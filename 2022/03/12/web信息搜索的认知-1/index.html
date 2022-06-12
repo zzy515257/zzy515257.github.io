@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#3367D6"/>
+  <link rel="apple-touch-icon" href="/icons-192.png">
+  <link rel="manifest" href="/manifest.json">
+  
+  <meta name="generator" content="Hexo 6.1.0">
+
+  
+    <meta name="description" content="QLUT disabled person">
+  
+
+  
+
+  
+    <meta name="author" content="汪汪队闯大祸">
+  
+
+  
+
+  
+
+  <title>web信息搜索的认知 | 齐工大摆烂王</title>
+
+  
+
+  
+    <link rel="shortcut icon" href="/tu.png">
+  
+
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@1.1.3/index.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlightjs@9.16.2/styles/monokai.css">
+  
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+</head>
+<body>
+  <div class="root-container">
+    
+<!-- header container -->
+<header class="header-container post">
+  
+    <div class="post-image" style="background-image: url(https://www.z4a.net/images/2022/03/13/2166b62f095c448735d4b90fdccecf2e.png)"></div>
+  
+
+  <!-- navbar -->
+<nav class="navbar">
+  <div class="navbar-content">
+    <!-- logo -->
+    <div class="navbar-logo">
+      <a href="/">
+        
+          齐工大摆烂王
+        
+      </a>
+    </div>
+    <!-- link -->
+    <div class="navbar-link">
+      <div class="navbar-btn">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+      <ul class="navbar-list">
+        
+          <li class="navbar-list-item"><a target="_blank" rel="noopener" href="https://github.com/zzy515257?tab=repositories">首页</a></li>
+        
+          <li class="navbar-list-item"><a target="_blank" rel="noopener" href="https://github.com/zzy515257">github</a></li>
+        
+          <li class="navbar-list-item"><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1GJ411x7h7?p=1&share_medium=android&share_plat=android&share_source=COPY&share_tag=s_i&timestamp=1610032908&unique_k=j0rQzU">网站福利</a></li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+
+  
+  
+    <div class="header-content">
+      <div class="post-text layout-block">
+        <div class="layout-margin">
+          <h1 class="title-wrap">web信息搜索的认知</h1>
+          <h2 class="title-sub-wrap">
+            <strong>汪汪队闯大祸</strong>
+            <span>发布于</span>
+            <time  class="article-date" datetime="2022-03-12T15:39:18.000Z" itemprop="datePublished">2022-03-12</time>
+          </h2>
+          <ul class="wrap-list dark">
+  
+</ul>
+          <ul class="wrap-list dark">
+  
+</ul>
+        </div>
+      </div>
+    </div>
+  
+
+  
+  
+  
+</header>
+
+    <!-- 文章 -->
+
+<!-- 文章内容 -->
+<div class="body-container">
+  <article class="content-container layout-block post-container">
+    <div class="article-info">
+      
+      
+      
+      
+      <section class="article-entry markdown-body layout-margin content-padding--large soft-size--large soft-style--box">
+        <p>web之信息泄露</p>
+<pre><code>    一、目录遍历
+    二、PHPINFO
+    三、备份文件下载
+        1、网站源码
+        2、bak文件
+        3、Vim缓存
+        4、.DS_Store
+    四、Git泄露
+        1、Log
+        2、Stash
+        3、Index
+    五、SVN泄露
+    六、HG泄露
+</code></pre>
+<p>Web技能树</p>
+<p>信息泄露树</p>
+<p><img src="/web%E4%BF%A1%E6%81%AF%E6%90%9C%E7%B4%A2%E7%9A%84%E8%AE%A4%E7%9F%A5-1.assets/image-20220223123635986.png" alt="image-20220223123635986">一、目录遍历</p>
+<p><img src="/web%E4%BF%A1%E6%81%AF%E6%90%9C%E7%B4%A2%E7%9A%84%E8%AE%A4%E7%9F%A5-1.assets/image-20220223123658993.png" alt="image-20220223123658993"></p>
+<p>路径遍历攻击（也称为目录遍历）旨在访问存储在Web根文件夹之外的文件和目录。通过操纵带有“点-斜线（…）”序列及其变化的文件或使用绝对文件路径来引用文件的变量，可以访问存储在文件系统上的任意文件和目录，包括应用程序源代码、配置和关键系统文件。需要注意的是，系统操作访问控制（如在微软Windows操作系统上锁定或使用文件）限制了对文件的访问权限。这种攻击也称为“点-点斜线”、“目录遍历”、“目录爬升”和“回溯”。<br>目录遍历<br>常用的自动化扫描工具有 nmap，这里只是一个简单例题，可以找到flag.txt在文件夹3&#x2F;3里面 ctfhub{88b149b346fb302de0450995974715be4fa603ec}<br>二、PHPINFO</p>
+<p><img src="/web%E4%BF%A1%E6%81%AF%E6%90%9C%E7%B4%A2%E7%9A%84%E8%AE%A4%E7%9F%A5-1.assets/image-20220223123714403.png" alt="image-20220223123714403"></p>
+<p>phpinfo函数能够输出服务器PHP当前状态的大量信息，其来中包含了PHP的编译选项、启用拓展、php版本信息、服务器信自息、环境变量配置、HTTP头和PHP授权信息。<br>phpinfo<br>可以看到在PHP Variables里找到了FLAG。ctfhub{3a6c5b87dd92ce11b479a004e4ca36b43ce00144}<br>三、备份文件下载<br>1、网站源码</p>
+<p><img src="/web%E4%BF%A1%E6%81%AF%E6%90%9C%E7%B4%A2%E7%9A%84%E8%AE%A4%E7%9F%A5-1.assets/image-20220223123729094.png" alt="image-20220223123729094"></p>
+<p>当开发人员在线上环境中对源代码进行了备份操作，并且将备份文件放在了 web 目录下，就会引起网站源码泄露。<br>网站源码<br>可以使用dirsearch扫描<img src="/web%E4%BF%A1%E6%81%AF%E6%90%9C%E7%B4%A2%E7%9A%84%E8%AE%A4%E7%9F%A5-1.assets/image-20220223123800944.png" alt="image-20220223123800944"></p>
+<p>dirsearch结果或者自己写python脚本。</p>
+<p><img src="/web%E4%BF%A1%E6%81%AF%E6%90%9C%E7%B4%A2%E7%9A%84%E8%AE%A4%E7%9F%A5-1.assets/image-20220223123817273.png" alt="image-20220223123817273"></p>
+<p>最后发现在<a target="_blank" rel="noopener" href="http://www.zip中,下载附件得到地址,访问这个地址,得到flag/">www.zip中，下载附件得到地址，访问这个地址，得到flag</a><br>flag<br>2、bak文件</p>
+<p><img src="/web%E4%BF%A1%E6%81%AF%E6%90%9C%E7%B4%A2%E7%9A%84%E8%AE%A4%E7%9F%A5-1.assets/image-20220223123836699.png" alt="image-20220223123836699"></p>
+<p>当开发人员在线上环境中对源代码进行了备份操作，并且将备份文件放在了 web 目录下，就会引起网站源码泄露。</p>
+<p>使用dirsearch扫描</p>
+<p>发现bak文件：<a target="_blank" rel="noopener" href="http://challenge-04e00dc531ed053a.sandbox.ctfhub.com:10080/index.php.bak%EF%BC%8C%E4%B8%8B%E8%BD%BD%E6%89%93%E5%BC%80%E5%BE%97%E5%88%B0ctfhub%7Bc815ebc9b93ada54b4723aac5e2a4d22a9f187eb%7D">http://challenge-04e00dc531ed053a.sandbox.ctfhub.com:10080/index.php.bak，下载打开得到ctfhub{c815ebc9b93ada54b4723aac5e2a4d22a9f187eb}</a><br>flag<br>3、Vim缓存</p>
+<p>临时文件是在vim编辑文本时就会创建的文件，如果程序正常退出，临时文件自动删除，如果意外退出就会保留，当vim异常退出后，因为未处理缓存文件，导致可以通过缓存文件恢复原始文件内容</p>
+<pre><code>以 index.php 为例 第一次产生的缓存文件名为 .index.php.swp
+第二次意外退出后，文件名为.index.php.swo
+第三次产生的缓存文件则为 .index.php.swn
+注意：index前有 &quot; . &quot;
+</code></pre>
+<p>访问<a target="_blank" rel="noopener" href="http://challenge-343d9fadf93a2a2f.sandbox.ctfhub.com:10080/index.php.swp%E4%B8%8B%E8%BD%BD%E6%9F%A5%E7%9C%8B%E5%BE%97%E5%88%B0ctfhub%7B8f4301704447f3106de94198e6913197cb3571a2%7D">http://challenge-343d9fadf93a2a2f.sandbox.ctfhub.com:10080/index.php.swp下载查看得到ctfhub{8f4301704447f3106de94198e6913197cb3571a2}</a><br>flag<br>4、.DS_Store</p>
+<p>.DS_Store 是 Mac OS 保存文件夹的自定义属性的隐藏文件。通过.DS_Store可以知道这个目录里面所有文件的清单。<br>访问<a target="_blank" rel="noopener" href="http://challenge-980bb942573f0bff.sandbox.ctfhub.com:10080/.DS_Store%E8%8E%B7%E5%BE%97DS_Store%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%96%87%E4%BB%B6%EF%BC%8C%E5%9C%A8linux%E7%B3%BB%E7%BB%9F%E4%B8%ADcat">http://challenge-980bb942573f0bff.sandbox.ctfhub.com:10080/.DS_Store获得DS_Store二进制文件，在linux系统中cat</a> DS_Storeflag地址<br>所以访问<a target="_blank" rel="noopener" href="http://challenge-980bb942573f0bff.sandbox.ctfhub.com:10080/e94c0e2ee5abb58c71363b97f6d1329e.txt%EF%BC%8C%E5%BE%97%E5%88%B0ctfhub%7Bb0652300aa41e9c54bddbf6c2a31235bf0cabd2b%7D">http://challenge-980bb942573f0bff.sandbox.ctfhub.com:10080/e94c0e2ee5abb58c71363b97f6d1329e.txt，得到ctfhub{b0652300aa41e9c54bddbf6c2a31235bf0cabd2b}</a><br>四、Git泄露</p>
+<p>当前大量开发人员使用git进行版本控制，对站点自动部署。如果配置不当,可能会将.git文件夹直接部署到线上环境。这就引起了git泄露漏洞。<br>1、Log</p>
+<p>git中的Log功能可以查看提交历史。<br>题目<br>根据提示，使用dirsearch发现有一些带有git名字的目录有内容，然后用Githack工具下载到本地，再git log，进行对比即可得到flag。这里我踩了一个坑就是Githack的版本，我下的是这个:<br><a target="_blank" rel="noopener" href="https://github.com/BugScanTeam/GitHack.git">https://github.com/BugScanTeam/GitHack.git</a></p>
+<p><img src="/web%E4%BF%A1%E6%81%AF%E6%90%9C%E7%B4%A2%E7%9A%84%E8%AE%A4%E7%9F%A5-1.assets/image-20220223123926585.png" alt="image-20220223123926585">githack ls -a是查看隐藏文件。</p>
+<p><img src="/web%E4%BF%A1%E6%81%AF%E6%90%9C%E7%B4%A2%E7%9A%84%E8%AE%A4%E7%9F%A5-1.assets/image-20220223123950479.png" alt="image-20220223123950479">git diff查看git提交的不同处。flag得到<br>2、Stash</p>
+<p><img src="/web%E4%BF%A1%E6%81%AF%E6%90%9C%E7%B4%A2%E7%9A%84%E8%AE%A4%E7%9F%A5-1.assets/image-20220223124004914.png" alt="image-20220223124004914"></p>
+<p>stash命令可用于临时保存和恢复修改，可跨分支。<br>在这里插入图片描述</p>
+<p>和log那道题的套路一样。git stash list查看所有保存的记录列表，git stash pop，从 git 栈中弹出来一个文件，这个文件的内容就是 flag解题<br>3、Index</p>
+<p>和前两题做法一样，git文件夹下载到本地后里面这个txt里面就是flag。</p>
+<p><img src="/web%E4%BF%A1%E6%81%AF%E6%90%9C%E7%B4%A2%E7%9A%84%E8%AE%A4%E7%9F%A5-1.assets/image-20220223124018372.png" alt="image-20220223124018372">题解<br>五、SVN泄露</p>
+<p>当开发人员使用 SVN 进行版本控制，对站点自动部署。如果配置不当,可能会将.svn文件夹直接部署到线上环境。这就引起了 SVN 泄露漏洞。</p>
+<p>Subversion，简称SVN，是一个开放源代码的版本控制系统，相对于的RCS、CVS，采用了分支管理系统，它的设计目标就是取代CVS。互联网上越来越多的控制服务从CVS转移到Subversion。<br>SVN题目<br>看了别人题解后推荐这个工具吧<a target="_blank" rel="noopener" href="https://github.com/kost/dvcs-ripper">https://github.com/kost/dvcs-ripper</a></p>
+<p><img src="/web%E4%BF%A1%E6%81%AF%E6%90%9C%E7%B4%A2%E7%9A%84%E8%AE%A4%E7%9F%A5-1.assets/image-20220223124117509.png" alt="image-20220223124117509"></p>
+<p><img src="/web%E4%BF%A1%E6%81%AF%E6%90%9C%E7%B4%A2%E7%9A%84%E8%AE%A4%E7%9F%A5-1.assets/image-20220223124139185.png" alt="image-20220223124139185"></p>
+<p>安装Perl模块：<br>sudo apt-get install perl libio-socket-ssl-perl libdbd-sqlite3-perl libclass-dbi-perl libio-all-lwp-perl</p>
+<p>下载dvcs-ripper工具: git clone <a target="_blank" rel="noopener" href="https://github.com/kost/dvcs-ripper">https://github.com/kost/dvcs-ripper</a></p>
+<p>dvcs-ripper工具用法： .&#x2F;rip-git.pl -v -u <a target="_blank" rel="noopener" href="http://www.example.com/.svn/">http://www.example.com/.svn/</a></p>
+<pre><code>svn1.6及以前版本会在项目的每个文件夹下都生成一个.svn文件夹，里面包含了所有文件的备份，文件名为 .svn/text-base/文件名.svn-base
+svn1.7及以后版本则只在项目根目录生成一个.svn文件夹，里面的pristine文件夹里包含了整个项目的所有文件备份
+</code></pre>
+<p>可以先去wc.db找，cat wc.db | grep flag，没有。<br>找flag<br>最后我是在缓存文件夹pristine的c7目录找到了flag。<br>六、HG泄露</p>
+<p><img src="/web%E4%BF%A1%E6%81%AF%E6%90%9C%E7%B4%A2%E7%9A%84%E8%AE%A4%E7%9F%A5-1.assets/image-20220223124203987.png" alt="image-20220223124203987"></p>
+<p>当开发人员使用 Mercurial 进行版本控制，对站点自动部署。如果配置不当,可能会将.hg 文件夹直接部署到线上环境。这就引起了 hg 泄露漏洞。</p>
+<p>同样Mercurial也是一个版本控制软件，只不过是轻量级的，具体区别感兴趣可以去查一查。<br>题目使用dvcs-ripper下载hg文件：.&#x2F;rip-hg.pl -v -u <a target="_blank" rel="noopener" href="http://challenge-5e8292bf8a7e5669.sandbox.ctfhub.com:10080/.hg/">http://challenge-5e8292bf8a7e5669.sandbox.ctfhub.com:10080/.hg/</a><br>下载结果<br>进入下载的.hg目录中（图形界面ctrl+h可以显示隐藏文件），直接grep -r flag *搜索，发现flag的一点轨迹。<br>发现flag<br>访问它，得到flag。<br>访问得到flag<br>文章知识点与官方知识档案匹配，可进一步学习相关知识<br>CS入门技能树Git入门Git简介633 人正在系统学习中<br>————————————————<br>版权声明：本文为CSDN博主「青小俊」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/a597934448/article/details/105431367">https://blog.csdn.net/a597934448/article/details/105431367</a></p>
+
+      </section>
+
+      
+      
+        <nav class="article-nav">
+          
+            <div class="article-nav-item layout-padding">
+  <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
+    
+      <div class="card-cover" background-image-lazy data-img="https://www.z4a.net/images/2022/03/13/23dd12bd0855a4cb1fc69b3a1d8b5eb8.jpg"></div>
+    
+    <div class="card-text">
+      
+        <a href="/2022/03/12/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/" itemprop="url">
+          <h2 class="card-text--title text-ellipsis">命令执行。</h2>
+        </a>
+      
+      <div class="card-text--row">Newer</div>
+    </div>
+  </article>
+</div>
+          
+          
+            <div class="article-nav-item layout-padding">
+  <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
+    
+      <div class="card-cover" background-image-lazy data-img="https://www.z4a.net/images/2022/03/13/07e5ff6c02a77a5168d4cb791831ecaf.jpg"></div>
+    
+    <div class="card-text">
+      
+        <a href="/2022/03/12/web%E5%85%A5%E9%97%A8%E9%A2%981-20%E4%BF%A1%E6%81%AF%E6%90%9C%E7%B4%A2-1/" itemprop="url">
+          <h2 class="card-text--title text-ellipsis">web入门题1-20信息搜索</h2>
+        </a>
+      
+      <div class="card-text--row">Older</div>
+    </div>
+  </article>
+</div>
+          
+        </nav>
+      
+
+      <section class="page-message-container layout-padding">
+        
+
+
+  
+  
+
+  
+  
+
+
+      </section>
+    </div>
+    <div class="widget-info">
+      <section class="widget-author widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-body">
+    
+      <img src="/tou.jpg" class="soft-size--round soft-style--box" alt="摆就完了">
+    
+    
+      <h2>摆就完了</h2>
+    
+    
+      <p>越摆越烂</p>
+    
+
+    <div class="count-box">
+      <div class="count-box--item">
+        <svg class="icon icon-article" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M240.51564747 647.74217627h196.07203239c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806V165.10332731c0-33.18142087-30.16492806-60.32985613-60.32985612-60.32985611H245.04038668C225.43318342 104.7734712 210.35071939 119.85593522 210.35071939 139.46313845V617.57724821c0 16.59071043 13.57421762 30.16492806 30.16492808 30.16492806z m663.62841731-452.47392089v482.63884894c0 33.18142087-27.14843525 60.32985613-60.32985612 60.32985613H180.18579134c-33.18142087 0-60.32985613-27.14843525-60.32985612-60.32985613V195.26825538c-49.77213131 0-90.49478418 40.72265287-90.49478417 90.49478417v452.4739209c0 49.77213131 40.72265287 90.49478418 90.49478417 90.49478417h286.56681657c16.59071043 0 30.16492806 13.57421762 30.16492807 30.16492807s13.57421762 30.16492806 30.16492805 30.16492806h90.49478418c16.59071043 0 30.16492806-13.57421762 30.16492805-30.16492806s13.57421762-30.16492806 30.16492807-30.16492807h286.56681657c49.77213131 0 90.49478418-40.72265287 90.49478417-90.49478417V285.76303955c0-49.77213131-40.72265287-90.49478418-90.49478417-90.49478417zM587.41232014 647.74217627h191.54729318c19.60720323 0 34.68966726-15.08246403 34.68966729-34.68966727V134.93839925c0-16.59071043-13.57421762-30.16492806-30.16492808-30.16492805H617.57724821c-30.16492806 0-60.32985613 27.14843525-60.32985612 60.32985611v452.4739209c0 16.59071043 13.57421762 30.16492806 30.16492805 30.16492806z" fill="currentColor"></path>
+</svg>
+        <span>14</span>
+      </div>
+      <div class="count-box--item">
+        <svg class="icon icon-categories" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M900.3614811 257.09082106h-339.81629553l-67.96326003-101.9448889c-19.41807444-29.12711113-48.54518557-43.69066667-82.52681443-43.69066667H123.6385189c-53.39970333 0-97.09036999 43.69066667-97.09037113 97.09036999v582.54222222c0 53.39970333 43.69066667 97.09036999 97.09037113 97.09037002h776.7229622c53.39970333 0 97.09036999-43.69066667 97.09037113-97.09037002V354.18119104c0-53.39970333-43.69066667-97.09036999-97.09037113-97.09036998z m-97.09036999 242.72592554H220.72888889c-24.27259221 0-48.54518557-24.27259221-48.54518556-48.54518556s24.27259221-48.54518557 48.54518556-48.54518444h582.54222222c24.27259221 0 48.54518557 24.27259221 48.54518556 48.54518444s-24.27259221 48.54518557-48.54518556 48.54518556z" fill="currentColor"></path>
+</svg>
+        0
+      </div>
+      <div class="count-box--item">
+        <svg class="icon icon-tags" viewBox="0 0 1098 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M283.42180005 272q0-28.38857157-20.09142843-48.48000001t-48.47999998-20.09142842-48.48000002 20.09142842-20.09142846 48.48000001 20.09142846 48.48 48.48000002 20.09142843 48.47999998-20.09142843 20.09142843-48.48zM855.0332285 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.03999997 263.58857157q-20.9142853 19.81714313-48.75428534 19.81714312-28.38857157 0-48.20571468-19.81714312l-383.04-383.58857157q-20.36571468-19.81714313-34.55999999-54.10285688t-14.19428534-62.6742853l0-222.85714313q0-27.84000002 20.36571469-48.20571469t48.2057147-20.36571466l222.85714313 0q28.38857157 0 62.6742853 14.19428529t54.65142842 34.55999999l383.04000001 382.49142843q19.81714313 20.9142853 19.81714314 48.75428532zM1060.74751475 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.04 263.58857157q-20.9142853 19.81714313-48.75428531 19.81714312-19.26857155 0-31.61142843-7.47428531t-28.38857159-24.13714314l251.79428534-251.7942853q19.81714313-19.81714313 19.81714308-48.20571469 0-27.84000002-19.81714308-48.75428531l-383.04000001-382.49142845q-20.36571468-20.36571468-54.65142842-34.55999999t-62.67428532-14.19428534l120 0q28.38857157 0 62.67428532 14.19428534t54.65142842 34.55999999l383.03999998 382.49142845q19.81714313 20.9142853 19.81714314 48.75428531z" fill="currentColor"></path>
+</svg>
+        0
+      </div>
+    </div>
+  </div>
+</section>
+
+      
+
+      
+<section class="widet-notice widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-notice" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M512 945.02305225v28.15620663a24.27259221 24.27259221 0 0 1-24.27259221 24.27259335H394.0352a48.54518557 48.54518557 0 0 1-41.74885888-23.78714112l-110.68302222-184.47170332a132.04290333 132.04290333 0 0 1-17.47626667-48.54518557h118.4502511a200.97706667 200.97706667 0 0 1 76.21594113 14.56355556l20.38897777 133.49925888a48.54518557 48.54518557 0 0 0 36.40888888 27.67075555l16.01991111 2.91271112a24.27259221 24.27259221 0 0 1 20.38897778 25.72894889zM997.45185223 463.45481443a194.18074112 194.18074112 0 0 1-38.8361489 116.50844445 24.75804445 24.75804445 0 0 1-36.4088889 0l-34.95253333-34.95253333a24.27259221 24.27259221 0 0 1-2.91271111-30.58346667 97.09036999 97.09036999 0 0 0 0-106.79940665 24.27259221 24.27259221 0 0 1 2.91271111-30.58346666l34.95253333-34.95253334a24.75804445 24.75804445 0 0 1 18.93262223-7.28177777 26.2144 26.2144 0 0 1 17.47626667 9.70903665A194.18074112 194.18074112 0 0 1 997.45185223 463.45481443z m-194.18074112-388.36148111v776.72296335a48.54518557 48.54518557 0 0 1-48.54518556 48.54518443h-28.64165888a48.54518557 48.54518557 0 0 1-33.98163001-14.07810332l-145.63555556-143.20829668A291.27111111 291.27111111 0 0 0 342.57730333 657.63555556H172.18370333a145.63555556 145.63555556 0 0 1-145.63555556-145.63555556v-97.09036999a145.63555556 145.63555556 0 0 1 145.63555556-145.63555556h170.3936a291.27111111 291.27111111 0 0 0 206.31703779-85.43952668l145.63555555-143.20829554a48.54518557 48.54518557 0 0 1 33.98162888-14.07810446H754.72592555a48.54518557 48.54518557 0 0 1 48.54518556 48.54518555z" fill="currentColor"></path>
+</svg>
+    <span>NOTICE</span>
+  </div>
+  <div class="widget-body">
+    <p>flex-block主题部分重构，详情查看https://github.com/miiiku/flex-block</p>
+  </div>
+</section>
+
+
+      <section class="widget-categorys widget-item layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-categories" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M900.3614811 257.09082106h-339.81629553l-67.96326003-101.9448889c-19.41807444-29.12711113-48.54518557-43.69066667-82.52681443-43.69066667H123.6385189c-53.39970333 0-97.09036999 43.69066667-97.09037113 97.09036999v582.54222222c0 53.39970333 43.69066667 97.09036999 97.09037113 97.09037002h776.7229622c53.39970333 0 97.09036999-43.69066667 97.09037113-97.09037002V354.18119104c0-53.39970333-43.69066667-97.09036999-97.09037113-97.09036998z m-97.09036999 242.72592554H220.72888889c-24.27259221 0-48.54518557-24.27259221-48.54518556-48.54518556s24.27259221-48.54518557 48.54518556-48.54518444h582.54222222c24.27259221 0 48.54518557 24.27259221 48.54518556 48.54518444s-24.27259221 48.54518557-48.54518556 48.54518556z" fill="currentColor"></path>
+</svg>
+    <span>CATEGORYS</span>
+  </div>
+  <div class="widget-body">
+    <ul class="categorys-list">
+      
+    </ul>
+  </div>
+</section>
+
+      <section class="widget-tags widget-item  layout-margin content-padding--primary soft-size--large soft-style--box">
+  <div class="widget-title">
+    <svg class="icon icon-tags" viewBox="0 0 1098 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M283.42180005 272q0-28.38857157-20.09142843-48.48000001t-48.47999998-20.09142842-48.48000002 20.09142842-20.09142846 48.48000001 20.09142846 48.48 48.48000002 20.09142843 48.47999998-20.09142843 20.09142843-48.48zM855.0332285 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.03999997 263.58857157q-20.9142853 19.81714313-48.75428534 19.81714312-28.38857157 0-48.20571468-19.81714312l-383.04-383.58857157q-20.36571468-19.81714313-34.55999999-54.10285688t-14.19428534-62.6742853l0-222.85714313q0-27.84000002 20.36571469-48.20571469t48.2057147-20.36571466l222.85714313 0q28.38857157 0 62.6742853 14.19428529t54.65142842 34.55999999l383.04000001 382.49142843q19.81714313 20.9142853 19.81714314 48.75428532zM1060.74751475 580.57142843q0 28.38857157-19.81714313 48.2057147l-263.04 263.58857157q-20.9142853 19.81714313-48.75428531 19.81714312-19.26857155 0-31.61142843-7.47428531t-28.38857159-24.13714314l251.79428534-251.7942853q19.81714313-19.81714313 19.81714308-48.20571469 0-27.84000002-19.81714308-48.75428531l-383.04000001-382.49142845q-20.36571468-20.36571468-54.65142842-34.55999999t-62.67428532-14.19428534l120 0q28.38857157 0 62.67428532 14.19428534t54.65142842 34.55999999l383.03999998 382.49142845q19.81714313 20.9142853 19.81714314 48.75428531z" fill="currentColor"></path>
+</svg>
+    <span>TAGS</span>
+  </div>
+  <div class="widget-body">
+    <div class="tags-cloud">
+      
+    </div>
+  </div>
+</section>
+    </div>
+  </article>
+</div>
+
+    <!-- footer container -->
+<footer id="footer" class="footer">
+  <div class="footer-container">
+    
+    <div class="social-icons">
+      
+        
+      
+        
+      
+        
+      
+        
+          <a href="https://github.com/miiiku/" class="soft-size--primary soft-style--box" target="_blank" rel="noopener noreferrer">
+            <svg class="icon icon-github" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M64.6 512c0 195.6 125.4 361.9 300.1 422.9 23.5 5.9 19.9-10.8 19.9-22.2v-77.6c-135.8 15.9-141.3-74-150.5-89-18.5-31.5-61.9-39.5-49-54.5 31-15.9 62.5 4 98.9 58 26.4 39.1 77.9 32.5 104.1 26 5.7-23.5 17.9-44.5 34.7-60.9-140.7-25.2-199.4-111.1-199.4-213.3 0-49.5 16.4-95.1 48.4-131.8-20.4-60.6 1.9-112.4 4.9-120.1 58.2-5.2 118.5 41.6 123.3 45.3 33.1-8.9 70.8-13.7 112.9-13.7 42.4 0 80.3 4.9 113.5 13.9 11.3-8.6 67.3-48.8 121.4-43.9 2.9 7.7 24.7 58.3 5.5 118.1 32.5 36.8 49 82.8 49 132.4 0 102.3-59 188.3-200.2 213.2 23.5 23.3 38.1 55.5 38.1 91.1v112.7c0.8 9 0 17.9 15.1 17.9C832.7 877 960.4 709.4 960.4 512.1c0-247.5-200.6-447.9-447.9-447.9C265 64.1 64.6 264.5 64.6 512z"></path>
+</svg>
+          </a>
+        
+      
+        
+          <a href="https://twitter.com/guanquanhong" class="soft-size--primary soft-style--box" target="_blank" rel="noopener noreferrer">
+            <svg class="icon icon-twitter" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <path d="M962.285714 233.142857q-38.285714 56-92.571429 95.428571 0.571429 8 0.571429 24 0 74.285714-21.714286 148.285714t-66 142-105.428571 120.285714-147.428571 83.428571-184.571429 31.142857q-154.857143 0-283.428571-82.857143 20 2.285714 44.571429 2.285714 128.571429 0 229.142857-78.857143-60-1.142857-107.428571-36.857143t-65.142857-91.142857q18.857143 2.857143 34.857143 2.857143 24.571429 0 48.571429-6.285714-64-13.142857-106-63.714286t-42-117.428571l0-2.285714q38.857143 21.714286 83.428571 23.428571-37.714286-25.142857-60-65.714286t-22.285714-88q0-50.285714 25.142857-93.142857 69.142857 85.142857 168.285714 136.285714t212.285714 56.857143q-4.571429-21.714286-4.571429-42.285714 0-76.571429 54-130.571429t130.571429-54q80 0 134.857143 58.285714 62.285714-12 117.142857-44.571429-21.142857 65.714286-81.142857 101.714286 53.142857-5.714286 106.285714-28.571429z"></path>
+</svg>
+          </a>
+        
+      
+    </div>
+     
+    <p>&copy; 2022 <a href="/" target="_blank">汪汪队闯大祸</a></p>
+
+    
+
+    <p>Powered by <a href="https://hexo.io" target="_blank" rel="noopener noreferrer">Hexo</a> Theme - <a href="https://github.com/miiiku/flex-block" target="_blank" rel="noopener noreferrer author">flex-block</a></p>
+
+    <p>
+      <a href="javascript:;" id="theme-light">🌞 浅色</a>
+      <a href="javascript:;" id="theme-dark">🌛 深色</a>
+      <a href="javascript:;" id="theme-auto">🤖️ 自动</a>
+    </p>
+  </div>
+</footer>
+  </div>
+
+  <div class="back-to-top-fixed soft-size--round soft-style--box">
+    <svg class="icon icon-back-to-top" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <path d="M725.333333 426.666667c-12.8 0-21.333333-4.266667-29.866667-12.8l-213.333333-213.333333c-17.066667-17.066667-17.066667-42.666667 0-59.733333s42.666667-17.066667 59.733333 0l213.333333 213.333333c17.066667 17.066667 17.066667 42.666667 0 59.733333C746.666667 422.4 738.133333 426.666667 725.333333 426.666667z"></path>
+      <path d="M298.666667 426.666667c-12.8 0-21.333333-4.266667-29.866667-12.8-17.066667-17.066667-17.066667-42.666667 0-59.733333l213.333333-213.333333c17.066667-17.066667 42.666667-17.066667 59.733333 0s17.066667 42.666667 0 59.733333l-213.333333 213.333333C320 422.4 311.466667 426.666667 298.666667 426.666667z"></path>
+      <path d="M512 896c-25.6 0-42.666667-17.066667-42.666667-42.666667L469.333333 170.666667c0-25.6 17.066667-42.666667 42.666667-42.666667s42.666667 17.066667 42.666667 42.666667l0 682.666667C554.666667 878.933333 537.6 896 512 896z"></path>
+    </svg>
+  </div>
+
+  
+  <!-- aplayer -->
+
+
+<!-- dplayer -->
+
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+  
+  <!-- 尾部用户自定义相关内容 -->
+</body>
+</html>
