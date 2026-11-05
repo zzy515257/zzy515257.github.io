@@ -1725,25 +1725,9 @@
 
     if (!audioDom || !rootDom) return;
 
-    // =========================================================================
-    // 页面状态判断：区分“具体博客文章阅读页”与“主页 / 目录 / 分类 / 归档页”
-    // =========================================================================
-    function isReadingPostPage() {
-        // 1. 检查是否存在文章正文容器
-        if (document.querySelector(".post-page-container, .article-content-container, .post-tools")) {
-            return true;
-        }
-        // 2. 检查路径是否匹配 Hexo 文章日期路径 (例如 /2026/11/05/xxx/)
-        const path = window.location.pathname;
-        if (/\/\d{4}\/\d{2}\/\d{2}\//.test(path)) {
-            return true;
-        }
-        return false;
-    }
-
-    // 只要不是在阅读文章正文（即在主页、目录列表、分类、归档等浏览页面），均保持播放音乐
+    // 全站全场景无缝持续播放（进入博客文章、分类目录、主页等均不暂停）
     function shouldPlayMusic() {
-        return !isReadingPostPage();
+        return true;
     }
 
     // =========================================================================
@@ -2000,17 +1984,10 @@
         }, 800);
     });
 
-    // 核心需求：“主页与目录界面保持播放，进入博客文章页面自动暂停”
+    // 核心需求：“全站无缝持续播放，进入博客文章、分类目录均不自动暂停”
     function handleNavigationState() {
-        const shouldPlay = shouldPlayMusic();
-        if (shouldPlay) {
-            if (!userManuallyPaused) {
-                playMusic();
-            }
-        } else {
-            // 进入具体文章正文页，自动暂停以供静心阅读
-            pauseMusic();
-            closeCard();
+        if (!userManuallyPaused && !isPlaying) {
+            playMusic();
         }
     }
 
@@ -2020,7 +1997,7 @@
         const unlockEvents = ["pointerdown", "mousedown", "touchstart", "click", "keydown"];
         const unlockHandler = () => {
             userHasInteracted = true;
-            if (shouldPlayMusic() && !userManuallyPaused && !isPlaying) {
+            if (!userManuallyPaused && !isPlaying) {
                 playMusic();
             }
             unlockEvents.forEach(evt => {
@@ -2045,11 +2022,9 @@
     // 注册全局手势解锁（随时准备在用户初次交互时开播）
     initAutoplayUnlock();
 
-    // 首次进入页面时的状态检查与开播尝试
-    if (shouldPlayMusic()) {
+    // 首次进入页面时的开播尝试
+    if (!userManuallyPaused) {
         playMusic();
-    } else {
-        pauseMusic();
     }
 
     // 监听 Swup 路由切换事件
