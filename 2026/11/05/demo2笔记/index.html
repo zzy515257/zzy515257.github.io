@@ -255,12 +255,14 @@
 <div class="home-banner-background transition-fade fixed top-0 left-0 w-screen h-screen scale-125 sm:scale-110 box-border will-change-transform bg-cover">
     <img src="/images/banner-light.jpg" alt="home-banner-background" class="w-full h-full object-cover dark:hidden">
     <img src="/images/banner-dark.jpg" alt="home-banner-background" class="w-full h-full object-cover hidden dark:block">
-    <!-- Daytime Sunlight Sweep Animation (白天阳光缓慢循环划过) -->
+    <!-- Daytime Sunlight Sweep Animation (白天阳光密集温润划过 - 缩短间隔连续沐浴) -->
 <div class="sunlight-banner-effects dark:hidden pointer-events-none">
     <div class="sun-flare-origin"></div>
     <div class="sun-beam-sweep beam-1"></div>
     <div class="sun-beam-sweep beam-2"></div>
     <div class="sun-beam-sweep beam-3"></div>
+    <div class="sun-beam-sweep beam-4"></div>
+    <div class="sun-beam-sweep beam-5"></div>
 </div>
 
 <!-- Nighttime Meteor Shower Animation (夜间绚丽流星雨，密集交错) -->
@@ -340,81 +342,109 @@
     }
 }
 
-/* 连续不断缓慢划过雪山的金色阳光束 */
+/* 连续不断缓慢划过雪山的金色阳光束（周期缩短至9s，多束交替紧凑漫步） */
 .sun-beam-sweep {
     position: absolute;
     top: -55%;
-    left: -70%;
-    width: 85%;
+    left: -60%;
+    width: 80%;
     height: 220%;
-    transform: translate3d(-100%, -25%, 0) rotate(38deg);
+    transform: translate3d(-45%, -12%, 0) rotate(36deg);
     background: linear-gradient(
         90deg,
         transparent 0%,
-        rgba(255, 255, 255, 0) 15%,
-        rgba(255, 250, 230, 0.15) 38%,
-        rgba(255, 240, 185, 0.38) 50%,
-        rgba(255, 250, 230, 0.15) 62%,
-        rgba(255, 255, 255, 0) 85%,
+        rgba(255, 255, 255, 0) 12%,
+        rgba(255, 250, 230, 0.18) 36%,
+        rgba(255, 240, 185, 0.42) 50%,
+        rgba(255, 250, 230, 0.18) 64%,
+        rgba(255, 255, 255, 0) 88%,
         transparent 100%
     );
     mix-blend-mode: screen;
     pointer-events: none;
-    filter: blur(32px);
-    animation: continuous-sunlight-sweep 18s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    filter: blur(30px);
+    animation: continuous-sunlight-sweep 9s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     will-change: transform, opacity;
 }
 
-/* 3条交错光芒带，相隔6秒发射，构成永不停歇的温润光影漫步 */
+/* 5条交错光芒带，相隔1.8秒紧密发射，无间断温润光影漫步 */
 .sun-beam-sweep.beam-1 {
     animation-delay: 0s;
 }
 
 .sun-beam-sweep.beam-2 {
     width: 65%;
-    filter: blur(38px);
+    filter: blur(36px);
     background: linear-gradient(
         90deg,
         transparent 0%,
-        rgba(255, 248, 220, 0.08) 32%,
-        rgba(255, 235, 170, 0.26) 50%,
-        rgba(255, 248, 220, 0.08) 68%,
+        rgba(255, 248, 220, 0.1) 30%,
+        rgba(255, 235, 170, 0.32) 50%,
+        rgba(255, 248, 220, 0.1) 70%,
         transparent 100%
     );
-    animation-delay: 6s;
+    animation-delay: 1.8s;
 }
 
 .sun-beam-sweep.beam-3 {
-    width: 75%;
+    width: 85%;
+    filter: blur(32px);
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0) 18%,
+        rgba(255, 245, 205, 0.28) 50%,
+        rgba(255, 255, 255, 0) 82%,
+        transparent 100%
+    );
+    animation-delay: 3.6s;
+}
+
+.sun-beam-sweep.beam-4 {
+    width: 70%;
     filter: blur(34px);
     background: linear-gradient(
         90deg,
         transparent 0%,
-        rgba(255, 255, 255, 0) 20%,
-        rgba(255, 245, 205, 0.22) 50%,
-        rgba(255, 255, 255, 0) 80%,
+        rgba(255, 250, 230, 0.12) 28%,
+        rgba(255, 240, 190, 0.35) 50%,
+        rgba(255, 250, 230, 0.12) 72%,
         transparent 100%
     );
-    animation-delay: 12s;
+    animation-delay: 5.4s;
+}
+
+.sun-beam-sweep.beam-5 {
+    width: 90%;
+    filter: blur(38px);
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 248, 210, 0.08) 22%,
+        rgba(255, 232, 160, 0.3) 50%,
+        rgba(255, 248, 210, 0.08) 78%,
+        transparent 100%
+    );
+    animation-delay: 7.2s;
 }
 
 @keyframes continuous-sunlight-sweep {
     0% {
         opacity: 0;
-        transform: translate3d(-100%, -25%, 0) rotate(38deg);
+        transform: translate3d(-45%, -12%, 0) rotate(36deg);
     }
-    15% {
-        opacity: 0.8;
+    18% {
+        opacity: 0.88;
     }
-    50% {
-        opacity: 0.85;
+    55% {
+        opacity: 0.92;
     }
-    85% {
-        opacity: 0.55;
+    82% {
+        opacity: 0.65;
     }
     100% {
         opacity: 0;
-        transform: translate3d(240%, 65%, 0) rotate(38deg);
+        transform: translate3d(165%, 46%, 0) rotate(36deg);
     }
 }
 
@@ -1282,17 +1312,29 @@
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2026/11/05/SafeDrug%20Dual%20Molecular%20Graph%20Encoders%20for%20Safe%20Drug%20Recommendations/">
+				<a class="prev" rel="prev" href="/2026/11/05/CausalMed%20Causality-Based%20Personalized%20Medication%20Recommendation%20Centered%20on%20Patient%20Health%20State/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">SafeDrug Dual Molecular Graph Encoders for Safe Drug Recommendations</span>
+						<span class="post-nav-title-item truncate max-w-48">CausalMed Causality-Based Personalized Medication Recommendation Centered on Patient Health State</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
 			</div>
 			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2026/11/05/transformer%E8%AE%B2%E8%A7%A3/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">transformer讲解</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
 			
 		</div>
 		
@@ -2582,6 +2624,363 @@
     // 监听 popstate（浏览器前进后退）
     window.addEventListener("popstate", () => {
         setTimeout(handleNavigationState, 60);
+    });
+})();
+</script>
+
+	<!-- Welcome Intro Overlay Component (首次进入主页粒子风散进场动画) -->
+<div id="welcome-intro-overlay" class="welcome-intro-overlay pointer-events-auto" data-swup-ignore-script>
+    <canvas id="welcome-intro-canvas"></canvas>
+    <button id="welcome-skip-btn" class="welcome-skip-btn" title="点击跳过进场动画">跳过 &gt;</button>
+</div>
+
+<style>
+/* ==========================================================================
+   Welcome Intro Overlay Styles (深邃幕布 · 粒子风散 · 主页淡淡显示)
+   ========================================================================== */
+.welcome-intro-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 999999;
+    background: radial-gradient(ellipse at center, rgba(16, 20, 32, 0.98) 0%, rgba(7, 9, 16, 0.99) 100%);
+    display: none; /* 初始隐藏，由 JS 检查条件后激活显示 */
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: opacity 1.8s cubic-bezier(0.25, 1, 0.5, 1);
+    opacity: 1;
+}
+
+.welcome-intro-overlay.is-active {
+    display: flex;
+}
+
+.welcome-intro-overlay.is-fading {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+#welcome-intro-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+}
+
+/* 简约右上角跳过按钮 */
+.welcome-skip-btn {
+    position: absolute;
+    top: 24px;
+    right: 28px;
+    padding: 6px 14px;
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.75);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    z-index: 10;
+    font-family: var(--default-font-family, sans-serif);
+}
+
+.welcome-skip-btn:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .welcome-skip-btn {
+        top: 16px;
+        right: 18px;
+        padding: 4px 12px;
+        font-size: 0.72rem;
+    }
+}
+</style>
+
+<script data-swup-ignore-script>
+(function() {
+    // 检查是否为主页
+    function checkIsHomePage() {
+        const path = window.location.pathname;
+        const root = (window.config && window.config.root) || "/";
+        return path === root || path === root + "index.html" || (path.endsWith("/index.html") && path.replace(/index\.html$/, "") === root);
+    }
+
+    // 核心条件：“只有首次进入主页时有，从文章或者目录回到主页时没有”
+    // 使用 sessionStorage 记录会话内是否已经展示过进场动画
+    if (!checkIsHomePage()) return;
+    if (sessionStorage.getItem("has_seen_welcome_intro")) return;
+
+    // 标记当前会话已播放过，后续无论从目录还是文章返回均不再触发
+    sessionStorage.setItem("has_seen_welcome_intro", "1");
+
+    const overlay = document.getElementById("welcome-intro-overlay");
+    const canvas = document.getElementById("welcome-intro-canvas");
+    const skipBtn = document.getElementById("welcome-skip-btn");
+    if (!overlay || !canvas) return;
+
+    // 激活全屏幕布
+    overlay.classList.add("is-active");
+
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    let dpr = window.devicePixelRatio || 1;
+    let width = 0;
+    let height = 0;
+
+    // 随机文案候选池
+    const QUOTES = [
+        "欢迎光临，有幸相见",
+        "今天天气还好吗",
+        "你是我博客最重要的一篇文章",
+        "HELLO--WORLD"
+    ];
+
+    // 随机艺术色彩组合（明艳、高级、具有梦幻发光感）
+    const PALETTES = [
+        { name: "极光青", text: "#00f2fe", glow: "rgba(0, 242, 254, 0.8)", particles: ["#4facfe", "#00f2fe", "#43e97b", "#a8ff78"] },
+        { name: "落日金", text: "#ffd166", glow: "rgba(255, 209, 102, 0.85)", particles: ["#ffe066", "#ffd166", "#f77f00", "#ffba08"] },
+        { name: "樱花粉", text: "#ff758c", glow: "rgba(255, 117, 140, 0.85)", particles: ["#ff758c", "#ff7eb3", "#fbc2eb", "#ffa8a8"] },
+        { name: "星空紫", text: "#c084fc", glow: "rgba(192, 132, 252, 0.85)", particles: ["#c084fc", "#a855f7", "#e879f9", "#d8b4fe"] },
+        { name: "晨曦橙", text: "#ff9966", glow: "rgba(255, 153, 102, 0.85)", particles: ["#ff9966", "#ff5e62", "#ffb199", "#fca311"] },
+        { name: "薄荷绿", text: "#2af598", glow: "rgba(42, 245, 152, 0.85)", particles: ["#2af598", "#009efd", "#08d9d6", "#5eead4"] },
+        { name: "冰川蓝", text: "#38ef7d", glow: "rgba(56, 239, 125, 0.85)", particles: ["#11998e", "#38ef7d", "#a8ff78", "#6ee7b7"] },
+        { name: "霓虹红", text: "#ff4b72", glow: "rgba(255, 75, 114, 0.85)", particles: ["#ff416c", "#ff4b72", "#ff758c", "#fda4af"] }
+    ];
+
+    const chosenQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+    const chosenPalette = PALETTES[Math.floor(Math.random() * PALETTES.length)];
+
+    let particles = [];
+    let state = "holding"; // "holding" -> "dissolving" -> "finished"
+    let startTime = null;
+    let dissolveStartTime = null;
+    const HOLD_DURATION = 5000; // 句子停留 5 秒
+    let animId = null;
+
+    function resizeCanvas() {
+        dpr = window.devicePixelRatio || 1;
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        ctx.scale(dpr, dpr);
+    }
+
+    resizeCanvas();
+    window.addEventListener("resize", () => {
+        if (state === "holding") {
+            resizeCanvas();
+        }
+    });
+
+    // 计算自适应字体大小
+    function getFontSize() {
+        const charCount = chosenQuote.length;
+        if (width <= 768) {
+            return Math.min(34, Math.max(18, Math.floor((width * 0.88) / charCount)));
+        } else {
+            return Math.min(52, Math.max(26, Math.floor((width * 0.72) / charCount)));
+        }
+    }
+
+    // 绘制文字并生成粒子采样点
+    function renderStaticText(alpha = 1.0, glowRatio = 1.0) {
+        ctx.clearRect(0, 0, width, height);
+        const fontSize = getFontSize();
+        ctx.save();
+        ctx.font = `600 ${fontSize}px "Chillax", "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        // 外层柔光晕染
+        ctx.shadowColor = chosenPalette.glow;
+        ctx.shadowBlur = 28 * glowRatio;
+        ctx.fillStyle = chosenPalette.text;
+        ctx.globalAlpha = alpha;
+        ctx.fillText(chosenQuote, width / 2, height / 2);
+
+        // 核心文字提亮
+        ctx.shadowBlur = 10 * glowRatio;
+        ctx.fillText(chosenQuote, width / 2, height / 2);
+        ctx.restore();
+    }
+
+    // 从文字像素中提取粒子（随风飘散效果）
+    function initParticlesFromText() {
+        renderStaticText(1.0, 1.0);
+        const fontSize = getFontSize();
+        const textMetrics = ctx.measureText(chosenQuote);
+        const textWidth = textMetrics.width;
+        const textHeight = fontSize * 1.5;
+
+        const startX = Math.max(0, Math.floor((width / 2 - textWidth / 2 - 10) * dpr));
+        const startY = Math.max(0, Math.floor((height / 2 - textHeight / 2 - 10) * dpr));
+        const scanW = Math.min(canvas.width - startX, Math.ceil((textWidth + 20) * dpr));
+        const scanH = Math.min(canvas.height - startY, Math.ceil((textHeight + 20) * dpr));
+
+        const imgData = ctx.getImageData(startX, startY, scanW, scanH);
+        const data = imgData.data;
+        particles = [];
+
+        // 根据屏幕 DPR 与尺寸自适应采样步长（保持流畅度与粒子密度平衡）
+        const step = width <= 768 ? Math.round(dpr * 2.2) : Math.round(dpr * 1.8);
+
+        for (let y = 0; y < scanH; y += step) {
+            for (let x = 0; x < scanW; x += step) {
+                const index = (y * scanW + x) * 4;
+                const alpha = data[index + 3];
+                if (alpha > 45) {
+                    const worldX = (startX + x) / dpr;
+                    const worldY = (startY + y) / dpr;
+
+                    // 粒子物理属性：向右上方随风起舞飘散
+                    const colorPick = chosenPalette.particles[Math.floor(Math.random() * chosenPalette.particles.length)];
+                    const windForce = 2.4 + Math.random() * 4.2;
+
+                    particles.push({
+                        originX: worldX,
+                        originY: worldY,
+                        x: worldX,
+                        y: worldY,
+                        vx: windForce,
+                        vy: (Math.random() - 0.5) * 2.2 - (0.4 + Math.random() * 1.2), // 向上升腾微旋
+                        size: (Math.random() * 2.0 + 1.2),
+                        color: colorPick,
+                        alpha: 1.0,
+                        decay: 0.010 + Math.random() * 0.014,
+                        wobbleSpeed: 0.03 + Math.random() * 0.05,
+                        wobbleAmp: 0.8 + Math.random() * 1.6,
+                        wobblePhase: Math.random() * Math.PI * 2,
+                        // 依照横坐标轻微产生时差，如同风自左向右吹过吹散字形
+                        delay: (worldX - (width / 2 - textWidth / 2)) * 0.0018
+                    });
+                }
+            }
+        }
+
+        // 清空静态文字画布，进入粒子飞散阶段
+        ctx.clearRect(0, 0, width, height);
+    }
+
+    // 触发粒子风化消散并淡出主页背景
+    function startDissolve() {
+        if (state !== "holding") return;
+        state = "dissolving";
+        dissolveStartTime = performance.now();
+        initParticlesFromText();
+
+        // 隐藏跳过按钮
+        if (skipBtn) skipBtn.style.display = "none";
+
+        // 主页淡淡显示：幕布背景开始 1.8s 平滑透明淡出
+        overlay.classList.add("is-fading");
+    }
+
+    // 结束并彻底清理 DOM
+    function finishIntro() {
+        if (state === "finished") return;
+        state = "finished";
+        if (animId) cancelAnimationFrame(animId);
+        ctx.clearRect(0, 0, width, height);
+        overlay.classList.remove("is-active");
+        overlay.remove();
+    }
+
+    // 动画主循环
+    function loop(timestamp) {
+        if (state === "finished") return;
+        if (!startTime) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+
+        if (state === "holding") {
+            // 进场前 0.8 秒平滑渐显，随后优雅呼吸停留满 5 秒
+            let textAlpha = 1.0;
+            if (elapsed < 800) {
+                textAlpha = elapsed / 800;
+            }
+            // 呼吸光晕
+            const breatheRatio = 0.85 + 0.25 * Math.sin((elapsed - 800) / 600);
+            renderStaticText(textAlpha, breatheRatio);
+
+            if (elapsed >= HOLD_DURATION) {
+                startDissolve();
+            }
+            animId = requestAnimationFrame(loop);
+        } else if (state === "dissolving") {
+            ctx.clearRect(0, 0, width, height);
+            const dissolveElapsed = (timestamp - dissolveStartTime) / 1000;
+            let activeCount = 0;
+
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                if (dissolveElapsed < p.delay) {
+                    // 尚未被风刮走，绘制原位轻颤
+                    ctx.save();
+                    ctx.globalAlpha = p.alpha;
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(p.x, p.y, p.size, p.size);
+                    ctx.restore();
+                    activeCount++;
+                    continue;
+                }
+
+                p.x += p.vx;
+                p.vx += 0.08; // 风力加速
+                p.wobblePhase += p.wobbleSpeed;
+                p.y += p.vy + Math.sin(p.wobblePhase) * p.wobbleAmp;
+                p.alpha -= p.decay;
+
+                if (p.alpha > 0.01) {
+                    activeCount++;
+                    ctx.save();
+                    ctx.globalAlpha = Math.max(0, p.alpha);
+                    ctx.fillStyle = p.color;
+                    ctx.shadowColor = p.color;
+                    ctx.shadowBlur = 6;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            // 当粒子全部消散或淡出时间已达 2.2 秒时，彻底销毁幕布
+            if (activeCount === 0 || dissolveElapsed > 2.2) {
+                finishIntro();
+                return;
+            }
+
+            animId = requestAnimationFrame(loop);
+        }
+    }
+
+    // 启动动画循环
+    animId = requestAnimationFrame(loop);
+
+    // 交互响应：点击跳过按钮或点击全屏直接加速消散，不阻碍急切访问的用户
+    if (skipBtn) {
+        skipBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            startDissolve();
+        });
+    }
+
+    overlay.addEventListener("click", () => {
+        if (state === "holding") {
+            startDissolve();
+        }
     });
 })();
 </script>
