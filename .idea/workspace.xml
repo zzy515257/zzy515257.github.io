@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="bce1adb9-ccab-4d8f-9fb2-3d299611b829" name="变更" comment="">
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/LICENSE" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/_config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/_config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/languages/de.yml" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/languages/de.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/languages/default.yml" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/languages/default.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/languages/es.yml" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/languages/es.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/languages/fr.yml" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/languages/fr.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/languages/ja.yml" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/languages/ja.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/languages/ko.yml" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/languages/ko.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/languages/nl.yml" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/languages/nl.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/languages/no.yml" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/languages/no.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/languages/pt.yml" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/languages/pt.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/languages/ru.yml" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/languages/ru.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/languages/zh-CN.yml" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/languages/zh-CN.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/languages/zh-TW.yml" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/languages/zh-TW.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/_partial/article-list.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/_partial/article-list.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/_partial/content.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/_partial/content.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/_partial/footer-script.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/_partial/footer-script.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/_partial/footer.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/_partial/footer.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/_partial/header.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/_partial/header.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/_partial/nav.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/_partial/nav.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/_partial/page.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/_partial/page.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/_partial/pagination.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/_partial/pagination.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/_svg/social-github.svg" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/_svg/social-github.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/_svg/social-ins.svg" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/_svg/social-ins.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/_svg/social-twitter.svg" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/_svg/social-twitter.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/_svg/social-weibo.svg" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/_svg/social-weibo.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/_svg/social-zhihu.svg" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/_svg/social-zhihu.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/_widget/comment.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/_widget/comment.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/archive.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/archive.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/category.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/category.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/index.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/index.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/layout.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/layout.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/page.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/page.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/plug-in/aplayer.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/plug-in/aplayer.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/plug-in/dplayer.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/plug-in/dplayer.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/post.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/post.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/layout/tag.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/layout/tag.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/scripts/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/scripts/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/source/css/_partial/card.styl" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/source/css/_partial/card.styl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/source/css/_partial/content.styl" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/source/css/_partial/content.styl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/source/css/_partial/footer.styl" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/source/css/_partial/footer.styl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/source/css/_partial/header.styl" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/source/css/_partial/header.styl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/source/css/_partial/nav.styl" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/source/css/_partial/nav.styl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/source/css/_partial/page.styl" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/source/css/_partial/page.styl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/source/css/_partial/pagination.styl" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/source/css/_partial/pagination.styl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/source/css/_util/mixins.styl" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/source/css/_util/mixins.styl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/source/css/_util/theme.styl" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/source/css/_util/theme.styl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/source/css/_util/variables.styl" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/source/css/_util/variables.styl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/source/css/style.styl" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/source/css/style.styl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/source/favicon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/source/icons-192.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/source/icons-512.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/source/js/script.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/source/js/script.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/flexblock/source/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/themes/flexblock/source/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/redefine/_config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/themes/redefine/_config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/.babelrc" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/.babelrc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/.editorconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/.eslintignore" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/.eslintignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/.eslintrc.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/.eslintrc.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/.gitattributes" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/.gitattributes" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/_config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/_config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/languages/default.yml" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/languages/default.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/languages/fr.yml" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/languages/fr.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/languages/nl.yml" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/languages/nl.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/languages/no.yml" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/languages/no.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/languages/ru.yml" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/languages/ru.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/languages/zh-CN.yml" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/languages/zh-CN.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/languages/zh-tw.yml" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/languages/zh-tw.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/after-footer.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/after-footer.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/archive-post.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/archive-post.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/archive.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/archive.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/article.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/article.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/aside.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/aside.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/baidu-analytics.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/baidu-analytics.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/footer.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/footer.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/google-analytics.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/google-analytics.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/head.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/head.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/header.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/header.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/left-col.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/left-col.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/mathjax.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/mathjax.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/mobile-nav.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/mobile-nav.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/post/category.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/post/category.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/post/changyan.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/post/changyan.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/post/date.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/post/date.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/post/duoshuo.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/post/duoshuo.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/post/gitment.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/post/gitment.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/post/nav.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/post/nav.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/post/share.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/post/share.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/post/tag.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/post/tag.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/post/title.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/post/title.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/post/wangyiyun.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/post/wangyiyun.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/script.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/script.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/tools.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/tools.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/_partial/viewer.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/_partial/viewer.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/index.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/index.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/layout/layout.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/layout/layout.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/_core.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/_core.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/_function.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/_function.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/archive.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/archive.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/article-inner.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/article-inner.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/article-main.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/article-main.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/article-nav.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/article-nav.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/article.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/article.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/aside.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/aside.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/comment.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/comment.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/core/_animation.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/core/_animation.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/core/_media-queries.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/core/_media-queries.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/core/_mixin.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/core/_mixin.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/core/_reset.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/core/_reset.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/core/_variables.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/core/_variables.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/fonts.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/fonts.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/fonts/iconfont.svg" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/fonts/iconfont.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/footer.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/footer.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/grid.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/grid.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/highlight.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/highlight.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/left.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/left.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/main.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/main.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/mobile-slider.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/mobile-slider.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/mobile.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/mobile.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/page.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/page.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/reward.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/reward.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/scroll.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/scroll.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/share.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/share.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/social.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/social.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/tags-cloud.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/tags-cloud.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/tags.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/tags.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/tools.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/tools.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/css/tooltip.scss" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/css/tooltip.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/js/Q.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/js/Q.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/js/anm.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/js/anm.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/js/aside.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/js/aside.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/js/browser.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/js/browser.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/js/fix.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/js/fix.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/js/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/js/mobile.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/js/mobile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/js/report.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/js/report.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/js/share.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/js/share.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/js/slider.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/js/slider.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/js/util.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/js/util.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/js/viewer.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/js/viewer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source-src/script.ejs" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source-src/script.ejs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source/fonts/iconfont.45d7ee.svg" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source/fonts/iconfont.45d7ee.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source/main.0cf68a.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source/main.0cf68a.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source/mobile.992cbe.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source/mobile.992cbe.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/source/slider.e37972.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/source/slider.e37972.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/themes/yilia/webpack.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/themes/yilia/webpack.config.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="2NKhbxwgJZW3RQoKL5FgxF7ILnq" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="应用程序级" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="默认任务">
+      <changelist id="bce1adb9-ccab-4d8f-9fb2-3d299611b829" name="变更" comment="" />
+      <created>1679418757796</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1679418757796</updated>
+      <workItem from="1679418759044" duration="3000" />
+    </task>
+    <servers />
+  </component>
+</project>
