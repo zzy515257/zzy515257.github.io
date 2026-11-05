@@ -979,17 +979,29 @@
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2026/11/05/transformer%E8%AE%B2%E8%A7%A3/">
+				<a class="prev" rel="prev" href="/2026/11/05/demo2%E7%AC%94%E8%AE%B0/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">transformer讲解</span>
+						<span class="post-nav-title-item truncate max-w-48">demo2笔记</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
 			</div>
 			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2026/11/05/git%E6%8C%87%E4%BB%A4%E4%BB%8B%E7%BB%8D/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">git指令介绍</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
 			
 		</div>
 		
@@ -1342,8 +1354,8 @@
 
 
 	
-	<!-- Vinyl Record Music Player Component (网易云音乐旋转唱片控制器) -->
-<div id="vinyl-player" class="vinyl-player-root" data-swup-ignore-script>
+	<!-- Vinyl Record Music Player Component (网易云音乐旋转唱片控制器 - 交互增强版) -->
+<div id="vinyl-player" class="vinyl-player-root dock-right" data-swup-ignore-script>
     <!-- 展开式播放控制面板 -->
     <div class="vinyl-control-card" id="vinyl-card">
         <div class="vinyl-card-info">
@@ -1370,8 +1382,8 @@
         </div>
     </div>
 
-    <!-- 旋转黑胶唱片主体与唱针 -->
-    <div class="vinyl-disc-wrapper" id="vinyl-disc-trigger" title="点击展开音乐控制 / 播放暂停">
+    <!-- 旋转黑胶唱片主体与唱针（支持点击展开/收起、长按拖拽左右停靠） -->
+    <div class="vinyl-disc-wrapper" id="vinyl-disc-trigger" title="点击展开音乐控制 · 可长按拖拽到左侧或右侧">
         <!-- 唱臂 / 唱针 -->
         <div class="vinyl-tonearm" id="vinyl-tonearm">
             <div class="tonearm-base"></div>
@@ -1402,12 +1414,10 @@
 
 <style>
 /* ==========================================================================
-   Vinyl Record Music Player Styles (右下角旋转唱片播放器)
+   Vinyl Record Music Player Styles (可拖拽停靠 · 点击伸出 · 自动收回)
    ========================================================================== */
 .vinyl-player-root {
     position: fixed;
-    right: 92px;
-    bottom: 24px;
     z-index: 1002;
     display: flex;
     align-items: center;
@@ -1415,14 +1425,36 @@
     font-family: var(--default-font-family, sans-serif);
     user-select: none;
     -webkit-user-select: none;
+    touch-action: none;
+    will-change: transform, left, top, right;
 }
 
-@media (max-width: 768px) {
-    .vinyl-player-root {
-        right: 16px;
-        bottom: 82px;
-        gap: 8px;
-    }
+/* 停靠在右侧：唱片在右，控制条向左伸出 */
+.vinyl-player-root.dock-right {
+    flex-direction: row;
+}
+
+/* 停靠在左侧：唱片在左，控制条向右伸出 */
+.vinyl-player-root.dock-left {
+    flex-direction: row-reverse;
+}
+
+/* 拖拽吸附边缘平滑动画 */
+.vinyl-player-root.is-snapping {
+    transition: left 0.38s cubic-bezier(0.34, 1.56, 0.64, 1),
+                right 0.38s cubic-bezier(0.34, 1.56, 0.64, 1),
+                top 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+/* 拖拽中样式 */
+.vinyl-player-root.is-dragging {
+    transition: none !important;
+    cursor: grabbing !important;
+}
+.vinyl-player-root.is-dragging .vinyl-disc-wrapper {
+    cursor: grabbing !important;
+    transform: scale(1.16) !important;
+    filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.55)) !important;
 }
 
 /* 唱片主体包裹层 */
@@ -1430,9 +1462,11 @@
     position: relative;
     width: 62px;
     height: 62px;
-    cursor: pointer;
-    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
+    cursor: grab;
+    filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.38));
     transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    touch-action: none;
+    flex-shrink: 0;
 }
 
 .vinyl-disc-wrapper:hover {
@@ -1452,13 +1486,14 @@
     inset: 0;
     border-radius: 50%;
     background: radial-gradient(circle, #0a0a0a 0%, #181818 45%, #2a2a2a 50%, #151515 55%, #080808 100%);
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.12), inset 0 0 10px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.14), inset 0 0 10px rgba(0, 0, 0, 0.85);
     display: flex;
     align-items: center;
     justify-content: center;
     animation: vinyl-spin-anim 12s linear infinite;
     animation-play-state: paused;
     will-change: transform;
+    pointer-events: none;
 }
 
 .vinyl-player-root.is-playing .vinyl-disc {
@@ -1528,6 +1563,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    pointer-events: none;
 }
 
 .vinyl-center-hole {
@@ -1609,6 +1645,7 @@
     box-shadow: 0 2px 6px rgba(163, 31, 52, 0.4);
     border: 1.5px solid var(--background-color);
     transition: all 0.25s ease;
+    pointer-events: none;
 }
 
 .vinyl-player-root.is-playing .vinyl-status-badge {
@@ -1624,24 +1661,59 @@
     }
 }
 
-/* 控制卡片（磨砂悬浮面板） */
+/* ==========================================================================
+   控制卡片（默认收起 · 点击展开 · 自动收回 · 方向自适应）
+   ========================================================================== */
 .vinyl-control-card {
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 8px 16px 8px 14px;
     border-radius: 18px;
     background: var(--background-color-transparent-80);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid var(--border-color);
+    border: 1px solid transparent;
     box-shadow: var(--redefine-box-shadow-flat);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    opacity: 0.95;
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+
+    /* 默认收起状态：宽度为0、透明、内边距为0 */
+    max-width: 0;
+    opacity: 0;
+    padding: 0;
+    pointer-events: none;
+
+    /* 平滑丝滑的滑入滑出过渡 */
+    transition: max-width 0.42s cubic-bezier(0.34, 1.45, 0.64, 1),
+                opacity 0.3s ease,
+                padding 0.35s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease,
+                transform 0.42s cubic-bezier(0.34, 1.45, 0.64, 1);
+    will-change: max-width, opacity, transform;
 }
 
-.vinyl-player-root:hover .vinyl-control-card {
+/* 停靠在右侧时：从右向左伸出 */
+.vinyl-player-root.dock-right .vinyl-control-card {
+    transform-origin: right center;
+    transform: scaleX(0.7) translateX(18px);
+}
+
+/* 停靠在左侧时：从左向右伸出 */
+.vinyl-player-root.dock-left .vinyl-control-card {
+    transform-origin: left center;
+    transform: scaleX(0.7) translateX(-18px);
+}
+
+/* 展开状态激活 */
+.vinyl-player-root.is-expanded .vinyl-control-card {
+    max-width: 360px;
     opacity: 1;
+    padding: 8px 16px 8px 14px;
+    border-color: var(--border-color);
+    pointer-events: auto;
+    transform: scaleX(1) translateX(0);
     box-shadow: var(--redefine-box-shadow-flat-hover);
 }
 
@@ -1754,8 +1826,10 @@
 
 @media (max-width: 640px) {
     .vinyl-control-card {
-        padding: 6px 10px;
         gap: 8px;
+    }
+    .vinyl-player-root.is-expanded .vinyl-control-card {
+        padding: 6px 10px;
     }
     .vinyl-card-info {
         max-width: 110px;
@@ -1808,7 +1882,20 @@
     let userHasInteracted = false;
     let userManuallyPaused = false; // 用户是否手动点击了暂停
 
+    // 拖拽与吸附停靠状态
+    let isPointerDown = false;
+    let hasMoved = false;
+    let startX = 0;
+    let startY = 0;
+    let initialRect = null;
+    let currentDock = "right";
+
+    // 自动收回计时器（4.5秒无操作自动收缩）
+    let autoCollapseTimeout = null;
+    const COLLAPSE_DELAY = 4500;
+
     const rootDom = document.getElementById("vinyl-player");
+    const cardDom = document.getElementById("vinyl-card");
     const audioDom = document.getElementById("vinyl-audio");
     const titleDom = document.getElementById("vinyl-title");
     const artistDom = document.getElementById("vinyl-artist");
@@ -1828,7 +1915,170 @@
         return path === root || path === root + "index.html" || path.endsWith("/index.html") && path.replace(/index\.html$/, "") === root;
     }
 
-    // 更新界面信息
+    // =========================================================================
+    // 控制面板展开 / 收起 / 自动延时隐藏逻辑
+    // =========================================================================
+    function openCard() {
+        rootDom.classList.add("is-expanded");
+        resetAutoCollapseTimer();
+    }
+
+    function closeCard() {
+        rootDom.classList.remove("is-expanded");
+        clearTimeout(autoCollapseTimeout);
+    }
+
+    function toggleCard() {
+        if (rootDom.classList.contains("is-expanded")) {
+            closeCard();
+        } else {
+            openCard();
+        }
+    }
+
+    function resetAutoCollapseTimer() {
+        clearTimeout(autoCollapseTimeout);
+        if (rootDom.classList.contains("is-expanded")) {
+            autoCollapseTimeout = setTimeout(() => {
+                closeCard();
+            }, COLLAPSE_DELAY);
+        }
+    }
+
+    // 在控制卡片上活动时，重置倒计时
+    if (cardDom) {
+        cardDom.addEventListener("pointerdown", (e) => {
+            e.stopPropagation();
+            resetAutoCollapseTimer();
+        });
+        cardDom.addEventListener("pointerenter", () => resetAutoCollapseTimer());
+        cardDom.addEventListener("pointermove", () => resetAutoCollapseTimer());
+    }
+
+    // =========================================================================
+    // 左右停靠与持久化记忆
+    // =========================================================================
+    function applyDock(dock, targetY, animate = true) {
+        currentDock = dock;
+        if (animate) {
+            rootDom.classList.add("is-snapping");
+            setTimeout(() => rootDom.classList.remove("is-snapping"), 400);
+        }
+
+        const isMobile = window.innerWidth <= 768;
+        const screenHeight = window.innerHeight;
+        const safeY = Math.max(16, Math.min(screenHeight - 85, targetY || (screenHeight - 95)));
+
+        if (dock === "left") {
+            rootDom.classList.remove("dock-right");
+            rootDom.classList.add("dock-left");
+            rootDom.style.left = isMobile ? "16px" : "24px";
+            rootDom.style.right = "auto";
+            rootDom.style.top = safeY + "px";
+            rootDom.style.bottom = "auto";
+        } else {
+            rootDom.classList.remove("dock-left");
+            rootDom.classList.add("dock-right");
+            rootDom.style.left = "auto";
+            rootDom.style.right = isMobile ? "16px" : "92px";
+            rootDom.style.top = safeY + "px";
+            rootDom.style.bottom = "auto";
+        }
+
+        try {
+            localStorage.setItem("vinyl_dock_pos", JSON.stringify({
+                dock: currentDock,
+                topPercent: safeY / screenHeight
+            }));
+        } catch(e) {}
+    }
+
+    // 恢复历史停靠位置
+    try {
+        const saved = JSON.parse(localStorage.getItem("vinyl_dock_pos") || "{}");
+        if (saved && (saved.dock === "left" || saved.dock === "right")) {
+            const topY = saved.topPercent ? Math.round(saved.topPercent * window.innerHeight) : null;
+            applyDock(saved.dock, topY, false);
+        } else {
+            applyDock("right", window.innerHeight - 95, false);
+        }
+    } catch(e) {
+        applyDock("right", window.innerHeight - 95, false);
+    }
+
+    // 窗口尺寸变化自适应
+    window.addEventListener("resize", () => {
+        const rect = rootDom.getBoundingClientRect();
+        applyDock(currentDock, rect.top, false);
+    });
+
+    // =========================================================================
+    // 唱片长按拖拽交互（Touch + Mouse 统一支持）
+    // =========================================================================
+    if (discTrigger) {
+        discTrigger.addEventListener("pointerdown", (e) => {
+            if (e.button !== 0 && e.pointerType === "mouse") return;
+
+            isPointerDown = true;
+            hasMoved = false;
+            startX = e.clientX;
+            startY = e.clientY;
+            initialRect = rootDom.getBoundingClientRect();
+
+            try {
+                discTrigger.setPointerCapture(e.pointerId);
+            } catch(err) {}
+        });
+
+        discTrigger.addEventListener("pointermove", (e) => {
+            if (!isPointerDown) return;
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+
+            if (!hasMoved && Math.hypot(dx, dy) > 6) {
+                hasMoved = true;
+                rootDom.classList.add("is-dragging");
+                closeCard(); // 拖拽中收起长条，体验更轻盈
+            }
+
+            if (hasMoved) {
+                const currentX = initialRect.left + dx;
+                const currentY = initialRect.top + dy;
+                rootDom.style.left = currentX + "px";
+                rootDom.style.top = currentY + "px";
+                rootDom.style.right = "auto";
+                rootDom.style.bottom = "auto";
+            }
+        });
+
+        const handlePointerEnd = (e) => {
+            if (!isPointerDown) return;
+            isPointerDown = false;
+            rootDom.classList.remove("is-dragging");
+
+            try {
+                discTrigger.releasePointerCapture(e.pointerId);
+            } catch(err) {}
+
+            if (hasMoved) {
+                // 拖动结束：根据中线判断吸附至左侧或右侧
+                const currentRect = rootDom.getBoundingClientRect();
+                const centerX = currentRect.left + currentRect.width / 2;
+                const targetDock = centerX < window.innerWidth / 2 ? "left" : "right";
+                applyDock(targetDock, currentRect.top, true);
+            } else {
+                // 纯点击：展开或收起控制面板！
+                toggleCard();
+            }
+        };
+
+        discTrigger.addEventListener("pointerup", handlePointerEnd);
+        discTrigger.addEventListener("pointercancel", handlePointerEnd);
+    }
+
+    // =========================================================================
+    // 音频播放控制逻辑
+    // =========================================================================
     function updateUI(song) {
         if (!song) return;
         if (titleDom) titleDom.textContent = song.title;
@@ -1836,7 +2086,6 @@
         if (coverDom) coverDom.src = song.cover;
     }
 
-    // 加载歌曲
     function loadTrack(index) {
         if (index < 0 || index >= PLAYLIST.length) index = 0;
         currentIndex = index;
@@ -1845,7 +2094,6 @@
         updateUI(song);
     }
 
-    // 播放音乐
     function playMusic() {
         const playPromise = audioDom.play();
         if (playPromise !== undefined) {
@@ -1857,14 +2105,12 @@
                     playIconDom.className = "fa-solid fa-pause";
                 }
             }).catch(err => {
-                console.warn("[Vinyl Player] Autoplay blocked by browser policy, waiting for gesture:", err);
-                // 浏览器阻止了自动播放，等待第一次交互
+                console.warn("[Vinyl Player] Autoplay blocked, waiting for gesture:", err);
                 setupFirstInteraction();
             });
         }
     }
 
-    // 暂停音乐
     function pauseMusic() {
         audioDom.pause();
         isPlaying = false;
@@ -1874,8 +2120,8 @@
         }
     }
 
-    // 切换播放/暂停
     function togglePlay() {
+        resetAutoCollapseTimer();
         if (isPlaying) {
             userManuallyPaused = true;
             pauseMusic();
@@ -1885,8 +2131,8 @@
         }
     }
 
-    // 切下一首（循环）
     function nextTrack(auto = false) {
+        resetAutoCollapseTimer();
         currentIndex = (currentIndex + 1) % PLAYLIST.length;
         loadTrack(currentIndex);
         if (auto || isPlaying || checkIsHomePage()) {
@@ -1894,8 +2140,8 @@
         }
     }
 
-    // 切上一首
     function prevTrack() {
+        resetAutoCollapseTimer();
         currentIndex = (currentIndex - 1 + PLAYLIST.length) % PLAYLIST.length;
         loadTrack(currentIndex);
         playMusic();
@@ -1910,17 +2156,16 @@
     function handleNavigationState() {
         const onHome = checkIsHomePage();
         if (onHome) {
-            // 回到主页：如果用户未手动点击暂停，自动恢复播放
             if (!userManuallyPaused) {
                 playMusic();
             }
         } else {
-            // 离开主页（进入文章页面、分类归档等）：自动暂停！
             pauseMusic();
+            closeCard();
         }
     }
 
-    // 首次交互监听（解决现代浏览器首页静音/阻断 autoplay 问题）
+    // 首次交互监听
     function setupFirstInteraction() {
         if (userHasInteracted) return;
         const onFirstGesture = () => {
@@ -1941,7 +2186,6 @@
 
     // 绑定控制器按钮事件
     if (toggleBtn) toggleBtn.addEventListener("click", (e) => { e.stopPropagation(); togglePlay(); });
-    if (discTrigger) discTrigger.addEventListener("click", () => togglePlay());
     if (prevBtn) prevBtn.addEventListener("click", (e) => { e.stopPropagation(); prevTrack(); });
     if (nextBtn) nextBtn.addEventListener("click", (e) => { e.stopPropagation(); nextTrack(); });
 
