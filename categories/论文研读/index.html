@@ -2079,12 +2079,12 @@
 })();
 </script>
 
-	<!-- Click Ripple Component (空白处小范围水波涟漪 · 选中文本与长按不触发) -->
+	<!-- Click Ripple Component (空白处多层慢速蓝色大范围水波涟漪 · 选中文本与长按不触发) -->
 <div id="click-ripple-container" class="click-ripple-container" data-swup-ignore-script></div>
 
 <style>
 /* ==========================================================================
-   Click Ripple Styles (精致小范围水波 · 随点随化)
+   Click Ripple Styles (多层湛蓝水波 · 漫速扩散 · 大范围涟漪)
    ========================================================================== */
 .click-ripple-container {
     position: fixed;
@@ -2096,78 +2096,102 @@
     overflow: hidden;
 }
 
-.ripple-wave {
+/* 涟漪粒子包裹组 */
+.ripple-group {
     position: absolute;
-    width: 52px;
-    height: 52px;
-    margin-left: -26px;
-    margin-top: -26px;
+    width: 0;
+    height: 0;
+    pointer-events: none !important;
+}
+
+/* 蓝色多层水波环（基础直径 150px，展开范围明显开阔） */
+.ripple-ring {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    margin-left: -75px;
+    margin-top: -75px;
     border-radius: 50%;
     pointer-events: none !important;
     box-sizing: border-box;
     will-change: transform, opacity;
+    animation: blue-ripple-spread 1.25s cubic-bezier(0.16, 0.82, 0.38, 1) forwards;
 }
 
-/* 外圈细腻水纹光晕 */
-.ripple-wave-outer {
-    border: 1.5px solid var(--primary-color);
-    box-shadow: 0 0 8px rgba(163, 31, 52, 0.45);
-    animation: ripple-spread-outer 0.55s cubic-bezier(0.12, 0.8, 0.32, 1) forwards;
+/* 第 1 层外圈（深邃天青蓝） */
+.ripple-ring-1 {
+    border: 1.8px solid #00c6ff;
+    background: radial-gradient(circle, rgba(0, 198, 255, 0.15) 0%, rgba(0, 150, 255, 0.05) 50%, transparent 75%);
+    box-shadow: 0 0 14px rgba(0, 198, 255, 0.6), inset 0 0 10px rgba(0, 198, 255, 0.3);
+    animation-delay: 0s;
 }
 
-/* 内圈微澜水纹 */
-.ripple-wave-inner {
-    border: 1px solid var(--primary-color);
-    box-shadow: 0 0 4px rgba(163, 31, 52, 0.35);
-    animation: ripple-spread-inner 0.45s cubic-bezier(0.12, 0.8, 0.32, 1) forwards;
+/* 第 2 层中圈（明亮湖水蓝，慢速交错漫出） */
+.ripple-ring-2 {
+    border: 1.6px solid #38bdf8;
+    background: radial-gradient(circle, rgba(56, 189, 248, 0.12) 0%, rgba(56, 189, 248, 0.03) 50%, transparent 75%);
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.55), inset 0 0 8px rgba(56, 189, 248, 0.25);
+    animation-delay: 0.16s;
 }
 
-/* 中心水珠轻颤微点 */
-.ripple-wave-dot {
+/* 第 3 层内圈（清澈蔚蓝） */
+.ripple-ring-3 {
+    border: 1.4px solid #60a5fa;
+    box-shadow: 0 0 10px rgba(96, 165, 250, 0.5);
+    animation-delay: 0.32s;
+}
+
+/* 第 4 层细微残波（浅水天蓝） */
+.ripple-ring-4 {
+    border: 1.1px solid #93c5fd;
+    box-shadow: 0 0 8px rgba(147, 197, 253, 0.45);
+    animation-delay: 0.48s;
+}
+
+/* 中心湛蓝水滴落点微辉 */
+.ripple-center-dot {
     position: absolute;
-    width: 5px;
-    height: 5px;
-    margin-left: -2.5px;
-    margin-top: -2.5px;
+    width: 8px;
+    height: 8px;
+    margin-left: -4px;
+    margin-top: -4px;
     border-radius: 50%;
-    background: var(--primary-color);
-    box-shadow: 0 0 6px var(--primary-color);
-    animation: ripple-dot-fade 0.28s ease-out forwards;
+    background: #00f2fe;
+    box-shadow: 0 0 10px #00f2fe, 0 0 18px rgba(0, 198, 255, 0.9);
+    animation: blue-dot-fade 0.48s ease-out forwards;
     pointer-events: none !important;
 }
 
-@keyframes ripple-spread-outer {
+/* 水波慢速漫延衰减关键帧（从 0.08 到 1.0 缓慢平滑荡漾） */
+@keyframes blue-ripple-spread {
     0% {
-        transform: scale(0.15);
-        opacity: 0.85;
-    }
-    50% {
-        opacity: 0.55;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 0;
-    }
-}
-
-@keyframes ripple-spread-inner {
-    0% {
-        transform: scale(0.1);
-        opacity: 0.75;
-    }
-    100% {
-        transform: scale(0.72);
-        opacity: 0;
-    }
-}
-
-@keyframes ripple-dot-fade {
-    0% {
-        transform: scale(1);
+        transform: scale(0.08);
         opacity: 0.95;
     }
+    35% {
+        opacity: 0.8;
+    }
+    70% {
+        opacity: 0.38;
+    }
     100% {
-        transform: scale(0.3);
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+/* 中心水滴渐隐 */
+@keyframes blue-dot-fade {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.35);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(0.2);
         opacity: 0;
     }
 }
@@ -2187,7 +2211,7 @@
     let isDown = false;
     let hasMoved = false;
 
-    // 交互元素选择器：点击这些元素属于具体功能操作，不触发背景涟漪
+    // 交互元素选择器：点击这些控件属于具体操作，不触发背景水波
     const IGNORE_SELECTORS = [
         "a", "button", "input", "textarea", "select", "option",
         "label", "[role='button']", "[role='link']",
@@ -2266,39 +2290,46 @@
         const posY = e.clientY;
         setTimeout(() => {
             if (hasTextSelected()) return;
-            createRipple(posX, posY);
+            createBlueRipple(posX, posY);
         }, 16);
     }, { capture: true, passive: true });
 
-    function createRipple(x, y) {
-        // 外圈水波
-        const outerWave = document.createElement("div");
-        outerWave.className = "ripple-wave ripple-wave-outer";
-        outerWave.style.left = x + "px";
-        outerWave.style.top = y + "px";
+    function createBlueRipple(x, y) {
+        // 创建一组多层波纹容器
+        const group = document.createElement("div");
+        group.className = "ripple-group";
+        group.style.left = x + "px";
+        group.style.top = y + "px";
 
-        // 内圈水波
-        const innerWave = document.createElement("div");
-        innerWave.className = "ripple-wave ripple-wave-inner";
-        innerWave.style.left = x + "px";
-        innerWave.style.top = y + "px";
-
-        // 中心水珠微点
+        // 创建中心水滴光晕
         const dot = document.createElement("div");
-        dot.className = "ripple-wave-dot";
-        dot.style.left = x + "px";
-        dot.style.top = y + "px";
+        dot.className = "ripple-center-dot";
 
-        container.appendChild(outerWave);
-        container.appendChild(innerWave);
-        container.appendChild(dot);
+        // 创建 4 层不同时延的多重蓝色波纹环
+        const ring1 = document.createElement("div");
+        ring1.className = "ripple-ring ripple-ring-1";
 
-        // 动画完成自动从 DOM 移除
+        const ring2 = document.createElement("div");
+        ring2.className = "ripple-ring ripple-ring-2";
+
+        const ring3 = document.createElement("div");
+        ring3.className = "ripple-ring ripple-ring-3";
+
+        const ring4 = document.createElement("div");
+        ring4.className = "ripple-ring ripple-ring-4";
+
+        group.appendChild(dot);
+        group.appendChild(ring1);
+        group.appendChild(ring2);
+        group.appendChild(ring3);
+        group.appendChild(ring4);
+
+        container.appendChild(group);
+
+        // 4 层波纹全部扩散完成（约 0.48s + 1.25s = 1.73s）后彻底销毁，保证零内存泄露
         setTimeout(() => {
-            outerWave.remove();
-            innerWave.remove();
-            dot.remove();
-        }, 580);
+            group.remove();
+        }, 1850);
     }
 })();
 </script>
