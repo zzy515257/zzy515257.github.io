@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    
+    <meta name="author" content="Zoe Raina">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes ASAP (before DOMContentLoaded)
+            (function() {
+                const addBodyClass = () => {
+                    const b = document.body;
+                    if (!b) return false;
+                    b.classList.add(theme + "-mode");
+                    return true;
+                };
+
+                // Try immediately
+                if (addBodyClass()) return;
+
+                // Observe until body exists
+                const mo = new MutationObserver(() => {
+                    if (addBodyClass()) mo.disconnect();
+                });
+                mo.observe(document.documentElement, { childList: true, subtree: true });
+            })();
+        })();
+    </script>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/2026/11/05/demo1笔记/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="demo1笔记">
+<meta property="og:url" content="http://example.com/2026/11/05/demo1%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="Zoe Raina的笔记">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/redefine-og.webp">
+<meta property="article:published_time" content="2026-11-05T06:39:24.000Z">
+<meta property="article:modified_time" content="2026-11-05T06:39:24.887Z">
+<meta property="article:author" content="Zoe Raina">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/logo.jpg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/logo.jpg">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/logo.jpg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            demo1笔记 | Zoe Raina的笔记
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+                
+                    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+                
+    
+            
+                
+                    <script data-swup-reload-script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+                
+    
+            
+                
+                    <script data-swup-reload-script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+                
+    
+            
+                
+                    <script data-swup-reload-script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/mathtex-script-type.min.js"></script>
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/banner-light.jpg","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/banner-light.jpg","dark":"/images/banner-dark.jpg"},"title":"Zoe Raina的笔记","subtitle":{"text":[],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":80,"starting_delay":500,"backing_delay":1500,"loop":true,"smart_backspace":true},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":[{"icon":"fa-brands fa-github","url":null},{"icon":"fa-brands fa-twitter","url":null},{"icon":"fa-solid fa-at","url":"you@example.com"},{"icon":"fa-brands fa-telegram","url":null},{"icon":"/images/custom-icon.svg","url":null}],"qrs":[{"icon":"fa-brands fa-weixin","qr":null},{"icon":"/images/custom-icon.svg","qr":null}]}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1","theme":{"light":"default","dark":"dark"}}},"version":"2.9.0","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"Home":{"path":"/","icon":"fa-regular fa-house"}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur","masonry":{"batch_size":12,"initial_batch_size":24}},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":null},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footer":{"runtime":true,"icon":"<i class=\"fa-solid fa-heart fa-beat\" style=\"--fa-animation-duration: 0.5s; color: #f54545\"></i>","start":"2022/8/17 11:45:14","statistics":true,"customize":null,"icp":{"enable":false,"number":null,"url":null}},"footerStart":"2022/8/17 11:45:14","mermaid":{"style":{"light":"default","dark":"dark"}}};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.i18n = {"search":"Search...","toc":"On this page","prev":"Prev","next":"Next","prev_posts":"Prev posts","next_posts":"Next posts","page":"Page %d","recent_posts":"Recent Posts","share":"Share","powered_by":"POWERED BY %s","theme":"THEME","rss_feed":"RSS Feed","category":"Category","categories":"Categories","tag":"Tag","tags":"Tags","post":"Post","posts":"Posts","tagcloud":"Tag Cloud","comment":"Comment","comments":"Comments","home":"Home","archive":"Archive","archives":"Archives","top":"TOP","sticky":"Sticky","go-back-home":"Go Back Home","masonry_loading":"Loading photos...","image_viewer":"Image viewer","close":"Close","exif":{"title":"EXIF","cards":{"camera":"Camera","lens":"Lens","exposure":"Exposure","other":"Other"},"fields":{"make":"Brand","model":"Model","date_taken":"Date taken","lens_model":"Lens","focal_length":"Focal length","focus_mode":"Focus mode","shutter":"Shutter","aperture":"Aperture","iso":"ISO","exposure_program":"Exposure program","exposure_compensation":"Exposure compensation","metering_mode":"Metering mode","flash":"Flash","white_balance":"White balance","latitude":"Latitude","longitude":"Longitude","altitude":"Altitude"},"status":{"loading":"Loading...","no_exif":"No EXIF available","library_missing":"EXIF library not loaded","image_source_missing":"Image source unavailable","unavailable":"EXIF unavailable (blocked by CORS or missing metadata)","flag_unavailable":"EXIF unavailable"}},"about":"About","changelog":"Changelog","links":"Links","link":"Link","friends":"Friends","friend":"Friend","timeline":"Timeline","shuoshuo":"Shuoshuo","bookmarks":"Bookmarks","site_uv":"VISITOR COUNT","site_pv":"TOTAL PAGE VIEWS","read_more":"Read more","wordcount":"Words","min2read":"Mins","status":"Status","runtime":"Blog up for","days":"days","hours":"hrs","minutes":"Min","seconds":"Sec","optimized_by":"and Optimized by Evan","rights":"All Rights Reserved","site_posts":"%s posts in total","site_wordcount":"%s words in total","copyright":{"author":"Author","title":"Title","link":"Link","create_time":"Created at","update_time":"Updated at","license_title":"License","license_content":"This work is licensed under %s.","all_rights_reserved":"All Rights Reserved &#169; %s","public_domain":"This work is in the public domain."},"ago":{"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"},"create_time":"Created","update_time":"Updated","expired":"This post is written %s days ago, and the content may not be up to date."};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/logo.jpg" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                Zoe Raina的笔记
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    HOME
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                HOME
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+
+            
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">0</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">0</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">7</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="post-page-container flex relative justify-between box-border w-full h-full">
+	<div class="article-content-container">
+
+		<div class="article-title relative w-full">
+			
+			<div class="w-full flex items-center pt-6 justify-start">
+				<h1 class="article-title-regular text-second-text-color tracking-tight text-4xl md:text-6xl font-semibold px-2 sm:px-6 md:px-8 py-3">demo1笔记</h1>
+			</div>
+			
+		</div>
+
+		
+		<div class="article-header flex flex-row gap-2 items-center px-2 sm:px-6 md:px-8">
+			<div class="avatar w-[46px] h-[46px] shrink-0 rounded-medium border border-border-color p-px">
+				<img src="/images/avatar.jpg">
+			</div>
+			<div class="info flex flex-col justify-between">
+				<div class="author flex items-center">
+					<span class="name text-default-text-color text-lg font-semibold">Zoe Raina</span>
+					
+					<span class="author-label ml-1.5 text-xs px-2 py-0.5 rounded-small text-third-text-color border border-shadow-color-1">Lv1</span>
+					
+				</div>
+				<div class="meta-info">
+					<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fa-regular fa-pen-fancy"></i>&nbsp;
+        <span class="desktop">2026-11-05 14:39:24</span>
+        <span class="mobile">2026-11-05 14:39:24</span>
+        <span class="hover-info">Created</span>
+    </span>
+    
+        <span class="article-date article-meta-item">
+            <i class="fa-regular fa-wrench"></i>&nbsp;
+            <span class="desktop">2026-11-05 14:39:24</span>
+            <span class="mobile">2026-11-05 14:39:24</span>
+            <span class="hover-info">Updated</span>
+        </span>
+    
+
+    
+    
+
+    
+    
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fa-regular fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+				</div>
+			</div>
+		</div>
+		
+
+		
+
+
+		<div class="article-content markdown-body px-2 sm:px-6 md:px-8 pb-8">
+			<h1 id="一-python函数解释"><a href="#一-python函数解释" class="headerlink" title="一.python函数解释"></a>一.python函数解释</h1><h2 id="1-enumerate"><a href="#1-enumerate" class="headerlink" title="1.enumerate()"></a>1.enumerate()</h2><p>enumerate() 函数用于将一个可遍历的数据对象(如列表、元组或字符串)组合为一个索引序列，同时列出数据和数据下标，一般用在 for 循环当中</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; seasons = [&#x27;Spring&#x27;, &#x27;Summer&#x27;, &#x27;Fall&#x27;, &#x27;Winter&#x27;]</span><br><span class="line">&gt;&gt;&gt; list(enumerate(seasons))</span><br><span class="line">[(0, &#x27;Spring&#x27;), (1, &#x27;Summer&#x27;), (2, &#x27;Fall&#x27;), (3, &#x27;Winter&#x27;)]</span><br><span class="line">&gt;&gt;&gt; list(enumerate(seasons, start=1))       # 下标从 1 开始</span><br><span class="line">[(1, &#x27;Spring&#x27;), (2, &#x27;Summer&#x27;), (3, &#x27;Fall&#x27;), (4, &#x27;Winter&#x27;)]</span><br></pre></td></tr></table></figure></div>
+<h2 id="2-map（）函数"><a href="#2-map（）函数" class="headerlink" title="2.map（）函数"></a>2.map（）函数</h2><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">map(label2id) 是什么意思？</span><br><span class="line">map() 是 Pandas（pd）中非常常用的一种数据映射方法。它会遍历 train_df[&#x27;label&#x27;] 这一列里的每一个数值，拿着这个数值去 label2id 这个“字典”里查找，把查到的结果放回新的一列中。</span><br><span class="line"></span><br><span class="line">就像查字典：给你一个英文单词（原始 Label），你查英汉字典（label2id），拿到中文释义（新的 Label_id）。</span><br></pre></td></tr></table></figure></div>
+<h2 id="3-tokenizer-BertTokenizer-from-pretrained-MODEL-PATH-local-files-only-True"><a href="#3-tokenizer-BertTokenizer-from-pretrained-MODEL-PATH-local-files-only-True" class="headerlink" title="3.tokenizer = BertTokenizer.from_pretrained(MODEL_PATH, local_files_only=True)"></a>3.tokenizer = BertTokenizer.from_pretrained(MODEL_PATH, local_files_only=True)</h2><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">1. BertTokenizer</span><br><span class="line">这是什么：它是 transformers 库中专门为 BERT 模型设计的文本预处理工具。</span><br><span class="line"></span><br><span class="line">它的任务：它不懂中文语义，只懂“切分”和“编号”。它负责把你看得懂的中文句子（如 &quot;我想买车&quot;）切分成 BERT 模型能识别的 Token（词块），并转换成对应的数字索引（input_ids）。</span><br><span class="line"></span><br><span class="line">注意：中文 BERT 是按字切分的（偶尔包含少量英文词汇），所以它会把 &quot;我想买车&quot; 切分成 [&#x27;我&#x27;, &#x27;想&#x27;, &#x27;买&#x27;, &#x27;车&#x27;]。</span><br><span class="line"></span><br><span class="line">2. .from_pretrained(...)</span><br><span class="line">这是什么：这是 transformers 库提供的一个统一加载接口。它非常智能，既可以接受官方的模型名称（如 &#x27;bert-base-chinese&#x27;），也可以接受你电脑里的本地文件夹路径。</span><br><span class="line"></span><br><span class="line">它的任务：它会去读取文件夹里的 vocab.txt（词表文件）、tokenizer_config.json（配置）等文件，根据这些文件来构建分词器的内部逻辑。</span><br><span class="line"></span><br><span class="line">3. MODEL_PATH</span><br><span class="line">这是什么：代码开头定义的一个变量，指向你本地存放模型的文件夹路径（比如 G:\...\bert-base-chinese）。</span><br><span class="line"></span><br><span class="line">为什么不用 &#x27;bert-base-chinese&#x27;：如果你写字符串 &#x27;bert-base-chinese&#x27;，程序会默认去 Hugging Face 官网下载。鉴于你之前遇到了网络超时错误，这里直接指定你已下载好的本地路径，彻底避免了联网请求。</span><br><span class="line"></span><br><span class="line">4. local_files_only=True（核心关键参数）</span><br><span class="line">这是什么：这是一个强制离线开关。</span><br><span class="line"></span><br><span class="line">它的任务：告诉程序：“只准在 MODEL_PATH 这个文件夹里找文件，如果找不到任何文件（比如 vocab.txt 缺失），就直接报错，绝对不许尝试联网去下载。”</span><br><span class="line"></span><br><span class="line">为什么加它：加了这个参数后，程序运行非常稳定。即使你的网络环境突然波动，或者 Hugging Face 官网崩溃，也完全不影响你运行代码。如果没有这个参数，程序一旦发现本地文件不完整，就会偷偷去联网下载，导致你再次遇到 Connection error。</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+<h2 id="4-DataFrame-iterrows"><a href="#4-DataFrame-iterrows" class="headerlink" title="4.DataFrame.iterrows()"></a>4.DataFrame.iterrows()</h2><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iterrows() 方法用于逐行迭代 DataFrame，每次迭代返回一个 (index, Series) 元组，其中 index 是行标签，Series 包含行的数据。</span><br></pre></td></tr></table></figure></div>
+<h2 id="5-f”-row-‘title’-row-‘content’-”"><a href="#5-f”-row-‘title’-row-‘content’-”" class="headerlink" title="5.f”{row[‘title’]} {row[‘content’]}”"></a>5.f”{row[‘title’]} {row[‘content’]}”</h2><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">f&quot;&#123;row[&#x27;title&#x27;]&#125; &#123;row[&#x27;content&#x27;]&#125;&quot;：</span><br><span class="line"></span><br><span class="line">这是一个 f-string（格式化字符串）。</span><br><span class="line"></span><br><span class="line">它从当前行取出 title 列和 content 列的内容，中间加一个空格将它们连接起来。</span><br><span class="line"></span><br><span class="line">为什么要这样？因为标题往往是正文的核心摘要，把标题放在正文前面，用空格隔开，能让 BERT 模型优先注意到标题的关键信息。</span><br></pre></td></tr></table></figure></div>
+<h2 id="6-TensorDataset"><a href="#6-TensorDataset" class="headerlink" title="6.TensorDataset"></a>6.TensorDataset</h2><div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">这是什么：TensorDataset 是 PyTorch 中 torch.utils.data 模块提供的一个包装类。</span><br><span class="line"></span><br><span class="line">它的功能：它只做一件非常简单的事——按位置一一对应地存储张量。</span><br><span class="line"></span><br><span class="line">核心机制：当你用索引 [0] 去访问它时，它会把你传入的所有张量中，索引为 0 的那一行数据打包成一个元组（Tuple） 返回。</span><br></pre></td></tr></table></figure></div>
+<h2 id="7-compile-函数"><a href="#7-compile-函数" class="headerlink" title="7.compile 函数"></a>7.compile 函数</h2><p><strong>compile 函数用于编译正则表达式，生成一个 Pattern 对象</strong>，它的一般使用形式如下：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">re.compile(pattern[, flag])</span><br><span class="line">match 方法 search 方法 findall 方法 finditer 方法 split 方法 sub 方法 subn 方法</span><br></pre></td></tr></table></figure></div>
+<h1 id="二-知识积累"><a href="#二-知识积累" class="headerlink" title="二.知识积累"></a>二.知识积累</h1><h2 id="把文字标题数字化了（tokenizer）"><a href="#把文字标题数字化了（tokenizer）" class="headerlink" title="把文字标题数字化了（tokenizer）"></a>把文字标题数字化了（tokenizer）</h2><p>用户问的是哪一步把文本标题数字化的。他们想具体了解从文本到数字的转换发生在哪里。</p>
+<p>数字化发生在 <strong><code>tokenizer(...)</code> 这一步</strong>，也就是 <code>encode_texts</code> 函数里的第 3 行到第 8 行。</p>
+<p>具体来说，就是下面这段代码：</p>
+<p>python</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">return tokenizer(</span><br><span class="line">    texts,                 # 上一步拼接好的中文文本列表</span><br><span class="line">    truncation=True,</span><br><span class="line">    padding=True,</span><br><span class="line">    max_length=MAX_LEN,</span><br><span class="line">    return_tensors=&#x27;pt&#x27;</span><br><span class="line">)</span><br></pre></td></tr></table></figure></div>
+<p><strong>在这一行代码内部</strong>，发生了从「中文文字」到「数字 ID」的转换。</p>
+<hr>
+<p>一、转换的完整过程（以一条文本为例）</p>
+<p>假设原始拼接后的文本是：</p>
+<p>text</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;暴雨天气开车 需要这波操作&quot;</span><br></pre></td></tr></table></figure></div>
+<p>当它被传入 <code>tokenizer</code> 时，内部依次执行了 5 个步骤：</p>
+<p>第 1 步：分词（Tokenize）</p>
+<p>把整句切成一个个 Token（中文 BERT 按字切分）：</p>
+<p>text</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#x27;暴&#x27;, &#x27;雨&#x27;, &#x27;天&#x27;, &#x27;气&#x27;, &#x27;开&#x27;, &#x27;车&#x27;, &#x27;需&#x27;, &#x27;要&#x27;, &#x27;这&#x27;, &#x27;波&#x27;, &#x27;操&#x27;, &#x27;作&#x27;]</span><br></pre></td></tr></table></figure></div>
+<p>第 2 步：添加特殊标记</p>
+<p>BERT 需要在句首加 <code>[CLS]</code>，句尾加 <code>[SEP]</code>：</p>
+<p>text</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&#x27;[CLS]&#x27;, &#x27;暴&#x27;, &#x27;雨&#x27;, &#x27;天&#x27;, &#x27;气&#x27;, &#x27;开&#x27;, &#x27;车&#x27;, &#x27;需&#x27;, &#x27;要&#x27;, &#x27;这&#x27;, &#x27;波&#x27;, &#x27;操&#x27;, &#x27;作&#x27;, &#x27;[SEP]&#x27;]</span><br></pre></td></tr></table></figure></div>
+<p>第 3 步：查词表，转成数字 ID（<strong>这就是数字化的核心</strong>）</p>
+<p>分词器内部维护了一个<strong>词表文件 <code>vocab.txt</code></strong>，里面记录了每个汉字对应的整数编号。查表后得到：</p>
+<p>text</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[101, 6887, 5107, 5955, 6295, 6575, 6846, 4490, 7552, 6903, 4263, 6677, 5411, 102]</span><br></pre></td></tr></table></figure></div>
+<p>其中：</p>
+<ul>
+<li><code>101</code> 是 <code>[CLS]</code> 的固定编号</li>
+<li><code>102</code> 是 <code>[SEP]</code> 的固定编号</li>
+<li>其他数字都是对应汉字的编号</li>
+</ul>
+<p><strong>至此，中文文字已经变成了数字 ID 序列（<code>input_ids</code>）。</strong></p>
+<p>第 4 步：补齐长度（Padding）</p>
+<p>如果上面只有 14 个数字，而 <code>MAX_LEN = 128</code>，就在末尾补 114 个 <code>0</code>（<code>[PAD]</code> 的编号），凑够 128 个数字。</p>
+<p>第 5 步：生成 attention_mask</p>
+<p>同时生成一个与之配套的掩码：</p>
+<p>text</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, ... 0]</span><br></pre></td></tr></table></figure></div>
+<p>前 14 位是 1（真实文字），后 114 位是 0（填充符）。</p>
+<p>最终返回的字典里，<code>input_ids</code> 就是数字化的结果。</p>
+<hr>
+<p>二、关键：<code>vocab.txt</code> 词表文件</p>
+<p>数字化的依据来自你下载的模型文件夹里的 <strong><code>vocab.txt</code></strong>：</p>
+<p>text</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">G:\...\bert-base-chinese\vocab.txt</span><br></pre></td></tr></table></figure></div>
+<p>这个文件的内容大致长这样（简化版）：</p>
+<p>text</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[PAD]   0</span><br><span class="line">[unused1] 1</span><br><span class="line">...</span><br><span class="line">[CLS]  101</span><br><span class="line">[SEP]  102</span><br><span class="line">[UNK]  100</span><br><span class="line">暴     6887</span><br><span class="line">雨     5107</span><br><span class="line">天     5955</span><br><span class="line">...</span><br></pre></td></tr></table></figure></div>
+<p>分词器读入这个文件后，就建立了一张<strong>「汉字 → 整数」的映射表</strong>。当你传入中文句子时，它逐个字符去查表，拿到对应的数字。</p>
+<hr>
+<p>三、数字化代码对应关系图</p>
+<p>text</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">encode_texts(df)</span><br><span class="line">    │</span><br><span class="line">    ├── texts = [...]                 # ① 拼接原始中文文本</span><br><span class="line">    │</span><br><span class="line">    └── tokenizer(texts, ...)         # ② 这里发生数字化！</span><br><span class="line">            │</span><br><span class="line">            ├── 分词（按字切分）</span><br><span class="line">            ├── 加 [CLS] / [SEP]</span><br><span class="line">            ├── 查 vocab.txt 词表   ← 💡 核心：汉字变成整数</span><br><span class="line">            ├── 补齐到 128 长度</span><br><span class="line">            └── 返回 input_ids (3000, 128)   ← 💡 数字化的结果</span><br></pre></td></tr></table></figure></div>
+<hr>
+<p>四、直观对比</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">阶段</th>
+<th style="text-align:left">数据长什么样</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>数字化前</strong>（Python 字符串）</td>
+<td style="text-align:left"><code>&quot;暴雨天气开车 需要这波操作&quot;</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>数字化后</strong>（张量，截取前 14 位）</td>
+<td style="text-align:left"><code>[101, 6887, 5107, 5955, 6295, 6575, 6846, 4490, 7552, 6903, 4263, 6677, 5411, 102]</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<hr>
+<p>五、一句话总结</p>
+<p><strong>数字化的那一刻，就是调用 <code>tokenizer(...)</code> 的瞬间。</strong> 分词器通过查 <code>vocab.txt</code> 词表，把每一个汉字替换成对应的整数编号，输出 <code>input_ids</code> 张量。你之前拼接文本（<code>f&quot;&#123;row[&#39;title&#39;]&#125; &#123;row[&#39;content&#39;]&#125;&quot;</code>）那一步只是<strong>准备原料</strong>，真正的<strong>数字化加工</strong>全部发生在 <code>tokenizer(...)</code> 内部。</p>
+<h2 id="将训练的权重保存下来—torch-save"><a href="#将训练的权重保存下来—torch-save" class="headerlink" title="将训练的权重保存下来—torch.save()"></a>将训练的权重保存下来—torch.save()</h2><p>用户想要保存训练好的模型权重。这是 PyTorch 中的标准实践。让我为他们的 BERT 文本分类项目提供全面的指导。</p>
+<p>保存训练好的模型权重是深度学习项目的标准操作，方便后续推理、部署或继续训练。对于你现在的 BERT 文本分类项目，有三种常用方式，各有适用场景。下面逐一介绍，并给出整合到你现有代码的最佳方案。</p>
+<hr>
+<p>一、三种保存方式对比</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">方式</th>
+<th style="text-align:left">保存内容</th>
+<th style="text-align:left">文件大小</th>
+<th style="text-align:left">适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>1. 只保存 state_dict</strong></td>
+<td style="text-align:left">仅权重参数</td>
+<td style="text-align:left">小（约 400MB）</td>
+<td style="text-align:left"><strong>推荐</strong>，标准做法</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>2. 保存整个模型对象</strong></td>
+<td style="text-align:left">模型结构 + 权重</td>
+<td style="text-align:left">大</td>
+<td style="text-align:left">快速恢复，但依赖原代码</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>3. 用 transformers 的 save_pretrained</strong></td>
+<td style="text-align:left">权重 + 配置文件</td>
+<td style="text-align:left">中等</td>
+<td style="text-align:left">兼容 Hugging Face 生态</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>最推荐方式 1</strong>：通用、可移植、只保存参数，加载时需要有相同的模型代码。</p>
+<hr>
+<p>二、方式一：保存 <code>state_dict</code>（推荐）</p>
+<p>在训练结束后，调用 <code>torch.save()</code> 保存模型的参数字典。</p>
+<p>修改 <code>run_experiment</code> 函数</p>
+<p>python</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">def run_experiment(lr, batch_size, dropout, run_name=None, save_path=None):</span><br><span class="line">    train_loader, dev_loader, test_loader = build_loaders(batch_size)</span><br><span class="line">    model = BertClassifier(num_classes, dropout=dropout).to(DEVICE)</span><br><span class="line">    optimizer = optim.AdamW(model.parameters(), lr=lr)</span><br><span class="line">    criterion = nn.CrossEntropyLoss()</span><br><span class="line"></span><br><span class="line">    swanlab.init(</span><br><span class="line">        project=SWAN_PROJECT,</span><br><span class="line">        experiment_name=run_name or f&quot;lr&#123;lr&#125;_bs&#123;batch_size&#125;_do&#123;dropout&#125;&quot;,</span><br><span class="line">        config=&#123;...&#125;,</span><br><span class="line">        mode=SWAN_MODE</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line">    # 训练循环</span><br><span class="line">    for epoch in range(1, EPOCHS+1):</span><br><span class="line">        train_loss, train_acc = train_epoch(model, train_loader, optimizer, criterion)</span><br><span class="line">        dev_loss, dev_acc = evaluate(model, dev_loader, criterion)</span><br><span class="line">        swanlab.log(&#123;...&#125;)</span><br><span class="line">        print(f&quot;Epoch &#123;epoch&#125;: ...&quot;)</span><br><span class="line"></span><br><span class="line">    # 测试集评估</span><br><span class="line">    test_loss, test_acc = evaluate(model, test_loader, criterion)</span><br><span class="line">    swanlab.log(&#123;&quot;test_acc&quot;: test_acc&#125;)</span><br><span class="line">    print(f&quot;Test Acc: &#123;test_acc:.4f&#125;&quot;)</span><br><span class="line"></span><br><span class="line">    # ===== 保存权重 =====</span><br><span class="line">    if save_path is not None:</span><br><span class="line">        torch.save(model.state_dict(), save_path)</span><br><span class="line">        print(f&quot;Model weights saved to: &#123;save_path&#125;&quot;)</span><br><span class="line"></span><br><span class="line">    swanlab.finish()</span><br><span class="line">    return test_acc, model</span><br></pre></td></tr></table></figure></div>
+<p>在主程序中调用</p>
+<p>python</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    DO_HYPERPARAM_SEARCH = cfg[&#x27;training&#x27;][&#x27;do_hyperparam_search&#x27;]</span><br><span class="line"></span><br><span class="line">    if not DO_HYPERPARAM_SEARCH:</span><br><span class="line">        # 指定保存路径（建议放在模型目录下）</span><br><span class="line">        SAVE_PATH = os.path.join(DATA_DIR, &quot;bert_classifier_weights.pt&quot;)</span><br><span class="line"></span><br><span class="line">        test_acc, model = run_experiment(</span><br><span class="line">            lr=DEFAULT_LR,</span><br><span class="line">            batch_size=DEFAULT_BS,</span><br><span class="line">            dropout=DEFAULT_DO,</span><br><span class="line">            run_name=&quot;default_from_json&quot;,</span><br><span class="line">            save_path=SAVE_PATH</span><br><span class="line">        )</span><br><span class="line">        print(f&quot;Test Accuracy: &#123;test_acc:.4f&#125;&quot;)</span><br></pre></td></tr></table></figure></div>
+<p>运行后，你会在 <code>DATA_DIR</code> 下看到 <code>bert_classifier_weights.pt</code> 文件（约 400MB）。</p>
+<hr>
+<p>三、加载权重进行推理</p>
+<p>保存后，如果想用这个权重做预测，需要<strong>先重建模型结构</strong>，再加载参数：</p>
+<p>python</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">def load_model_for_inference(weight_path, num_classes, dropout=0.2):</span><br><span class="line">    &quot;&quot;&quot;加载训练好的模型用于推理&quot;&quot;&quot;</span><br><span class="line">    # 1. 创建空模型（结构必须与训练时完全一致）</span><br><span class="line">    model = BertClassifier(num_classes, dropout=dropout).to(DEVICE)</span><br><span class="line">    </span><br><span class="line">    # 2. 加载保存的权重</span><br><span class="line">    model.load_state_dict(torch.load(weight_path, map_location=DEVICE))</span><br><span class="line">    </span><br><span class="line">    # 3. 切换到评估模式（关闭 Dropout）</span><br><span class="line">    model.eval()</span><br><span class="line">    return model</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 使用示例</span><br><span class="line">trained_model = load_model_for_inference(</span><br><span class="line">    weight_path=&quot;G:/.../bert_classifier_weights.pt&quot;,</span><br><span class="line">    num_classes=17,</span><br><span class="line">    dropout=0.2</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"># 用训练好的模型预测新文本</span><br><span class="line">def predict(text, model, tokenizer):</span><br><span class="line">    model.eval()</span><br><span class="line">    enc = tokenizer(</span><br><span class="line">        text,</span><br><span class="line">        truncation=True,</span><br><span class="line">        padding=True,</span><br><span class="line">        max_length=128,</span><br><span class="line">        return_tensors=&#x27;pt&#x27;</span><br><span class="line">    )</span><br><span class="line">    with torch.no_grad():</span><br><span class="line">        input_ids = enc[&#x27;input_ids&#x27;].to(DEVICE)</span><br><span class="line">        mask = enc[&#x27;attention_mask&#x27;].to(DEVICE)</span><br><span class="line">        logits = model(input_ids, mask)</span><br><span class="line">        pred_id = torch.argmax(logits, dim=1).item()</span><br><span class="line">    return id2label[pred_id]</span><br><span class="line"></span><br><span class="line"># 测试</span><br><span class="line">text = &quot;想买一辆七座SUV，预算30万&quot;</span><br><span class="line">result = predict(text, trained_model, tokenizer)</span><br><span class="line">print(f&quot;预测类别：&#123;result&#125;&quot;)</span><br></pre></td></tr></table></figure></div>
+<hr>
+<p>四、方式二：保存完整模型（不推荐，但简单）</p>
+<p>python</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 保存</span><br><span class="line">torch.save(model, &quot;full_model.pt&quot;)</span><br><span class="line"></span><br><span class="line"># 加载（无需重建结构）</span><br><span class="line">model = torch.load(&quot;full_model.pt&quot;)</span><br></pre></td></tr></table></figure></div>
+<p><strong>缺点</strong>：文件更大，且加载时必须确保模型类的定义代码完全一致，跨项目移植困难。</p>
+<hr>
+<p>五、方式三：保存为 Hugging Face 格式（进阶）</p>
+<p>如果希望模型能被 <code>transformers</code> 库的 <code>from_pretrained</code> 直接加载：</p>
+<p>python</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"># 保存</span><br><span class="line">SAVE_DIR = os.path.join(DATA_DIR, &quot;bert_classifier_saved&quot;)</span><br><span class="line">os.makedirs(SAVE_DIR, exist_ok=True)</span><br><span class="line"></span><br><span class="line"># 保存 BERT 主干</span><br><span class="line">model.bert.save_pretrained(SAVE_DIR)</span><br><span class="line"># 保存分类头</span><br><span class="line">torch.save(model.classifier.state_dict(), os.path.join(SAVE_DIR, &quot;classifier.pt&quot;))</span><br><span class="line"># 保存分词器</span><br><span class="line">tokenizer.save_pretrained(SAVE_DIR)</span><br></pre></td></tr></table></figure></div>
+<p>这种方式适合发布或团队共享模型。</p>
+<hr>
+<p>六、保存最佳权重（进阶技巧）</p>
+<p>如果你希望<strong>在每个 epoch 后自动保存验证集准确率最高的那个模型</strong>，可以这样改造：</p>
+<p>python</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">def run_experiment_with_best_save(lr, batch_size, dropout, save_path):</span><br><span class="line">    train_loader, dev_loader, test_loader = build_loaders(batch_size)</span><br><span class="line">    model = BertClassifier(num_classes, dropout=dropout).to(DEVICE)</span><br><span class="line">    optimizer = optim.AdamW(model.parameters(), lr=lr)</span><br><span class="line">    criterion = nn.CrossEntropyLoss()</span><br><span class="line"></span><br><span class="line">    best_dev_acc = 0.0</span><br><span class="line"></span><br><span class="line">    for epoch in range(1, EPOCHS+1):</span><br><span class="line">        train_loss, train_acc = train_epoch(model, train_loader, optimizer, criterion)</span><br><span class="line">        dev_loss, dev_acc = evaluate(model, dev_loader, criterion)</span><br><span class="line"></span><br><span class="line">        # 若当前轮验证准确率更高，则保存</span><br><span class="line">        if dev_acc &gt; best_dev_acc:</span><br><span class="line">            best_dev_acc = dev_acc</span><br><span class="line">            torch.save(model.state_dict(), save_path)</span><br><span class="line">            print(f&quot;✅ Epoch &#123;epoch&#125;: New best dev_acc=&#123;dev_acc:.4f&#125;, saved.&quot;)</span><br><span class="line"></span><br><span class="line">    # 测试集使用最终模型（也可以重新加载 best 权重再测）</span><br><span class="line">    test_loss, test_acc = evaluate(model, test_loader, criterion)</span><br><span class="line">    print(f&quot;Test Acc (last epoch): &#123;test_acc:.4f&#125;&quot;)</span><br><span class="line"></span><br><span class="line">    # 推荐：加载最佳权重后再测一次</span><br><span class="line">    model.load_state_dict(torch.load(save_path))</span><br><span class="line">    test_loss, test_acc = evaluate(model, test_loader, criterion)</span><br><span class="line">    print(f&quot;Test Acc (best model): &#123;test_acc:.4f&#125;&quot;)</span><br><span class="line"></span><br><span class="line">    return test_acc, model</span><br></pre></td></tr></table></figure></div>
+<p>这种方式能避免过拟合带来的性能损失，<strong>强烈推荐</strong>。</p>
+<hr>
+<p>七、注意事项</p>
+<ol>
+<li><strong>权重文件很大</strong>：BERT-base 约 400MB，如果保存多份实验权重会占用大量磁盘空间，建议用完及时清理或只保留最佳权重。</li>
+<li><strong>加载时模型结构必须一致</strong>：<code>state_dict</code> 保存的只是参数，加载时 <code>BertClassifier</code> 的层数、隐藏维度、类别数必须与训练时完全相同。</li>
+<li><strong><code>map_location=DEVICE</code></strong>：在 CPU 上加载 GPU 训练的权重时需要这个参数，否则会报错。</li>
+<li><strong>推理时务必 <code>model.eval()</code></strong>：关闭 Dropout 层，避免预测结果随机。</li>
+<li><strong>使用 <code>torch.no_grad()</code></strong>：推理时不需要计算梯度，可以节省大量显存并加快速度。</li>
+</ol>
+<hr>
+<p>八、推荐做法总结</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:left">场景</th>
+<th style="text-align:left">推荐方式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><strong>日常保存</strong></td>
+<td style="text-align:left"><code>torch.save(model.state_dict(), path)</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>加载推理</strong></td>
+<td style="text-align:left">先构建模型 → <code>load_state_dict()</code> → <code>model.eval()</code></td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>保存最佳模型</strong></td>
+<td style="text-align:left">每轮比较 <code>dev_acc</code>，只保留最优权重</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>跨团队共享</strong></td>
+<td style="text-align:left"><code>save_pretrained()</code> + 分类头单独保存</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>按方式一整合到你的项目后，训练结束会自动保存权重。之后无论做演示、部署还是继续微调，都可以直接加载，无需重新训练。如果需要我把整合后的完整 <code>main.py</code> 写出来，可以告诉我。</p>
+
+		</div>
+
+		
+		<div class="post-copyright-info w-full my-8 px-2 sm:px-6 md:px-8">
+			<div class="article-copyright-info-container">
+    <ul>
+        <li><strong>Title:</strong> demo1笔记</li>
+        <li><strong>Author:</strong> Zoe Raina</li>
+        <li><strong>Created at
+                :</strong> 2026-11-05 14:39:24</li>
+        
+            <li>
+                <strong>Updated at
+                    :</strong> 2026-11-05 14:39:24
+            </li>
+        
+        <li>
+            <strong>Link:</strong> https://redefine.ohevan.com/2026/11/05/demo1笔记/
+        </li>
+        <li>
+            <strong>
+                License:
+            </strong>
+            
+
+            
+                This work is licensed under <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0">CC BY-NC-SA 4.0</a>.
+            
+        </li>
+    </ul>
+</div>
+
+		</div>
+		
+
+		
+
+		
+
+		
+		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
+			
+			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="prev" rel="prev" href="/2026/11/05/git%E6%8C%87%E4%BB%A4%E4%BB%8B%E7%BB%8D/">
+					<span class="left arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-left"></i>
+					</span>
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">git指令介绍</span>
+						<span class="post-nav-item">Prev posts</span>
+					</span>
+				</a>
+			</div>
+			
+			
+			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
+				<a class="next" rel="next" href="/2026/11/05/%E5%B0%8F%E5%9C%9F%E5%A0%86%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+					<span class="title flex justify-center items-center">
+						<span class="post-nav-title-item truncate max-w-48">小土堆学习笔记</span>
+						<span class="post-nav-item">Next posts</span>
+					</span>
+					<span class="right arrow-icon flex justify-center items-center">
+						<i class="fa-solid fa-chevron-right"></i>
+					</span>
+				</a>
+			</div>
+			
+		</div>
+		
+
+
+		
+		<div class="comment-container px-2 sm:px-6 md:px-8 pb-8">
+			<div class="comments-container mt-10 w-full ">
+    <div id="comment-anchor" class="w-full h-2.5"></div>
+    <div class="comment-area-title w-full my-1.5 md:my-2.5 text-xl md:text-3xl font-bold">
+        Comments
+    </div>
+    
+
+        
+            
+    <div id="waline"></div>
+    <script type="module" data-swup-reload-script>
+      import { init } from '/js/libs/waline.js';
+
+      (function() {
+        const startPath = location.pathname;
+        const startTime = Date.now();
+        const retryDelay = 200;
+        const retryLimit = 5000;
+
+        const runWaline = () => {
+          if (location.pathname !== startPath) {
+            return;
+          }
+
+          const container = document.getElementById('waline');
+          if (!container) {
+            if (Date.now() - startTime < retryLimit) {
+              setTimeout(runWaline, retryDelay);
+            }
+            return;
+          }
+
+          if (window.redefineWalineInstance?.destroy) {
+            window.redefineWalineInstance.destroy();
+          }
+
+          container.innerHTML = '';
+          window.redefineWalineInstance = init({
+            el: '#waline',
+            serverURL: 'https://example.example.com',
+            path: location.pathname,
+            dark: 'body[class~="dark-mode"]',
+            reaction: false,
+            requiredMeta: ['nick', 'mail'],
+            emoji: [],
+                      lang: 'zh-CN',
+          });
+        };
+
+        runWaline();
+      })();
+    </script>
+
+
+
+        
+    
+</div>
+
+		</div>
+		
+	</div>
+
+	
+	<div class="toc-content-container">
+		<div class="post-toc-wrap">
+	<div class="post-toc">
+		<div class="toc-title">On this page</div>
+		<div class="page-title">demo1笔记</div>
+		<ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80-python%E5%87%BD%E6%95%B0%E8%A7%A3%E9%87%8A"><span class="nav-text">一.python函数解释</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-enumerate"><span class="nav-text">1.enumerate()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-map%EF%BC%88%EF%BC%89%E5%87%BD%E6%95%B0"><span class="nav-text">2.map（）函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-tokenizer-BertTokenizer-from-pretrained-MODEL-PATH-local-files-only-True"><span class="nav-text">3.tokenizer &#x3D; BertTokenizer.from_pretrained(MODEL_PATH, local_files_only&#x3D;True)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-DataFrame-iterrows"><span class="nav-text">4.DataFrame.iterrows()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-f%E2%80%9D-row-%E2%80%98title%E2%80%99-row-%E2%80%98content%E2%80%99-%E2%80%9D"><span class="nav-text">5.f”{row[‘title’]} {row[‘content’]}”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-TensorDataset"><span class="nav-text">6.TensorDataset</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-compile-%E5%87%BD%E6%95%B0"><span class="nav-text">7.compile 函数</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C-%E7%9F%A5%E8%AF%86%E7%A7%AF%E7%B4%AF"><span class="nav-text">二.知识积累</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%8A%E6%96%87%E5%AD%97%E6%A0%87%E9%A2%98%E6%95%B0%E5%AD%97%E5%8C%96%E4%BA%86%EF%BC%88tokenizer%EF%BC%89"><span class="nav-text">把文字标题数字化了（tokenizer）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%86%E8%AE%AD%E7%BB%83%E7%9A%84%E6%9D%83%E9%87%8D%E4%BF%9D%E5%AD%98%E4%B8%8B%E6%9D%A5%E2%80%94torch-save"><span class="nav-text">将训练的权重保存下来—torch.save()</span></a></li></ol></li></ol>
+
+	</div>
+</div>
+	</div>
+	
+</div>
+
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2026&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">Zoe Raina</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        7 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.9.0</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+
+                    
+                        <script data-swup-reload-script src="/js/katex-init.js"></script>
+                    
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+	<div class="post-tools">
+		<div class="post-tools-container">
+	<ul class="article-tools-list">
+		<!-- TOC aside toggle -->
+		
+		<li class="right-bottom-tools page-aside-toggle">
+			<i class="fa-regular fa-outdent"></i>
+		</li>
+		
+
+		<!-- go comment -->
+		
+		<li class="go-comment">
+			<i class="fa-regular fa-comments"></i>
+		</li>
+		
+	</ul>
+</div>
+	</div>
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container" role="dialog" aria-modal="true" aria-label="Image viewer">
+	<button class="image-viewer-close" type="button" aria-label="Close">
+		<i class="fa-solid fa-xmark"></i>
+	</button>
+	<button class="image-viewer-prev" type="button" aria-label="Prev">
+		<i class="fa-solid fa-chevron-left"></i>
+	</button>
+	<div class="image-viewer-frame">
+		<img src="" alt="">
+	</div>
+	<div class="image-viewer-exif-panel hidden absolute left-1/2 bottom-20 -translate-x-1/2 w-[min(92vw,420px)] max-h-[60vh] overflow-hidden rounded-2xl bg-background-color-transparent-80 p-4 text-left shadow-redefine-flat backdrop-blur-md" role="dialog" aria-label="EXIF" aria-hidden="true">
+		<div class="flex items-center justify-between mb-3">
+			<span class="text-sm font-semibold text-first-text-color">EXIF</span>
+			<button class="image-viewer-exif-close flex h-8 w-8 items-center justify-center rounded-full bg-background-color-transparent-80 text-first-text-color transition hover:bg-background-color-transparent-40" type="button" aria-label="Close">
+				<i class="fa-solid fa-xmark text-[0.65rem]"></i>
+			</button>
+		</div>
+		<div class="image-viewer-exif-cards grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[50vh] overflow-y-auto pr-1 scrollbar-hide"></div>
+		<template class="image-viewer-exif-card-template">
+			<div class="rounded-lg bg-background-color-transparent-40 px-3 py-2">
+				<div class="image-viewer-exif-card-header flex items-center gap-2 mb-1">
+					<i class="image-viewer-exif-card-icon fa-solid fa-circle-info text-xs text-third-text-color"></i>
+					<div class="image-viewer-exif-card-title text-xs font-semibold text-first-text-color"></div>
+				</div>
+				<div class="image-viewer-exif-card-items flex flex-col gap-1"></div>
+			</div>
+		</template>
+	</div>
+	<button class="image-viewer-exif-toggle flex items-center gap-2 hidden absolute left-1/2 bottom-6 -translate-x-1/2 rounded-full border border-border-color bg-background-color-transparent-80 px-4 py-2 text-first-text-color backdrop-blur-md transition hover:bg-background-color-transparent-40" type="button" aria-label="EXIF" aria-expanded="false">
+		<i class="fa-solid fa-circle-info text-xs"></i>
+		<span class="text-xs font-semibold uppercase tracking-wider">EXIF</span>
+	</button>
+	<button class="image-viewer-next" type="button" aria-label="Next">
+		<i class="fa-solid fa-chevron-right"></i>
+	</button>
+</div>
+
+
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    window.swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+
+    window.dispatchEvent(
+        new CustomEvent("redefine:swup:ready", {
+            detail: {
+                swup: window.swup,
+            },
+        }),
+    );
+</script>
+
+
+
+
+	
+<script src="/js/build/main.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+
+	
+</body>
+
+</html>
