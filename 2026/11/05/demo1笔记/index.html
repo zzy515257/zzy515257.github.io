@@ -1145,12 +1145,12 @@
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2026/11/05/SafeDrug%20Dual%20Molecular%20Graph%20Encoders%20for%20Safe%20Drug%20Recommendations/">
+				<a class="prev" rel="prev" href="/2026/11/05/CausalMed%20Causality-Based%20Personalized%20Medication%20Recommendation%20Centered%20on%20Patient%20Health%20State/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">SafeDrug Dual Molecular Graph Encoders for Safe Drug Recommendations</span>
+						<span class="post-nav-title-item truncate max-w-48">CausalMed Causality-Based Personalized Medication Recommendation Centered on Patient Health State</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -1158,9 +1158,9 @@
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2026/11/05/demo2%E7%AC%94%E8%AE%B0/">
+				<a class="next" rel="next" href="/2026/11/05/git%E6%8C%87%E4%BB%A4%E4%BB%8B%E7%BB%8D/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">demo2笔记</span>
+						<span class="post-nav-title-item truncate max-w-48">git指令介绍</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">
@@ -1520,8 +1520,8 @@
 
 
 	
-	<!-- Vinyl Record Music Player Component (网易云音乐旋转唱片控制器 - 交互增强版) -->
-<div id="vinyl-player" class="vinyl-player-root dock-right" data-swup-ignore-script>
+	<!-- Vinyl Record Music Player Component (网易云音乐旋转唱片控制器 - 左下角默认 · 目录不暂停 · 顺滑交互增强版) -->
+<div id="vinyl-player" class="vinyl-player-root dock-left" data-swup-ignore-script>
     <!-- 展开式播放控制面板 -->
     <div class="vinyl-control-card" id="vinyl-card">
         <div class="vinyl-card-info">
@@ -1548,8 +1548,8 @@
         </div>
     </div>
 
-    <!-- 旋转黑胶唱片主体与唱针（支持点击展开/收起、长按拖拽左右停靠） -->
-    <div class="vinyl-disc-wrapper" id="vinyl-disc-trigger" title="点击展开音乐控制 · 可长按拖拽到左侧或右侧">
+    <!-- 旋转黑胶唱片主体与唱针（支持点击直接播放/收起、长按拖拽左右停靠） -->
+    <div class="vinyl-disc-wrapper" id="vinyl-disc-trigger" title="点击播放音乐 · 展开控制条 · 可长按拖拽到左侧或右侧">
         <!-- 唱臂 / 唱针 -->
         <div class="vinyl-tonearm" id="vinyl-tonearm">
             <div class="tonearm-base"></div>
@@ -1580,29 +1580,39 @@
 
 <style>
 /* ==========================================================================
-   Vinyl Record Music Player Styles (可拖拽停靠 · 点击伸出 · 自动收回)
+   Vinyl Record Music Player Styles (默认左下角 · 可拖拽左右停靠 · 方向自适应)
    ========================================================================== */
 .vinyl-player-root {
     position: fixed;
     z-index: 1002;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 0;
     font-family: var(--default-font-family, sans-serif);
     user-select: none;
     -webkit-user-select: none;
     touch-action: none;
     will-change: transform, left, top, right;
+    bottom: 24px;
+    left: 24px;
+}
+
+.vinyl-player-root.is-expanded {
+    gap: 12px;
+}
+
+/* 停靠在左侧（默认）：唱片在左，控制条向右伸出 */
+.vinyl-player-root.dock-left {
+    flex-direction: row-reverse;
+    left: 24px;
+    right: auto;
 }
 
 /* 停靠在右侧：唱片在右，控制条向左伸出 */
 .vinyl-player-root.dock-right {
     flex-direction: row;
-}
-
-/* 停靠在左侧：唱片在左，控制条向右伸出 */
-.vinyl-player-root.dock-left {
-    flex-direction: row-reverse;
+    right: 24px;
+    left: auto;
 }
 
 /* 拖拽吸附边缘平滑动画 */
@@ -1619,7 +1629,7 @@
 }
 .vinyl-player-root.is-dragging .vinyl-disc-wrapper {
     cursor: grabbing !important;
-    transform: scale(1.16) !important;
+    transform: scale(1.15) !important;
     filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.55)) !important;
 }
 
@@ -1630,7 +1640,7 @@
     height: 62px;
     cursor: grab;
     filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.38));
-    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
     touch-action: none;
     flex-shrink: 0;
 }
@@ -1639,7 +1649,33 @@
     transform: scale(1.08);
 }
 
+/* 未播放状态下的呼吸微光提示，指引用户点击直接开始聆听 */
+.vinyl-player-root:not(.is-playing) .vinyl-disc-wrapper {
+    animation: disc-breathe 2.8s infinite ease-in-out;
+}
+
+@keyframes disc-breathe {
+    0%, 100% {
+        filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.38));
+    }
+    50% {
+        filter: drop-shadow(0 0 16px rgba(163, 31, 52, 0.65));
+    }
+}
+
 @media (max-width: 768px) {
+    .vinyl-player-root {
+        bottom: 16px;
+        left: 16px;
+    }
+    .vinyl-player-root.dock-left {
+        left: 16px;
+        right: auto;
+    }
+    .vinyl-player-root.dock-right {
+        right: 16px;
+        left: auto;
+    }
     .vinyl-disc-wrapper {
         width: 52px;
         height: 52px;
@@ -1794,7 +1830,7 @@
     transform: rotate(15deg);
 }
 
-/* 右下角状态徽章 */
+/* 状态角标 */
 .vinyl-status-badge {
     position: absolute;
     bottom: -2px;
@@ -1828,7 +1864,7 @@
 }
 
 /* ==========================================================================
-   控制卡片（默认收起 · 点击展开 · 自动收回 · 方向自适应）
+   控制卡片（默认收起 · 点击展开 · 自动收回 · 双向自适应）
    ========================================================================== */
 .vinyl-control-card {
     display: flex;
@@ -1850,7 +1886,7 @@
     padding: 0;
     pointer-events: none;
 
-    /* 平滑丝滑的滑入滑出过渡 */
+    /* 平滑过渡 */
     transition: max-width 0.42s cubic-bezier(0.34, 1.45, 0.64, 1),
                 opacity 0.3s ease,
                 padding 0.35s ease,
@@ -1860,16 +1896,16 @@
     will-change: max-width, opacity, transform;
 }
 
+/* 停靠在左侧（默认）：从左向右伸出 */
+.vinyl-player-root.dock-left .vinyl-control-card {
+    transform-origin: left center;
+    transform: scaleX(0.7) translateX(-18px);
+}
+
 /* 停靠在右侧时：从右向左伸出 */
 .vinyl-player-root.dock-right .vinyl-control-card {
     transform-origin: right center;
     transform: scaleX(0.7) translateX(18px);
-}
-
-/* 停靠在左侧时：从左向右伸出 */
-.vinyl-player-root.dock-left .vinyl-control-card {
-    transform-origin: left center;
-    transform: scaleX(0.7) translateX(-18px);
 }
 
 /* 展开状态激活 */
@@ -2046,15 +2082,15 @@
     let currentIndex = 0;
     let isPlaying = false;
     let userHasInteracted = false;
-    let userManuallyPaused = false; // 用户是否手动点击了暂停
+    let userManuallyPaused = false; // 用户是否在控制器上手动点击了暂停
 
-    // 拖拽与吸附停靠状态
+    // 拖拽与吸附停靠状态（默认左下角停靠）
     let isPointerDown = false;
     let hasMoved = false;
     let startX = 0;
     let startY = 0;
     let initialRect = null;
-    let currentDock = "right";
+    let currentDock = "left";
 
     // 自动收回计时器（4.5秒无操作自动收缩）
     let autoCollapseTimeout = null;
@@ -2074,11 +2110,25 @@
 
     if (!audioDom || !rootDom) return;
 
-    // 检查是否为主页
-    function checkIsHomePage() {
+    // =========================================================================
+    // 页面状态判断：区分“具体博客文章阅读页”与“主页 / 目录 / 分类 / 归档页”
+    // =========================================================================
+    function isReadingPostPage() {
+        // 1. 检查是否存在文章正文容器
+        if (document.querySelector(".post-page-container, .article-content-container, .post-tools")) {
+            return true;
+        }
+        // 2. 检查路径是否匹配 Hexo 文章日期路径 (例如 /2026/11/05/xxx/)
         const path = window.location.pathname;
-        const root = (window.config && window.config.root) || "/";
-        return path === root || path === root + "index.html" || path.endsWith("/index.html") && path.replace(/index\.html$/, "") === root;
+        if (/\/\d{4}\/\d{2}\/\d{2}\//.test(path)) {
+            return true;
+        }
+        return false;
+    }
+
+    // 只要不是在阅读文章正文（即在主页、目录列表、分类、归档等浏览页面），均保持播放音乐
+    function shouldPlayMusic() {
+        return !isReadingPostPage();
     }
 
     // =========================================================================
@@ -2122,7 +2172,7 @@
     }
 
     // =========================================================================
-    // 左右停靠与持久化记忆
+    // 左右停靠与持久化记忆（默认左下角：left: 24px）
     // =========================================================================
     function applyDock(dock, targetY, animate = true) {
         currentDock = dock;
@@ -2133,7 +2183,8 @@
 
         const isMobile = window.innerWidth <= 768;
         const screenHeight = window.innerHeight;
-        const safeY = Math.max(16, Math.min(screenHeight - 85, targetY || (screenHeight - 95)));
+        const defaultY = screenHeight - (isMobile ? 74 : 88);
+        const safeY = Math.max(16, Math.min(screenHeight - (isMobile ? 68 : 82), targetY || defaultY));
 
         if (dock === "left") {
             rootDom.classList.remove("dock-right");
@@ -2146,30 +2197,30 @@
             rootDom.classList.remove("dock-left");
             rootDom.classList.add("dock-right");
             rootDom.style.left = "auto";
-            rootDom.style.right = isMobile ? "16px" : "92px";
+            rootDom.style.right = isMobile ? "16px" : "24px";
             rootDom.style.top = safeY + "px";
             rootDom.style.bottom = "auto";
         }
 
         try {
-            localStorage.setItem("vinyl_dock_pos", JSON.stringify({
+            localStorage.setItem("vinyl_dock_pos_v2", JSON.stringify({
                 dock: currentDock,
                 topPercent: safeY / screenHeight
             }));
         } catch(e) {}
     }
 
-    // 恢复历史停靠位置
+    // 恢复历史停靠位置（默认左下角）
     try {
-        const saved = JSON.parse(localStorage.getItem("vinyl_dock_pos") || "{}");
-        if (saved && (saved.dock === "left" || saved.dock === "right")) {
-            const topY = saved.topPercent ? Math.round(saved.topPercent * window.innerHeight) : null;
+        const saved = JSON.parse(localStorage.getItem("vinyl_dock_pos_v2") || "{}");
+        if (saved && (saved.dock === "left" || saved.dock === "right") && saved.topPercent) {
+            const topY = Math.round(saved.topPercent * window.innerHeight);
             applyDock(saved.dock, topY, false);
         } else {
-            applyDock("right", window.innerHeight - 95, false);
+            applyDock("left", null, false);
         }
     } catch(e) {
-        applyDock("right", window.innerHeight - 95, false);
+        applyDock("left", null, false);
     }
 
     // 窗口尺寸变化自适应
@@ -2179,7 +2230,7 @@
     });
 
     // =========================================================================
-    // 唱片长按拖拽交互（Touch + Mouse 统一支持）
+    // 唱片交互（点击直接播放/收放、长按拖拽左右停靠）
     // =========================================================================
     if (discTrigger) {
         discTrigger.addEventListener("pointerdown", (e) => {
@@ -2233,8 +2284,14 @@
                 const targetDock = centerX < window.innerWidth / 2 ? "left" : "right";
                 applyDock(targetDock, currentRect.top, true);
             } else {
-                // 纯点击：展开或收起控制面板！
-                toggleCard();
+                // 纯点击唱片：若未播放则立即开播并展开，若已播放则切换展开/收起
+                if (!isPlaying) {
+                    userManuallyPaused = false;
+                    playMusic();
+                    openCard();
+                } else {
+                    toggleCard();
+                }
             }
         };
 
@@ -2243,7 +2300,7 @@
     }
 
     // =========================================================================
-    // 音频播放控制逻辑
+    // 音频播放控制与生命周期管理
     // =========================================================================
     function updateUI(song) {
         if (!song) return;
@@ -2271,8 +2328,8 @@
                     playIconDom.className = "fa-solid fa-pause";
                 }
             }).catch(err => {
-                console.warn("[Vinyl Player] Autoplay blocked, waiting for gesture:", err);
-                setupFirstInteraction();
+                console.warn("[Vinyl Player] Autoplay waiting for user gesture:", err);
+                initAutoplayUnlock();
             });
         }
     }
@@ -2301,7 +2358,7 @@
         resetAutoCollapseTimer();
         currentIndex = (currentIndex + 1) % PLAYLIST.length;
         loadTrack(currentIndex);
-        if (auto || isPlaying || checkIsHomePage()) {
+        if (auto || isPlaying || shouldPlayMusic()) {
             playMusic();
         }
     }
@@ -2318,36 +2375,48 @@
         nextTrack(true);
     });
 
-    // 核心需求：“只有主页自动播放，博客页面自动暂停”
+    // 遇到播放错误时，自动尝试下一首，避免卡死
+    audioDom.addEventListener("error", () => {
+        console.warn("[Vinyl Player] Stream error, skipping to next track...");
+        setTimeout(() => {
+            if (!userManuallyPaused && shouldPlayMusic()) {
+                nextTrack(true);
+            }
+        }, 800);
+    });
+
+    // 核心需求：“主页与目录界面保持播放，进入博客文章页面自动暂停”
     function handleNavigationState() {
-        const onHome = checkIsHomePage();
-        if (onHome) {
+        const shouldPlay = shouldPlayMusic();
+        if (shouldPlay) {
             if (!userManuallyPaused) {
                 playMusic();
             }
         } else {
+            // 进入具体文章正文页，自动暂停以供静心阅读
             pauseMusic();
             closeCard();
         }
     }
 
-    // 首次交互监听
-    function setupFirstInteraction() {
+    // 突破浏览器自动播放限制：监听全局首次手势（触摸、点击、按键等），捕捉阶段触发
+    function initAutoplayUnlock() {
         if (userHasInteracted) return;
-        const onFirstGesture = () => {
-            if (!userHasInteracted) {
-                userHasInteracted = true;
-                if (checkIsHomePage() && !userManuallyPaused) {
-                    playMusic();
-                }
+        const unlockEvents = ["pointerdown", "mousedown", "touchstart", "click", "keydown"];
+        const unlockHandler = () => {
+            userHasInteracted = true;
+            if (shouldPlayMusic() && !userManuallyPaused && !isPlaying) {
+                playMusic();
             }
-            window.removeEventListener("click", onFirstGesture);
-            window.removeEventListener("touchstart", onFirstGesture);
-            window.removeEventListener("scroll", onFirstGesture);
+            unlockEvents.forEach(evt => {
+                document.removeEventListener(evt, unlockHandler, true);
+                window.removeEventListener(evt, unlockHandler, true);
+            });
         };
-        window.addEventListener("click", onFirstGesture, { passive: true });
-        window.addEventListener("touchstart", onFirstGesture, { passive: true });
-        window.addEventListener("scroll", onFirstGesture, { passive: true });
+        unlockEvents.forEach(evt => {
+            document.addEventListener(evt, unlockHandler, { capture: true, passive: true });
+            window.addEventListener(evt, unlockHandler, { capture: true, passive: true });
+        });
     }
 
     // 绑定控制器按钮事件
@@ -2358,8 +2427,11 @@
     // 初始化第一首
     loadTrack(0);
 
-    // 页面加载时的状态检查
-    if (checkIsHomePage()) {
+    // 注册全局手势解锁（随时准备在用户初次交互时开播）
+    initAutoplayUnlock();
+
+    // 首次进入页面时的状态检查与开播尝试
+    if (shouldPlayMusic()) {
         playMusic();
     } else {
         pauseMusic();
@@ -2384,7 +2456,7 @@
 
     // 监听 popstate（浏览器前进后退）
     window.addEventListener("popstate", () => {
-        setTimeout(handleNavigationState, 50);
+        setTimeout(handleNavigationState, 60);
     });
 })();
 </script>
