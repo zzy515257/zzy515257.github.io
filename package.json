@@ -12,7 +12,7 @@
     "version": "6.3.0"
   },
   "dependencies": {
-    "dplayer": "^1.26.0",
+    "dplayer": "^1.27.1",
     "hexo": "^6.3.0",
     "hexo-deployer-git": "^3.0.0",
     "hexo-generator-archive": "^1.0.0",
