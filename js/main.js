@@ -161,7 +161,7 @@ const initPage = () => {
       subtitleEntries.length !== 0 ||
       (subtitleConfig.hitokoto && subtitleConfig.hitokoto.enable);
 
-    if (shouldInitTyped && location.pathname === config.root) {
+    if (shouldInitTyped && (location.pathname === config.root || location.pathname === config.root + "index.html" || Boolean(document.getElementById("subtitle")))) {
       initTyped("subtitle");
     }
   });
