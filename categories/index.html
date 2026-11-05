@@ -1105,6 +1105,643 @@
 
 
 	
+	<!-- Vinyl Record Music Player Component (网易云音乐旋转唱片控制器) -->
+<div id="vinyl-player" class="vinyl-player-root" data-swup-ignore-script>
+    <!-- 展开式播放控制面板 -->
+    <div class="vinyl-control-card" id="vinyl-card">
+        <div class="vinyl-card-info">
+            <div class="vinyl-song-title" id="vinyl-title">Ditto (治愈bgm)</div>
+            <div class="vinyl-song-artist" id="vinyl-artist">康河好声音</div>
+        </div>
+        <div class="vinyl-card-actions">
+            <button class="vinyl-btn" id="vinyl-prev" title="上一首">
+                <i class="fa-solid fa-backward-step"></i>
+            </button>
+            <button class="vinyl-btn vinyl-btn-main" id="vinyl-toggle" title="播放 / 暂停">
+                <i class="fa-solid fa-play" id="vinyl-play-icon"></i>
+            </button>
+            <button class="vinyl-btn" id="vinyl-next" title="下一首">
+                <i class="fa-solid fa-forward-step"></i>
+            </button>
+        </div>
+        <!-- 迷你跳动音浪 -->
+        <div class="vinyl-wave-bars" id="vinyl-wave">
+            <span class="v-bar"></span>
+            <span class="v-bar"></span>
+            <span class="v-bar"></span>
+            <span class="v-bar"></span>
+        </div>
+    </div>
+
+    <!-- 旋转黑胶唱片主体与唱针 -->
+    <div class="vinyl-disc-wrapper" id="vinyl-disc-trigger" title="点击展开音乐控制 / 播放暂停">
+        <!-- 唱臂 / 唱针 -->
+        <div class="vinyl-tonearm" id="vinyl-tonearm">
+            <div class="tonearm-base"></div>
+            <div class="tonearm-stick"></div>
+            <div class="tonearm-head"></div>
+        </div>
+
+        <!-- 黑胶唱盘 -->
+        <div class="vinyl-disc" id="vinyl-disc">
+            <!-- 黑胶纹理光晕层 -->
+            <div class="vinyl-grooves"></div>
+            <!-- 中心专辑封面 -->
+            <div class="vinyl-cover-box">
+                <img id="vinyl-cover-img" src="https://p1.music.126.net/0mbgMMMScsR6RG8BW46iHw==/109951171874258363.jpg" alt="Cover" />
+                <div class="vinyl-center-hole"></div>
+            </div>
+        </div>
+
+        <!-- 悬浮播放状态小角标 -->
+        <div class="vinyl-status-badge" id="vinyl-badge">
+            <i class="fa-solid fa-music"></i>
+        </div>
+    </div>
+
+    <!-- 原生音频播放器 -->
+    <audio id="vinyl-audio" preload="auto"></audio>
+</div>
+
+<style>
+/* ==========================================================================
+   Vinyl Record Music Player Styles (右下角旋转唱片播放器)
+   ========================================================================== */
+.vinyl-player-root {
+    position: fixed;
+    right: 92px;
+    bottom: 24px;
+    z-index: 1002;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--default-font-family, sans-serif);
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+@media (max-width: 768px) {
+    .vinyl-player-root {
+        right: 16px;
+        bottom: 82px;
+        gap: 8px;
+    }
+}
+
+/* 唱片主体包裹层 */
+.vinyl-disc-wrapper {
+    position: relative;
+    width: 62px;
+    height: 62px;
+    cursor: pointer;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.35));
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.vinyl-disc-wrapper:hover {
+    transform: scale(1.08);
+}
+
+@media (max-width: 768px) {
+    .vinyl-disc-wrapper {
+        width: 52px;
+        height: 52px;
+    }
+}
+
+/* 黑胶圆盘 */
+.vinyl-disc {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, #0a0a0a 0%, #181818 45%, #2a2a2a 50%, #151515 55%, #080808 100%);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.12), inset 0 0 10px rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: vinyl-spin-anim 12s linear infinite;
+    animation-play-state: paused;
+    will-change: transform;
+}
+
+.vinyl-player-root.is-playing .vinyl-disc {
+    animation-play-state: running;
+}
+
+@keyframes vinyl-spin-anim {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 唱盘同心圆纹理与高光 */
+.vinyl-grooves {
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: repeating-radial-gradient(
+        circle,
+        transparent 0px,
+        transparent 2px,
+        rgba(255, 255, 255, 0.04) 2.5px,
+        transparent 3px
+    );
+    pointer-events: none;
+}
+
+.vinyl-grooves::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.18) 0%,
+        transparent 40%,
+        rgba(255, 255, 255, 0.1) 60%,
+        transparent 100%
+    );
+    pointer-events: none;
+}
+
+/* 中心封面 */
+.vinyl-cover-box {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 0 0 2px #181818, 0 0 6px rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .vinyl-cover-box {
+        width: 26px;
+        height: 26px;
+    }
+}
+
+.vinyl-cover-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.vinyl-center-hole {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.8), 0 0 0 1px #475569;
+}
+
+/* 唱针（Tonearm） */
+.vinyl-tonearm {
+    position: absolute;
+    top: -12px;
+    right: -4px;
+    width: 32px;
+    height: 40px;
+    z-index: 3;
+    pointer-events: none;
+    transform-origin: 26px 4px;
+    transform: rotate(-32deg);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.vinyl-player-root.is-playing .vinyl-tonearm {
+    transform: rotate(0deg);
+}
+
+.tonearm-base {
+    position: absolute;
+    top: 0;
+    right: 2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #e2e8f0 0%, #94a3b8 100%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.tonearm-stick {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 3px;
+    height: 26px;
+    background: linear-gradient(to bottom, #cbd5e1, #64748b);
+    border-radius: 1.5px;
+    transform-origin: top center;
+    transform: rotate(20deg);
+}
+
+.tonearm-head {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    width: 6px;
+    height: 9px;
+    background: #f59e0b;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    transform: rotate(15deg);
+}
+
+/* 右下角状态徽章 */
+.vinyl-status-badge {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    box-shadow: 0 2px 6px rgba(163, 31, 52, 0.4);
+    border: 1.5px solid var(--background-color);
+    transition: all 0.25s ease;
+}
+
+.vinyl-player-root.is-playing .vinyl-status-badge {
+    animation: badge-pulse 2s infinite ease-in-out;
+}
+
+@keyframes badge-pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+/* 控制卡片（磨砂悬浮面板） */
+.vinyl-control-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 8px 16px 8px 14px;
+    border-radius: 18px;
+    background: var(--background-color-transparent-80);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--redefine-box-shadow-flat);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0.95;
+}
+
+.vinyl-player-root:hover .vinyl-control-card {
+    opacity: 1;
+    box-shadow: var(--redefine-box-shadow-flat-hover);
+}
+
+.vinyl-card-info {
+    display: flex;
+    flex-direction: column;
+    max-width: 170px;
+}
+
+.vinyl-song-title {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--first-text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+.vinyl-song-artist {
+    font-size: 0.74rem;
+    color: var(--third-text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    margin-top: 2px;
+}
+
+/* 按钮组 */
+.vinyl-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.vinyl-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: var(--second-background-color);
+    color: var(--second-text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.vinyl-btn:hover {
+    background: var(--primary-color);
+    color: #fff;
+    transform: scale(1.08);
+}
+
+.vinyl-btn-main {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: #fff;
+    font-size: 0.82rem;
+}
+
+.vinyl-btn-main:hover {
+    background: var(--primary-color);
+    filter: brightness(1.15);
+}
+
+/* 音浪跳动柱 */
+.vinyl-wave-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 2.5px;
+    height: 16px;
+    padding-left: 2px;
+}
+
+.v-bar {
+    width: 2.5px;
+    height: 4px;
+    background: var(--primary-color);
+    border-radius: 1px;
+    transition: height 0.2s ease;
+}
+
+.vinyl-player-root.is-playing .v-bar:nth-child(1) {
+    animation: sound-wave 0.8s ease-in-out infinite alternate;
+}
+.vinyl-player-root.is-playing .v-bar:nth-child(2) {
+    animation: sound-wave 0.6s ease-in-out infinite alternate 0.2s;
+}
+.vinyl-player-root.is-playing .v-bar:nth-child(3) {
+    animation: sound-wave 0.9s ease-in-out infinite alternate 0.4s;
+}
+.vinyl-player-root.is-playing .v-bar:nth-child(4) {
+    animation: sound-wave 0.7s ease-in-out infinite alternate 0.1s;
+}
+
+@keyframes sound-wave {
+    0% {
+        height: 3px;
+    }
+    100% {
+        height: 15px;
+    }
+}
+
+@media (max-width: 640px) {
+    .vinyl-control-card {
+        padding: 6px 10px;
+        gap: 8px;
+    }
+    .vinyl-card-info {
+        max-width: 110px;
+    }
+    .vinyl-song-title {
+        font-size: 0.8rem;
+    }
+    .vinyl-wave-bars {
+        display: none;
+    }
+}
+</style>
+
+<script data-swup-ignore-script>
+(function() {
+    // 歌单配置（使用网易云直链接口与官方原封面）
+    const PLAYLIST = [
+        {
+            id: "2738204719",
+            title: "Ditto (治愈bgm)",
+            artist: "康河好声音",
+            cover: "https://p1.music.126.net/0mbgMMMScsR6RG8BW46iHw==/109951171874258363.jpg",
+            src: "https://music.163.com/song/media/outer/url?id=2738204719.mp3"
+        },
+        {
+            id: "26908739",
+            title: "Variations On The Canon (卡农)",
+            artist: "George Winston",
+            cover: "https://p2.music.126.net/g8z5KwQuqkv-VCJmE2CilA==/5692171697095856.jpg",
+            src: "https://music.163.com/song/media/outer/url?id=26908739.mp3"
+        },
+        {
+            id: "516922570",
+            title: "G小调的巴赫 (Moonrise Edit)",
+            artist: "Vince Zhang",
+            cover: "https://p2.music.126.net/7EA2OIvIiJ5cHmwikD4_iQ==/109951162991116739.jpg",
+            src: "https://music.163.com/song/media/outer/url?id=516922570.mp3"
+        },
+        {
+            id: "512989806",
+            title: "A Story of Fate (三生树)",
+            artist: "Jannik",
+            cover: "https://p1.music.126.net/LjG28i7Shc6pR5X5uXF_Ng==/109951163043550939.jpg",
+            src: "https://music.163.com/song/media/outer/url?id=512989806.mp3"
+        }
+    ];
+
+    let currentIndex = 0;
+    let isPlaying = false;
+    let userHasInteracted = false;
+    let userManuallyPaused = false; // 用户是否手动点击了暂停
+
+    const rootDom = document.getElementById("vinyl-player");
+    const audioDom = document.getElementById("vinyl-audio");
+    const titleDom = document.getElementById("vinyl-title");
+    const artistDom = document.getElementById("vinyl-artist");
+    const coverDom = document.getElementById("vinyl-cover-img");
+    const playIconDom = document.getElementById("vinyl-play-icon");
+    const toggleBtn = document.getElementById("vinyl-toggle");
+    const prevBtn = document.getElementById("vinyl-prev");
+    const nextBtn = document.getElementById("vinyl-next");
+    const discTrigger = document.getElementById("vinyl-disc-trigger");
+
+    if (!audioDom || !rootDom) return;
+
+    // 检查是否为主页
+    function checkIsHomePage() {
+        const path = window.location.pathname;
+        const root = (window.config && window.config.root) || "/";
+        return path === root || path === root + "index.html" || path.endsWith("/index.html") && path.replace(/index\.html$/, "") === root;
+    }
+
+    // 更新界面信息
+    function updateUI(song) {
+        if (!song) return;
+        if (titleDom) titleDom.textContent = song.title;
+        if (artistDom) artistDom.textContent = song.artist;
+        if (coverDom) coverDom.src = song.cover;
+    }
+
+    // 加载歌曲
+    function loadTrack(index) {
+        if (index < 0 || index >= PLAYLIST.length) index = 0;
+        currentIndex = index;
+        const song = PLAYLIST[currentIndex];
+        audioDom.src = song.src;
+        updateUI(song);
+    }
+
+    // 播放音乐
+    function playMusic() {
+        const playPromise = audioDom.play();
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                isPlaying = true;
+                userHasInteracted = true;
+                rootDom.classList.add("is-playing");
+                if (playIconDom) {
+                    playIconDom.className = "fa-solid fa-pause";
+                }
+            }).catch(err => {
+                console.warn("[Vinyl Player] Autoplay blocked by browser policy, waiting for gesture:", err);
+                // 浏览器阻止了自动播放，等待第一次交互
+                setupFirstInteraction();
+            });
+        }
+    }
+
+    // 暂停音乐
+    function pauseMusic() {
+        audioDom.pause();
+        isPlaying = false;
+        rootDom.classList.remove("is-playing");
+        if (playIconDom) {
+            playIconDom.className = "fa-solid fa-play";
+        }
+    }
+
+    // 切换播放/暂停
+    function togglePlay() {
+        if (isPlaying) {
+            userManuallyPaused = true;
+            pauseMusic();
+        } else {
+            userManuallyPaused = false;
+            playMusic();
+        }
+    }
+
+    // 切下一首（循环）
+    function nextTrack(auto = false) {
+        currentIndex = (currentIndex + 1) % PLAYLIST.length;
+        loadTrack(currentIndex);
+        if (auto || isPlaying || checkIsHomePage()) {
+            playMusic();
+        }
+    }
+
+    // 切上一首
+    function prevTrack() {
+        currentIndex = (currentIndex - 1 + PLAYLIST.length) % PLAYLIST.length;
+        loadTrack(currentIndex);
+        playMusic();
+    }
+
+    // 歌曲播放结束时，自动循环下一首
+    audioDom.addEventListener("ended", () => {
+        nextTrack(true);
+    });
+
+    // 核心需求：“只有主页自动播放，博客页面自动暂停”
+    function handleNavigationState() {
+        const onHome = checkIsHomePage();
+        if (onHome) {
+            // 回到主页：如果用户未手动点击暂停，自动恢复播放
+            if (!userManuallyPaused) {
+                playMusic();
+            }
+        } else {
+            // 离开主页（进入文章页面、分类归档等）：自动暂停！
+            pauseMusic();
+        }
+    }
+
+    // 首次交互监听（解决现代浏览器首页静音/阻断 autoplay 问题）
+    function setupFirstInteraction() {
+        if (userHasInteracted) return;
+        const onFirstGesture = () => {
+            if (!userHasInteracted) {
+                userHasInteracted = true;
+                if (checkIsHomePage() && !userManuallyPaused) {
+                    playMusic();
+                }
+            }
+            window.removeEventListener("click", onFirstGesture);
+            window.removeEventListener("touchstart", onFirstGesture);
+            window.removeEventListener("scroll", onFirstGesture);
+        };
+        window.addEventListener("click", onFirstGesture, { passive: true });
+        window.addEventListener("touchstart", onFirstGesture, { passive: true });
+        window.addEventListener("scroll", onFirstGesture, { passive: true });
+    }
+
+    // 绑定控制器按钮事件
+    if (toggleBtn) toggleBtn.addEventListener("click", (e) => { e.stopPropagation(); togglePlay(); });
+    if (discTrigger) discTrigger.addEventListener("click", () => togglePlay());
+    if (prevBtn) prevBtn.addEventListener("click", (e) => { e.stopPropagation(); prevTrack(); });
+    if (nextBtn) nextBtn.addEventListener("click", (e) => { e.stopPropagation(); nextTrack(); });
+
+    // 初始化第一首
+    loadTrack(0);
+
+    // 页面加载时的状态检查
+    if (checkIsHomePage()) {
+        playMusic();
+    } else {
+        pauseMusic();
+    }
+
+    // 监听 Swup 路由切换事件
+    const setupSwupHooks = (swupInstance) => {
+        if (!swupInstance || !swupInstance.hooks) return;
+        swupInstance.hooks.on("page:view", () => {
+            handleNavigationState();
+        });
+    };
+
+    if (window.swup) {
+        setupSwupHooks(window.swup);
+    } else {
+        window.addEventListener("redefine:swup:ready", (e) => {
+            const swup = window.swup || e?.detail?.swup;
+            setupSwupHooks(swup);
+        });
+    }
+
+    // 监听 popstate（浏览器前进后退）
+    window.addEventListener("popstate", () => {
+        setTimeout(handleNavigationState, 50);
+    });
+})();
+</script>
+
 </body>
 
 </html>
