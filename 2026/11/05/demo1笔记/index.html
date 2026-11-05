@@ -208,6 +208,314 @@
 <main class="page-container" id="swup">
 
 	
+	<style>
+    .page-container {
+        background: transparent !important;
+    }
+    .main-content-container {
+        background: transparent !important;
+    }
+    .home-banner-background {
+        filter: blur(18px) !important;
+        -webkit-filter: blur(18px) !important;
+    }
+    .article-content-container,
+    .post-page-container,
+    .comments-container,
+    .article-nav,
+    .toc-content-container,
+    .home-article-item,
+    .category-detail,
+    .category-list-content,
+    .sidebar-links,
+    .sidebar-content,
+    a.page-number,
+    a.extend,
+    .sidebar-links .links:hover,
+    .right-bottom-tools,
+    footer.footer {
+        background-color: var(--background-color-transparent-80) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+    }
+    .right-bottom-tools:hover,
+    a.page-number:hover,
+    a.extend:hover {
+        background-color: var(--primary-color) !important;
+    }
+    .site-info,
+    .home-article-sticky-label {
+        background-color: var(--background-color-transparent-15) !important;
+    }
+    .home-article-sticky-label {
+        backdrop-filter: none !important;
+    }
+</style>
+
+<div class="home-banner-background transition-fade fixed top-0 left-0 w-screen h-screen scale-125 sm:scale-110 box-border will-change-transform bg-cover">
+    <img src="/images/banner-light.jpg" alt="home-banner-background" class="w-full h-full object-cover dark:hidden">
+    <img src="/images/banner-dark.jpg" alt="home-banner-background" class="w-full h-full object-cover hidden dark:block">
+    <!-- Daytime Sunlight Sweep Animation (白天阳光缓慢循环划过) -->
+<div class="sunlight-banner-effects dark:hidden pointer-events-none">
+    <div class="sun-flare-origin"></div>
+    <div class="sun-beam-sweep beam-1"></div>
+    <div class="sun-beam-sweep beam-2"></div>
+    <div class="sun-beam-sweep beam-3"></div>
+</div>
+
+<!-- Nighttime Meteor Shower Animation (夜间绚丽流星雨，密集交错) -->
+<div class="meteor-banner-effects hidden dark:block pointer-events-none">
+    <div class="meteor meteor-1"></div>
+    <div class="meteor meteor-2"></div>
+    <div class="meteor meteor-3"></div>
+    <div class="meteor meteor-4"></div>
+    <div class="meteor meteor-5"></div>
+    <div class="meteor meteor-6"></div>
+    <div class="meteor meteor-7"></div>
+    <div class="meteor meteor-8"></div>
+    <div class="meteor meteor-9"></div>
+    <div class="meteor meteor-10"></div>
+    <div class="meteor meteor-11"></div>
+    <div class="meteor meteor-12"></div>
+    <div class="meteor meteor-13"></div>
+    <div class="meteor meteor-14"></div>
+    <div class="meteor meteor-15"></div>
+    <div class="meteor meteor-16"></div>
+    <div class="meteor meteor-17"></div>
+    <div class="meteor meteor-18"></div>
+    <div class="meteor meteor-19"></div>
+    <div class="meteor meteor-20"></div>
+    <div class="meteor meteor-21"></div>
+    <div class="meteor meteor-22"></div>
+    <div class="meteor meteor-23"></div>
+    <div class="meteor meteor-24"></div>
+</div>
+
+<style>
+/* ==========================================================================
+   Daytime Sunlight Sweep (白天阳光划过 - 缓慢连续循环)
+   ========================================================================== */
+.sunlight-banner-effects {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none !important;
+    z-index: 1;
+}
+
+/* 晨光晕染中心（左上方日出位置） */
+.sun-flare-origin {
+    position: absolute;
+    top: -15%;
+    left: -10%;
+    width: 65vw;
+    height: 65vw;
+    max-width: 750px;
+    max-height: 750px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(255, 248, 220, 0.45) 0%,
+        rgba(255, 230, 160, 0.24) 30%,
+        rgba(255, 215, 130, 0.09) 58%,
+        transparent 75%
+    );
+    mix-blend-mode: screen;
+    pointer-events: none;
+    filter: blur(18px);
+    animation: sun-pulse 8s ease-in-out infinite alternate;
+}
+
+@keyframes sun-pulse {
+    0% {
+        transform: scale(0.96);
+        opacity: 0.65;
+    }
+    100% {
+        transform: scale(1.08);
+        opacity: 0.95;
+    }
+}
+
+/* 连续不断缓慢划过雪山的金色阳光束 */
+.sun-beam-sweep {
+    position: absolute;
+    top: -55%;
+    left: -70%;
+    width: 85%;
+    height: 220%;
+    transform: translate3d(-100%, -25%, 0) rotate(38deg);
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0) 15%,
+        rgba(255, 250, 230, 0.15) 38%,
+        rgba(255, 240, 185, 0.38) 50%,
+        rgba(255, 250, 230, 0.15) 62%,
+        rgba(255, 255, 255, 0) 85%,
+        transparent 100%
+    );
+    mix-blend-mode: screen;
+    pointer-events: none;
+    filter: blur(32px);
+    animation: continuous-sunlight-sweep 18s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    will-change: transform, opacity;
+}
+
+/* 3条交错光芒带，相隔6秒发射，构成永不停歇的温润光影漫步 */
+.sun-beam-sweep.beam-1 {
+    animation-delay: 0s;
+}
+
+.sun-beam-sweep.beam-2 {
+    width: 65%;
+    filter: blur(38px);
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 248, 220, 0.08) 32%,
+        rgba(255, 235, 170, 0.26) 50%,
+        rgba(255, 248, 220, 0.08) 68%,
+        transparent 100%
+    );
+    animation-delay: 6s;
+}
+
+.sun-beam-sweep.beam-3 {
+    width: 75%;
+    filter: blur(34px);
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0) 20%,
+        rgba(255, 245, 205, 0.22) 50%,
+        rgba(255, 255, 255, 0) 80%,
+        transparent 100%
+    );
+    animation-delay: 12s;
+}
+
+@keyframes continuous-sunlight-sweep {
+    0% {
+        opacity: 0;
+        transform: translate3d(-100%, -25%, 0) rotate(38deg);
+    }
+    15% {
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 0.85;
+    }
+    85% {
+        opacity: 0.55;
+    }
+    100% {
+        opacity: 0;
+        transform: translate3d(240%, 65%, 0) rotate(38deg);
+    }
+}
+
+/* ==========================================================================
+   Nighttime Meteor Shower (夜间绚丽密集流星雨)
+   ========================================================================== */
+.meteor-banner-effects {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none !important;
+    z-index: 1;
+}
+
+.meteor {
+    position: absolute;
+    width: 2.5px;
+    height: 2.5px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3),
+                0 0 8px 2px rgba(255, 255, 255, 0.95),
+                0 0 18px 5px rgba(160, 205, 255, 0.7);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate3d(0, 0, 0) rotate(-35deg);
+    animation: meteor-animation 7.5s linear infinite;
+    will-change: transform, opacity;
+}
+
+.meteor::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 135px;
+    height: 1.6px;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.98),
+        rgba(170, 215, 255, 0.55) 35%,
+        rgba(130, 185, 255, 0) 100%
+    );
+    border-radius: 999px;
+}
+
+@keyframes meteor-animation {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, 0, 0) rotate(-35deg);
+    }
+    2% {
+        opacity: 1;
+    }
+    26% {
+        opacity: 0.95;
+    }
+    34% {
+        opacity: 0;
+        transform: translate3d(-920px, 644px, 0) rotate(-35deg);
+    }
+    35%, 100% {
+        opacity: 0;
+        transform: translate3d(-920px, 644px, 0) rotate(-35deg);
+    }
+}
+
+/* 24 颗流星交错分布，频率密集，无论何时抬头都有多颗流星划过 */
+.meteor-1  { top: 2%;  right: 12%; animation-delay: 0.0s; }
+.meteor-2  { top: 8%;  right: 36%; animation-delay: 0.3s; } .meteor-2::before { width: 105px; }
+.meteor-3  { top: 1%;  right: 60%; animation-delay: 0.6s; } .meteor-3::before { width: 165px; height: 2px; }
+.meteor-4  { top: 16%; right: 24%; animation-delay: 0.9s; } .meteor-4::before { width: 115px; }
+.meteor-5  { top: 5%;  right: 78%; animation-delay: 1.2s; } .meteor-5::before { width: 145px; }
+.meteor-6  { top: 22%; right: 48%; animation-delay: 1.5s; } .meteor-6::before { width: 95px; }
+.meteor-7  { top: 2%;  right: 92%; animation-delay: 1.8s; } .meteor-7::before { width: 155px; }
+.meteor-8  { top: 28%; right: 66%; animation-delay: 2.1s; } .meteor-8::before { width: 120px; }
+.meteor-9  { top: 11%; right: 6%;  animation-delay: 2.4s; } .meteor-9::before { width: 130px; }
+.meteor-10 { top: 19%; right: 82%; animation-delay: 2.7s; } .meteor-10::before { width: 110px; }
+.meteor-11 { top: 4%;  right: 42%; animation-delay: 3.1s; } .meteor-11::before { width: 150px; height: 2px; }
+.meteor-12 { top: 14%; right: 18%; animation-delay: 3.4s; } .meteor-12::before { width: 100px; }
+.meteor-13 { top: 7%;  right: 70%; animation-delay: 3.7s; } .meteor-13::before { width: 170px; }
+.meteor-14 { top: 25%; right: 32%; animation-delay: 4.0s; } .meteor-14::before { width: 125px; }
+.meteor-15 { top: 10%; right: 88%; animation-delay: 4.3s; } .meteor-15::before { width: 140px; }
+.meteor-16 { top: 1%;  right: 28%; animation-delay: 4.6s; } .meteor-16::before { width: 110px; }
+.meteor-17 { top: 18%; right: 54%; animation-delay: 4.9s; } .meteor-17::before { width: 135px; }
+.meteor-18 { top: 30%; right: 14%; animation-delay: 5.2s; } .meteor-18::before { width: 100px; }
+.meteor-19 { top: 6%;  right: 96%; animation-delay: 5.5s; } .meteor-19::before { width: 160px; height: 2px; }
+.meteor-20 { top: 23%; right: 74%; animation-delay: 5.8s; } .meteor-20::before { width: 115px; }
+.meteor-21 { top: 12%; right: 38%; animation-delay: 6.2s; } .meteor-21::before { width: 145px; }
+.meteor-22 { top: 3%;  right: 50%; animation-delay: 6.5s; } .meteor-22::before { width: 125px; }
+.meteor-23 { top: 17%; right: 86%; animation-delay: 6.8s; } .meteor-23::before { width: 135px; }
+.meteor-24 { top: 27%; right: 26%; animation-delay: 7.1s; } .meteor-24::before { width: 150px; }
+</style>
+
+</div>
+
+	
 
 	<div class="main-content-container flex flex-col justify-between min-h-dvh">
 		<div class="main-content-header">
@@ -837,12 +1145,12 @@
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2026/11/05/transformer%E8%AE%B2%E8%A7%A3/">
+				<a class="prev" rel="prev" href="/2026/11/05/CausalMed%20Causality-Based%20Personalized%20Medication%20Recommendation%20Centered%20on%20Patient%20Health%20State/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">transformer讲解</span>
+						<span class="post-nav-title-item truncate max-w-48">CausalMed Causality-Based Personalized Medication Recommendation Centered on Patient Health State</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
@@ -850,9 +1158,9 @@
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2026/11/05/git%E6%8C%87%E4%BB%A4%E4%BB%8B%E7%BB%8D/">
+				<a class="next" rel="next" href="/2026/11/05/SafeDrug%20Dual%20Molecular%20Graph%20Encoders%20for%20Safe%20Drug%20Recommendations/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">git指令介绍</span>
+						<span class="post-nav-title-item truncate max-w-48">SafeDrug Dual Molecular Graph Encoders for Safe Drug Recommendations</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">

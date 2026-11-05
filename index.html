@@ -208,7 +208,9 @@
 	
 	
     <style>
-        .home-banner-container {
+        .home-banner-container,
+        .page-container,
+        .main-content-container {
             background: none !important;
         }
         .home-article-item,
@@ -237,14 +239,15 @@
     <div class="home-banner-background transition-fade fixed top-0 left-0 w-screen h-screen scale-125 sm:scale-110 box-border will-change-transform bg-cover">
         <img src="/images/banner-light.jpg" alt="home-banner-background" class="w-full h-full object-cover dark:hidden">
         <img src="/images/banner-dark.jpg" alt="home-banner-background" class="w-full h-full object-cover hidden dark:block">
-        <!-- Daytime Sunlight Sweep Animation -->
+        <!-- Daytime Sunlight Sweep Animation (白天阳光缓慢循环划过) -->
 <div class="sunlight-banner-effects dark:hidden pointer-events-none">
     <div class="sun-flare-origin"></div>
-    <div class="sun-beam-sweep"></div>
-    <div class="sun-beam-sweep secondary"></div>
+    <div class="sun-beam-sweep beam-1"></div>
+    <div class="sun-beam-sweep beam-2"></div>
+    <div class="sun-beam-sweep beam-3"></div>
 </div>
 
-<!-- Nighttime Meteor Shower Animation -->
+<!-- Nighttime Meteor Shower Animation (夜间绚丽流星雨，密集交错) -->
 <div class="meteor-banner-effects hidden dark:block pointer-events-none">
     <div class="meteor meteor-1"></div>
     <div class="meteor meteor-2"></div>
@@ -256,11 +259,25 @@
     <div class="meteor meteor-8"></div>
     <div class="meteor meteor-9"></div>
     <div class="meteor meteor-10"></div>
+    <div class="meteor meteor-11"></div>
+    <div class="meteor meteor-12"></div>
+    <div class="meteor meteor-13"></div>
+    <div class="meteor meteor-14"></div>
+    <div class="meteor meteor-15"></div>
+    <div class="meteor meteor-16"></div>
+    <div class="meteor meteor-17"></div>
+    <div class="meteor meteor-18"></div>
+    <div class="meteor meteor-19"></div>
+    <div class="meteor meteor-20"></div>
+    <div class="meteor meteor-21"></div>
+    <div class="meteor meteor-22"></div>
+    <div class="meteor meteor-23"></div>
+    <div class="meteor meteor-24"></div>
 </div>
 
 <style>
 /* ==========================================================================
-   Daytime Sunlight Sweep (白天阳光划过动画)
+   Daytime Sunlight Sweep (白天阳光划过 - 缓慢连续循环)
    ========================================================================== */
 .sunlight-banner-effects {
     position: absolute;
@@ -280,14 +297,14 @@
     left: -10%;
     width: 65vw;
     height: 65vw;
-    max-width: 720px;
-    max-height: 720px;
+    max-width: 750px;
+    max-height: 750px;
     border-radius: 50%;
     background: radial-gradient(
         circle,
-        rgba(255, 248, 220, 0.42) 0%,
-        rgba(255, 230, 160, 0.22) 32%,
-        rgba(255, 215, 130, 0.08) 58%,
+        rgba(255, 248, 220, 0.45) 0%,
+        rgba(255, 230, 160, 0.24) 30%,
+        rgba(255, 215, 130, 0.09) 58%,
         transparent 75%
     );
     mix-blend-mode: screen;
@@ -307,71 +324,86 @@
     }
 }
 
-/* 划过雪山的光芒束 */
+/* 连续不断缓慢划过雪山的金色阳光束 */
 .sun-beam-sweep {
     position: absolute;
     top: -55%;
-    left: -65%;
+    left: -70%;
     width: 85%;
     height: 220%;
-    transform: translate3d(-90%, -20%, 0) rotate(38deg);
+    transform: translate3d(-100%, -25%, 0) rotate(38deg);
     background: linear-gradient(
         90deg,
         transparent 0%,
-        rgba(255, 255, 255, 0) 18%,
-        rgba(255, 250, 230, 0.14) 42%,
-        rgba(255, 240, 190, 0.36) 50%,
-        rgba(255, 250, 230, 0.14) 58%,
-        rgba(255, 255, 255, 0) 82%,
+        rgba(255, 255, 255, 0) 15%,
+        rgba(255, 250, 230, 0.15) 38%,
+        rgba(255, 240, 185, 0.38) 50%,
+        rgba(255, 250, 230, 0.15) 62%,
+        rgba(255, 255, 255, 0) 85%,
         transparent 100%
     );
     mix-blend-mode: screen;
     pointer-events: none;
-    filter: blur(30px);
-    animation: sunlight-sweep-motion 14s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    filter: blur(32px);
+    animation: continuous-sunlight-sweep 18s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     will-change: transform, opacity;
 }
 
-.sun-beam-sweep.secondary {
-    width: 55%;
+/* 3条交错光芒带，相隔6秒发射，构成永不停歇的温润光影漫步 */
+.sun-beam-sweep.beam-1 {
+    animation-delay: 0s;
+}
+
+.sun-beam-sweep.beam-2 {
+    width: 65%;
+    filter: blur(38px);
     background: linear-gradient(
         90deg,
         transparent 0%,
-        rgba(255, 248, 220, 0.08) 35%,
-        rgba(255, 235, 170, 0.22) 50%,
-        rgba(255, 248, 220, 0.08) 65%,
+        rgba(255, 248, 220, 0.08) 32%,
+        rgba(255, 235, 170, 0.26) 50%,
+        rgba(255, 248, 220, 0.08) 68%,
         transparent 100%
     );
-    filter: blur(38px);
-    animation-delay: 1.8s;
+    animation-delay: 6s;
 }
 
-@keyframes sunlight-sweep-motion {
+.sun-beam-sweep.beam-3 {
+    width: 75%;
+    filter: blur(34px);
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0) 20%,
+        rgba(255, 245, 205, 0.22) 50%,
+        rgba(255, 255, 255, 0) 80%,
+        transparent 100%
+    );
+    animation-delay: 12s;
+}
+
+@keyframes continuous-sunlight-sweep {
     0% {
         opacity: 0;
-        transform: translate3d(-90%, -20%, 0) rotate(38deg);
+        transform: translate3d(-100%, -25%, 0) rotate(38deg);
     }
-    10% {
-        opacity: 0.15;
+    15% {
+        opacity: 0.8;
     }
-    28% {
+    50% {
         opacity: 0.85;
     }
-    42% {
-        opacity: 0.85;
+    85% {
+        opacity: 0.55;
     }
-    58% {
-        opacity: 0.1;
-        transform: translate3d(240%, 65%, 0) rotate(38deg);
-    }
-    60%, 100% {
+    100% {
         opacity: 0;
         transform: translate3d(240%, 65%, 0) rotate(38deg);
     }
 }
 
 /* ==========================================================================
-   Nighttime Meteor Shower (夜间流星雨动画)
+   Nighttime Meteor Shower (夜间绚丽密集流星雨)
    ========================================================================== */
 .meteor-banner-effects {
     position: absolute;
@@ -390,13 +422,13 @@
     height: 2.5px;
     border-radius: 50%;
     background: #ffffff;
-    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25),
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3),
                 0 0 8px 2px rgba(255, 255, 255, 0.95),
                 0 0 18px 5px rgba(160, 205, 255, 0.7);
     opacity: 0;
     pointer-events: none;
     transform: translate3d(0, 0, 0) rotate(-35deg);
-    animation: meteor-animation 11s linear infinite;
+    animation: meteor-animation 7.5s linear infinite;
     will-change: transform, opacity;
 }
 
@@ -425,87 +457,44 @@
     2% {
         opacity: 1;
     }
-    18% {
+    26% {
         opacity: 0.95;
     }
-    24% {
+    34% {
         opacity: 0;
-        transform: translate3d(-850px, 595px, 0) rotate(-35deg);
+        transform: translate3d(-920px, 644px, 0) rotate(-35deg);
     }
-    25%, 100% {
+    35%, 100% {
         opacity: 0;
-        transform: translate3d(-850px, 595px, 0) rotate(-35deg);
+        transform: translate3d(-920px, 644px, 0) rotate(-35deg);
     }
 }
 
-/* 10颗流星的位置与时差交错分布 */
-.meteor-1 {
-    top: 3%;
-    right: 12%;
-    animation-delay: 0s;
-}
-.meteor-2 {
-    top: 9%;
-    right: 36%;
-    animation-delay: 1.1s;
-}
-.meteor-2::before { width: 105px; }
-
-.meteor-3 {
-    top: 1%;
-    right: 60%;
-    animation-delay: 2.3s;
-}
-.meteor-3::before { width: 160px; height: 2px; }
-
-.meteor-4 {
-    top: 16%;
-    right: 24%;
-    animation-delay: 3.5s;
-}
-.meteor-4::before { width: 115px; }
-
-.meteor-5 {
-    top: 5%;
-    right: 78%;
-    animation-delay: 4.7s;
-}
-.meteor-5::before { width: 145px; }
-
-.meteor-6 {
-    top: 22%;
-    right: 48%;
-    animation-delay: 5.9s;
-}
-.meteor-6::before { width: 95px; }
-
-.meteor-7 {
-    top: 2%;
-    right: 92%;
-    animation-delay: 7.1s;
-}
-.meteor-7::before { width: 155px; }
-
-.meteor-8 {
-    top: 28%;
-    right: 66%;
-    animation-delay: 8.3s;
-}
-.meteor-8::before { width: 120px; }
-
-.meteor-9 {
-    top: 11%;
-    right: 6%;
-    animation-delay: 9.5s;
-}
-.meteor-9::before { width: 130px; }
-
-.meteor-10 {
-    top: 19%;
-    right: 82%;
-    animation-delay: 10.4s;
-}
-.meteor-10::before { width: 110px; }
+/* 24 颗流星交错分布，频率密集，无论何时抬头都有多颗流星划过 */
+.meteor-1  { top: 2%;  right: 12%; animation-delay: 0.0s; }
+.meteor-2  { top: 8%;  right: 36%; animation-delay: 0.3s; } .meteor-2::before { width: 105px; }
+.meteor-3  { top: 1%;  right: 60%; animation-delay: 0.6s; } .meteor-3::before { width: 165px; height: 2px; }
+.meteor-4  { top: 16%; right: 24%; animation-delay: 0.9s; } .meteor-4::before { width: 115px; }
+.meteor-5  { top: 5%;  right: 78%; animation-delay: 1.2s; } .meteor-5::before { width: 145px; }
+.meteor-6  { top: 22%; right: 48%; animation-delay: 1.5s; } .meteor-6::before { width: 95px; }
+.meteor-7  { top: 2%;  right: 92%; animation-delay: 1.8s; } .meteor-7::before { width: 155px; }
+.meteor-8  { top: 28%; right: 66%; animation-delay: 2.1s; } .meteor-8::before { width: 120px; }
+.meteor-9  { top: 11%; right: 6%;  animation-delay: 2.4s; } .meteor-9::before { width: 130px; }
+.meteor-10 { top: 19%; right: 82%; animation-delay: 2.7s; } .meteor-10::before { width: 110px; }
+.meteor-11 { top: 4%;  right: 42%; animation-delay: 3.1s; } .meteor-11::before { width: 150px; height: 2px; }
+.meteor-12 { top: 14%; right: 18%; animation-delay: 3.4s; } .meteor-12::before { width: 100px; }
+.meteor-13 { top: 7%;  right: 70%; animation-delay: 3.7s; } .meteor-13::before { width: 170px; }
+.meteor-14 { top: 25%; right: 32%; animation-delay: 4.0s; } .meteor-14::before { width: 125px; }
+.meteor-15 { top: 10%; right: 88%; animation-delay: 4.3s; } .meteor-15::before { width: 140px; }
+.meteor-16 { top: 1%;  right: 28%; animation-delay: 4.6s; } .meteor-16::before { width: 110px; }
+.meteor-17 { top: 18%; right: 54%; animation-delay: 4.9s; } .meteor-17::before { width: 135px; }
+.meteor-18 { top: 30%; right: 14%; animation-delay: 5.2s; } .meteor-18::before { width: 100px; }
+.meteor-19 { top: 6%;  right: 96%; animation-delay: 5.5s; } .meteor-19::before { width: 160px; height: 2px; }
+.meteor-20 { top: 23%; right: 74%; animation-delay: 5.8s; } .meteor-20::before { width: 115px; }
+.meteor-21 { top: 12%; right: 38%; animation-delay: 6.2s; } .meteor-21::before { width: 145px; }
+.meteor-22 { top: 3%;  right: 50%; animation-delay: 6.5s; } .meteor-22::before { width: 125px; }
+.meteor-23 { top: 17%; right: 86%; animation-delay: 6.8s; } .meteor-23::before { width: 135px; }
+.meteor-24 { top: 27%; right: 26%; animation-delay: 7.1s; } .meteor-24::before { width: 150px; }
 </style>
 
     </div>
@@ -1030,22 +1019,6 @@
                 <!-- 专栏文章目录列表 -->
                 <div class="cat-posts-list">
                     
-                        <a href="/2026/11/05/demo2%E7%AC%94%E8%AE%B0/" class="cat-post-item" title="demo2笔记">
-                            <div class="post-item-left">
-                                <i class="fa-regular fa-file-lines post-file-icon"></i>
-                                <span class="post-item-title">demo2笔记</span>
-                            </div>
-                            <span class="post-item-date">2026-11-05</span>
-                        </a>
-                    
-                        <a href="/2026/11/05/transformer%E8%AE%B2%E8%A7%A3/" class="cat-post-item" title="transformer讲解">
-                            <div class="post-item-left">
-                                <i class="fa-regular fa-file-lines post-file-icon"></i>
-                                <span class="post-item-title">transformer讲解</span>
-                            </div>
-                            <span class="post-item-date">2026-11-05</span>
-                        </a>
-                    
                         <a href="/2026/11/05/demo1%E7%AC%94%E8%AE%B0/" class="cat-post-item" title="demo1笔记">
                             <div class="post-item-left">
                                 <i class="fa-regular fa-file-lines post-file-icon"></i>
@@ -1058,6 +1031,22 @@
                             <div class="post-item-left">
                                 <i class="fa-regular fa-file-lines post-file-icon"></i>
                                 <span class="post-item-title">git指令介绍</span>
+                            </div>
+                            <span class="post-item-date">2026-11-05</span>
+                        </a>
+                    
+                        <a href="/2026/11/05/transformer%E8%AE%B2%E8%A7%A3/" class="cat-post-item" title="transformer讲解">
+                            <div class="post-item-left">
+                                <i class="fa-regular fa-file-lines post-file-icon"></i>
+                                <span class="post-item-title">transformer讲解</span>
+                            </div>
+                            <span class="post-item-date">2026-11-05</span>
+                        </a>
+                    
+                        <a href="/2026/11/05/demo2%E7%AC%94%E8%AE%B0/" class="cat-post-item" title="demo2笔记">
+                            <div class="post-item-left">
+                                <i class="fa-regular fa-file-lines post-file-icon"></i>
+                                <span class="post-item-title">demo2笔记</span>
                             </div>
                             <span class="post-item-date">2026-11-05</span>
                         </a>
