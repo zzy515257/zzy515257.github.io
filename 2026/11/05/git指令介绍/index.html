@@ -989,29 +989,17 @@
 		<div class="article-nav my-8 flex justify-between items-center px-2 sm:px-6 md:px-8">
 			
 			<div class="article-prev border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="prev" rel="prev" href="/2026/11/05/demo2%E7%AC%94%E8%AE%B0/">
+				<a class="prev" rel="prev" href="/2026/11/05/%E5%B0%8F%E5%9C%9F%E5%A0%86%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
 					<span class="left arrow-icon flex justify-center items-center">
 						<i class="fa-solid fa-chevron-left"></i>
 					</span>
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">demo2笔记</span>
+						<span class="post-nav-title-item truncate max-w-48">小土堆学习笔记</span>
 						<span class="post-nav-item">Prev posts</span>
 					</span>
 				</a>
 			</div>
 			
-			
-			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2026/11/05/demo1%E7%AC%94%E8%AE%B0/">
-					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">demo1笔记</span>
-						<span class="post-nav-item">Next posts</span>
-					</span>
-					<span class="right arrow-icon flex justify-center items-center">
-						<i class="fa-solid fa-chevron-right"></i>
-					</span>
-				</a>
-			</div>
 			
 		</div>
 		
@@ -2305,17 +2293,9 @@
 })();
 </script>
 
-	<!-- Welcome Intro Overlay Component (首次进入主页背景一致 · 3秒停留 · 粒子风散进场动画) -->
+	<!-- Welcome Intro Overlay Component (首次进入主页 · 透视真实主页背景图 · 停留1秒 · 粒子风散 · 主页淡淡显示) -->
 <div id="welcome-intro-overlay" class="welcome-intro-overlay pointer-events-auto" data-swup-ignore-script>
-    <!-- 背景图层（与主页背景图完全保持一致，深浅模式自动自适应） -->
-    <div class="welcome-bg-image-wrapper">
-        <img src="/images/banner-light.jpg" alt="welcome-bg-light" class="welcome-bg-img dark:hidden">
-        <img src="/images/banner-dark.jpg" alt="welcome-bg-dark" class="welcome-bg-img hidden dark:block">
-        <!-- 电影级柔焦与氛围遮罩，凸显发光字句的艺术美感 -->
-        <div class="welcome-bg-overlay-tint"></div>
-    </div>
-
-    <!-- 粒子绘制与文字画布 -->
+    <!-- 粒子绘制与文字画布（完全透视底层的真实主页背景与光效） -->
     <canvas id="welcome-intro-canvas"></canvas>
 
     <!-- 简约右上角跳过按钮 -->
@@ -2324,7 +2304,7 @@
 
 <style>
 /* ==========================================================================
-   Welcome Intro Overlay Styles (主页同款背景 · 3秒停留 · 粒子风散 · 主页淡淡显示)
+   Welcome Intro Overlay Styles (透明透视 · 真实主页背景 · 1秒停留 · 粒子风散)
    ========================================================================== */
 .welcome-intro-overlay {
     position: fixed;
@@ -2332,65 +2312,37 @@
     width: 100vw;
     height: 100vh;
     z-index: 999999;
+    background: transparent !important; /* 完全透明，直接展现底层真实主页雪山/星空背景与光影动画 */
     display: none; /* 初始隐藏，由 JS 检查条件后激活显示 */
     align-items: center;
     justify-content: center;
     overflow: hidden;
     user-select: none;
     -webkit-user-select: none;
-    transition: opacity 1.6s cubic-bezier(0.25, 1, 0.5, 1);
-    opacity: 1;
+    pointer-events: auto;
 }
 
 .welcome-intro-overlay.is-active {
     display: flex;
 }
 
-.welcome-intro-overlay.is-fading {
+/* 进场动画激活期间，暂隐主页前景内容（标题、导航栏、副标题、文章卡片、播放器），让背景图与发光字纯粹呈现 */
+body.welcome-intro-active .home-banner-container .content,
+body.welcome-intro-active .main-content-header,
+body.welcome-intro-active .main-content-body,
+body.welcome-intro-active .right-side-tools-container,
+body.welcome-intro-active #vinyl-player {
     opacity: 0 !important;
     pointer-events: none !important;
 }
 
-/* 主页同款背景图包裹层 */
-.welcome-bg-image-wrapper {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    pointer-events: none;
-    z-index: 1;
-}
-
-.welcome-bg-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transform: scale(1.04);
-    animation: welcome-bg-zoom 4.5s ease-out forwards;
-}
-
-@keyframes welcome-bg-zoom {
-    0% {
-        transform: scale(1.08);
-    }
-    100% {
-        transform: scale(1.02);
-    }
-}
-
-/* 适度的暗化与微柔焦，既看得到主页同款美景，又能保证各色字句极高对比度 */
-.welcome-bg-overlay-tint {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-        ellipse at center,
-        rgba(0, 0, 0, 0.38) 0%,
-        rgba(0, 0, 0, 0.65) 100%
-    );
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+/* 动画结束时，主页前景内容以 1.2s 优雅曲线淡淡显现 */
+.home-banner-container .content,
+.main-content-header,
+.main-content-body,
+.right-side-tools-container,
+#vinyl-player {
+    transition: opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 /* 画布层 */
@@ -2411,9 +2363,9 @@
     right: 28px;
     padding: 6px 14px;
     font-size: 0.78rem;
-    color: rgba(255, 255, 255, 0.85);
-    background: rgba(0, 0, 0, 0.32);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(0, 0, 0, 0.38);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 999px;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -2425,8 +2377,8 @@
 
 .welcome-skip-btn:hover {
     color: #ffffff;
-    background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(0, 0, 0, 0.6);
+    border-color: rgba(255, 255, 255, 0.6);
     transform: scale(1.05);
 }
 
@@ -2461,7 +2413,8 @@
     const skipBtn = document.getElementById("welcome-skip-btn");
     if (!overlay || !canvas) return;
 
-    // 激活全屏幕布
+    // 激活进场状态：透出真实主页背景图，暂隐前景元素
+    document.body.classList.add("welcome-intro-active");
     overlay.classList.add("is-active");
 
     const ctx = canvas.getContext("2d", { willReadFrequently: true });
@@ -2479,14 +2432,14 @@
 
     // 随机艺术色彩组合（明艳、高级、具有梦幻发光感）
     const PALETTES = [
-        { name: "极光青", text: "#00f2fe", glow: "rgba(0, 242, 254, 0.85)", particles: ["#4facfe", "#00f2fe", "#43e97b", "#a8ff78"] },
-        { name: "落日金", text: "#ffd166", glow: "rgba(255, 209, 102, 0.9)", particles: ["#ffe066", "#ffd166", "#f77f00", "#ffba08"] },
-        { name: "樱花粉", text: "#ff758c", glow: "rgba(255, 117, 140, 0.9)", particles: ["#ff758c", "#ff7eb3", "#fbc2eb", "#ffa8a8"] },
-        { name: "星空紫", text: "#c084fc", glow: "rgba(192, 132, 252, 0.9)", particles: ["#c084fc", "#a855f7", "#e879f9", "#d8b4fe"] },
-        { name: "晨曦橙", text: "#ff9966", glow: "rgba(255, 153, 102, 0.9)", particles: ["#ff9966", "#ff5e62", "#ffb199", "#fca311"] },
-        { name: "薄荷绿", text: "#2af598", glow: "rgba(42, 245, 152, 0.9)", particles: ["#2af598", "#009efd", "#08d9d6", "#5eead4"] },
-        { name: "冰川蓝", text: "#38ef7d", glow: "rgba(56, 239, 125, 0.9)", particles: ["#11998e", "#38ef7d", "#a8ff78", "#6ee7b7"] },
-        { name: "霓虹红", text: "#ff4b72", glow: "rgba(255, 75, 114, 0.9)", particles: ["#ff416c", "#ff4b72", "#ff758c", "#fda4af"] }
+        { name: "极光青", text: "#00f2fe", glow: "rgba(0, 242, 254, 0.9)", particles: ["#4facfe", "#00f2fe", "#43e97b", "#a8ff78"] },
+        { name: "落日金", text: "#ffd166", glow: "rgba(255, 209, 102, 0.95)", particles: ["#ffe066", "#ffd166", "#f77f00", "#ffba08"] },
+        { name: "樱花粉", text: "#ff758c", glow: "rgba(255, 117, 140, 0.95)", particles: ["#ff758c", "#ff7eb3", "#fbc2eb", "#ffa8a8"] },
+        { name: "星空紫", text: "#c084fc", glow: "rgba(192, 132, 252, 0.95)", particles: ["#c084fc", "#a855f7", "#e879f9", "#d8b4fe"] },
+        { name: "晨曦橙", text: "#ff9966", glow: "rgba(255, 153, 102, 0.95)", particles: ["#ff9966", "#ff5e62", "#ffb199", "#fca311"] },
+        { name: "薄荷绿", text: "#2af598", glow: "rgba(42, 245, 152, 0.95)", particles: ["#2af598", "#009efd", "#08d9d6", "#5eead4"] },
+        { name: "冰川蓝", text: "#38ef7d", glow: "rgba(56, 239, 125, 0.95)", particles: ["#11998e", "#38ef7d", "#a8ff78", "#6ee7b7"] },
+        { name: "霓虹红", text: "#ff4b72", glow: "rgba(255, 75, 114, 0.95)", particles: ["#ff416c", "#ff4b72", "#ff758c", "#fda4af"] }
     ];
 
     const chosenQuote = QUOTES[Math.floor(Math.random() * QUOTES.length)];
@@ -2496,7 +2449,7 @@
     let state = "holding"; // "holding" -> "dissolving" -> "finished"
     let startTime = null;
     let dissolveStartTime = null;
-    const HOLD_DURATION = 3000; // 严格停留 3 秒
+    const HOLD_DURATION = 1000; // 句子严格停留 1 秒
     let animId = null;
 
     function resizeCanvas() {
@@ -2525,7 +2478,7 @@
         }
     }
 
-    // 绘制静态文字（带发光光晕）
+    // 绘制静态文字（带暗影衬底与霓虹发光光晕）
     function renderStaticText(alpha = 1.0, glowRatio = 1.0) {
         ctx.clearRect(0, 0, width, height);
         const fontSize = getFontSize();
@@ -2534,16 +2487,22 @@
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
 
-        // 外层柔光晕染
-        ctx.shadowColor = chosenPalette.glow;
-        ctx.shadowBlur = 32 * glowRatio;
+        // 第一层：柔和暗色阴影衬底，确保在白天模式雪山高光背景下依然清晰锐利
+        ctx.shadowColor = "rgba(0, 0, 0, 0.78)";
+        ctx.shadowBlur = 18;
         ctx.fillStyle = chosenPalette.text;
         ctx.globalAlpha = alpha;
         ctx.fillText(chosenQuote, width / 2, height / 2);
 
-        // 核心文字高光
-        ctx.shadowBlur = 12 * glowRatio;
+        // 第二层：外层艺术霓虹光晕
+        ctx.shadowColor = chosenPalette.glow;
+        ctx.shadowBlur = 30 * glowRatio;
         ctx.fillText(chosenQuote, width / 2, height / 2);
+
+        // 第三层：核心字形高光提亮
+        ctx.shadowBlur = 10 * glowRatio;
+        ctx.fillText(chosenQuote, width / 2, height / 2);
+
         ctx.restore();
     }
 
@@ -2600,7 +2559,7 @@
         ctx.clearRect(0, 0, width, height);
     }
 
-    // 触发粒子风化消散并淡出主页背景
+    // 触发粒子风化消散并恢复主页前景元素
     function startDissolve() {
         if (state !== "holding") return;
         state = "dissolving";
@@ -2609,8 +2568,8 @@
 
         if (skipBtn) skipBtn.style.display = "none";
 
-        // 主页淡淡显示：幕布背景开始 1.6s 平滑透明淡出，背后的主页UI无缝呈现
-        overlay.classList.add("is-fading");
+        // 主页淡淡显示：解除暂隐，主页标题、副标题、导航栏与卡片以 1.2s 平滑浮现
+        document.body.classList.remove("welcome-intro-active");
     }
 
     // 结束并彻底清理 DOM
@@ -2618,6 +2577,7 @@
         if (state === "finished") return;
         state = "finished";
         if (animId) cancelAnimationFrame(animId);
+        document.body.classList.remove("welcome-intro-active");
         ctx.clearRect(0, 0, width, height);
         overlay.classList.remove("is-active");
         overlay.remove();
@@ -2630,12 +2590,12 @@
         const elapsed = timestamp - startTime;
 
         if (state === "holding") {
-            // 前 0.5 秒平滑显现，随后停留满 3 秒
+            // 前 200ms 快速柔和显现，随后停留满 1 秒
             let textAlpha = 1.0;
-            if (elapsed < 500) {
-                textAlpha = elapsed / 500;
+            if (elapsed < 200) {
+                textAlpha = elapsed / 200;
             }
-            const breatheRatio = 0.85 + 0.25 * Math.sin((elapsed - 500) / 450);
+            const breatheRatio = 0.9 + 0.15 * Math.sin((elapsed - 200) / 300);
             renderStaticText(textAlpha, breatheRatio);
 
             if (elapsed >= HOLD_DURATION) {
@@ -2679,7 +2639,7 @@
                 }
             }
 
-            if (activeCount === 0 || dissolveElapsed > 2.0) {
+            if (activeCount === 0 || dissolveElapsed > 1.8) {
                 finishIntro();
                 return;
             }
