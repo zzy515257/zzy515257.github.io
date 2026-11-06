@@ -1,0 +1,2170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords" content="Hexo Theme Redefine">
+    
+    
+    <meta name="author" content="Zoe Raina">
+    
+    <!-- Completely eliminate flash of wrong theme -->
+    <script>
+        (function() {
+            const THEME_KEY = "REDEFINE-THEME-STATUS";
+            const DARK = "dark", LIGHT = "light";
+            
+            // Get preferred theme
+            function getTheme() {
+                try {
+                    const saved = localStorage.getItem(THEME_KEY);
+                    if (saved) {
+                        const { isDark } = JSON.parse(saved);
+                        return isDark ? DARK : LIGHT;
+                    }
+                } catch (e) {}
+                
+                return matchMedia("(prefers-color-scheme: dark)").matches ? DARK : LIGHT;
+            }
+            
+            // Apply theme to document
+            function applyTheme(theme) {
+                const isDark = theme === DARK;
+                const root = document.documentElement;
+                
+                // Set classes for compatibility
+                root.classList.add(theme);
+                root.classList.remove(isDark ? LIGHT : DARK);
+                root.style.colorScheme = theme;
+            }
+            
+            // Initial application
+            const theme = getTheme();
+            applyTheme(theme);
+            
+            // Listen for system preference changes
+            matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ({ matches }) => {
+                // Only update if using system preference (no localStorage entry)
+                if (!localStorage.getItem(THEME_KEY)) {
+                    applyTheme(matches ? DARK : LIGHT);
+                }
+            });
+            
+            // Set body classes ASAP (before DOMContentLoaded)
+            (function() {
+                const addBodyClass = () => {
+                    const b = document.body;
+                    if (!b) return false;
+                    b.classList.add(theme + "-mode");
+                    return true;
+                };
+
+                // Try immediately
+                if (addBodyClass()) return;
+
+                // Observe until body exists
+                const mo = new MutationObserver(() => {
+                    if (addBodyClass()) mo.disconnect();
+                });
+                mo.observe(document.documentElement, { childList: true, subtree: true });
+            })();
+        })();
+    </script>
+    
+    <!-- preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    
+    <!--- Seo Part-->
+    
+    <link rel="canonical" href="http://example.com/tags/论文研读/"/>
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index,follow">
+    <meta name="revisit-after" content="1 days">
+    
+    
+        
+        <meta name="description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Zoe Raina的笔记">
+<meta property="og:url" content="http://example.com/tags/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/index.html">
+<meta property="og:site_name" content="Zoe Raina的笔记">
+<meta property="og:description" content="Hexo Theme Redefine, Redefine Your Hexo Journey.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/images/redefine-og.webp">
+<meta property="article:author" content="Zoe Raina">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/images/redefine-og.webp">
+    
+    
+    <!--- Icon Part-->
+    <link rel="icon" type="image/png" href="/images/logo.jpg" sizes="192x192">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/logo.jpg">
+    <meta name="theme-color" content="#A31F34">
+    <link rel="shortcut icon" href="/images/logo.jpg">
+    <!--- Page Info-->
+    
+    <title>
+        
+            Tag: 论文研读 | Zoe Raina的笔记
+        
+    </title>
+
+    
+<link rel="stylesheet" href="/fonts/Chillax/chillax.css">
+
+
+    <!--- Inject Part-->
+    
+        
+            
+                
+                    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+                
+    
+            
+                
+                    <script data-swup-reload-script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+                
+    
+            
+                
+                    <script data-swup-reload-script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+                
+    
+            
+                
+                    <script data-swup-reload-script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/mathtex-script-type.min.js"></script>
+                
+    
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+
+    
+        
+<link rel="stylesheet" href="/css/build/tailwind.css">
+
+    
+
+    
+<link rel="stylesheet" href="/fonts/GeistMono/geist-mono.css">
+
+    
+<link rel="stylesheet" href="/fonts/Geist/geist.css">
+
+    <!--- Font Part-->
+    
+    
+    
+    
+    
+    
+
+    <script id="hexo-configurations">
+    window.config = {"hostname":"example.com","root":"/","language":"en"};
+    window.theme = {"articles":{"style":{"font_size":"16px","line_height":1.5,"image_border_radius":"14px","image_alignment":"center","image_caption":false,"link_icon":true,"delete_mask":false,"title_alignment":"left","headings_top_spacing":{"h1":"3.2rem","h2":"2.4rem","h3":"1.9rem","h4":"1.6rem","h5":"1.4rem","h6":"1.3rem"}},"word_count":{"enable":true,"count":true,"min2read":true},"author_label":{"enable":true,"auto":false,"list":[]},"code_block":{"copy":true,"style":"mac","highlight_theme":{"light":"github","dark":"vs2015"},"font":{"enable":false,"family":null,"url":null}},"toc":{"enable":true,"max_depth":3,"number":false,"expand":true,"init_open":true},"copyright":{"enable":true,"default":"cc_by_nc_sa"},"lazyload":true,"pangu_js":false,"recommendation":{"enable":false,"title":"推荐阅读","limit":3,"mobile_limit":2,"placeholder":"/images/banner-light.jpg","skip_dirs":[]}},"colors":{"primary":"#A31F34","secondary":null,"default_mode":"light"},"global":{"fonts":{"chinese":{"enable":false,"family":null,"url":null},"english":{"enable":false,"family":null,"url":null},"title":{"enable":false,"family":null,"url":null}},"content_max_width":"1000px","sidebar_width":"210px","hover":{"shadow":true,"scale":false},"scroll_progress":{"bar":false,"percentage":true},"website_counter":{"url":"https://cn.vercount.one/js","enable":true,"site_pv":true,"site_uv":true,"post_pv":true},"single_page":true,"preloader":{"enable":false,"custom_message":null},"side_tools":{"gear_rotation":true,"auto_expand":false},"open_graph":{"enable":true,"image":"/images/redefine-og.webp","description":"Hexo Theme Redefine, Redefine Your Hexo Journey."},"google_analytics":{"enable":false,"id":null}},"home_banner":{"enable":true,"style":"fixed","image":{"light":"/images/banner-light.jpg","dark":"/images/banner-dark.jpg"},"title":"Zoe Raina的笔记","subtitle":{"text":["路虽弥，不行不至。事虽小，不做不成。","2026年11月5日 星期四 ｜ 大连 · 晴 6℃~16℃"],"hitokoto":{"enable":false,"show_author":false,"api":"https://v1.hitokoto.cn"},"typing_speed":100,"backing_speed":60,"starting_delay":500,"backing_delay":2000,"loop":true,"smart_backspace":false},"text_color":{"light":"#fff","dark":"#d1d1b6"},"text_style":{"title_size":"2.8rem","subtitle_size":"1.5rem","line_height":1.2},"custom_font":{"enable":false,"family":null,"url":null},"social_links":{"enable":false,"style":"default","links":[{"icon":"fa-brands fa-github","url":null},{"icon":"fa-brands fa-twitter","url":null},{"icon":"fa-solid fa-at","url":"you@example.com"},{"icon":"fa-brands fa-telegram","url":null},{"icon":"/images/custom-icon.svg","url":null}],"qrs":[{"icon":"fa-brands fa-weixin","qr":null},{"icon":"/images/custom-icon.svg","qr":null}]}},"plugins":{"feed":{"enable":false},"aplayer":{"enable":false,"type":"fixed","audios":[{"name":null,"artist":null,"url":null,"cover":null,"lrc":null}]},"mermaid":{"enable":false,"version":"11.4.1","theme":{"light":"default","dark":"dark"}}},"version":"2.9.0","navbar":{"auto_hide":false,"color":{"left":"#f78736","right":"#367df7","transparency":35},"width":{"home":"1200px","pages":"1000px"},"links":{"首页":{"path":"/","icon":"fa-regular fa-house"},"demo学习":{"icon":"fa-regular fa-laptop-code","submenus":{"全部笔记":"/categories/demo学习/","demo1笔记":"/2026/11/05/demo1笔记/","demo2笔记":"/2026/11/05/demo2笔记/","git指令介绍":"/2026/11/05/git指令介绍/","transformer讲解":"/2026/11/05/transformer讲解/","小土堆学习笔记":"/2026/11/05/小土堆学习笔记/"}},"论文研读":{"icon":"fa-regular fa-book-open-reader","submenus":{"全部论文":"/categories/论文研读/","CausalMed推荐模型":"/2026/11/05/CausalMed Causality-Based Personalized Medication Recommendation Centered on Patient Health State/","SafeDrug安全用药":"/2026/11/05/SafeDrug Dual Molecular Graph Encoders for Safe Drug Recommendations/"}}},"search":{"enable":false,"preload":true}},"page_templates":{"friends_column":2,"tags_style":"blur","masonry":{"batch_size":12,"initial_batch_size":24}},"home":{"sidebar":{"enable":true,"position":"left","first_item":"menu","announcement":null,"show_on_mobile":true,"links":{"目录汇总":{"path":"/categories","icon":"fa-regular fa-folder-tree"},"demo学习":{"path":"/categories/demo学习/","icon":"fa-regular fa-laptop-code"},"论文研读":{"path":"/categories/论文研读/","icon":"fa-regular fa-book-open-reader"}}},"article_date_format":"auto","excerpt_length":200,"categories":{"enable":true,"limit":3},"tags":{"enable":true,"limit":3}},"footer":{"runtime":true,"icon":"<i class=\"fa-solid fa-heart fa-beat\" style=\"--fa-animation-duration: 0.5s; color: #f54545\"></i>","start":"2022/8/17 11:45:14","statistics":true,"customize":null,"icp":{"enable":false,"number":null,"url":null}},"footerStart":"2022/8/17 11:45:14","mermaid":{"style":{"light":"default","dark":"dark"}}};
+    window.lang_ago = {"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"};
+    window.i18n = {"search":"Search...","toc":"On this page","prev":"Prev","next":"Next","prev_posts":"Prev posts","next_posts":"Next posts","page":"Page %d","recent_posts":"Recent Posts","share":"Share","powered_by":"POWERED BY %s","theme":"THEME","rss_feed":"RSS Feed","category":"Category","categories":"Categories","tag":"Tag","tags":"Tags","post":"Post","posts":"Posts","tagcloud":"Tag Cloud","comment":"Comment","comments":"Comments","home":"Home","archive":"Archive","archives":"Archives","top":"TOP","sticky":"Sticky","go-back-home":"Go Back Home","masonry_loading":"Loading photos...","image_viewer":"Image viewer","close":"Close","exif":{"title":"EXIF","cards":{"camera":"Camera","lens":"Lens","exposure":"Exposure","other":"Other"},"fields":{"make":"Brand","model":"Model","date_taken":"Date taken","lens_model":"Lens","focal_length":"Focal length","focus_mode":"Focus mode","shutter":"Shutter","aperture":"Aperture","iso":"ISO","exposure_program":"Exposure program","exposure_compensation":"Exposure compensation","metering_mode":"Metering mode","flash":"Flash","white_balance":"White balance","latitude":"Latitude","longitude":"Longitude","altitude":"Altitude"},"status":{"loading":"Loading...","no_exif":"No EXIF available","library_missing":"EXIF library not loaded","image_source_missing":"Image source unavailable","unavailable":"EXIF unavailable (blocked by CORS or missing metadata)","flag_unavailable":"EXIF unavailable"}},"about":"About","changelog":"Changelog","links":"Links","link":"Link","friends":"Friends","friend":"Friend","timeline":"Timeline","shuoshuo":"Shuoshuo","bookmarks":"Bookmarks","site_uv":"VISITOR COUNT","site_pv":"TOTAL PAGE VIEWS","read_more":"Read more","wordcount":"Words","min2read":"Mins","status":"Status","runtime":"Blog up for","days":"days","hours":"hrs","minutes":"Min","seconds":"Sec","optimized_by":"and Optimized by Evan","rights":"All Rights Reserved","site_posts":"%s posts in total","site_wordcount":"%s words in total","copyright":{"author":"Author","title":"Title","link":"Link","create_time":"Created at","update_time":"Updated at","license_title":"License","license_content":"This work is licensed under %s.","all_rights_reserved":"All Rights Reserved &#169; %s","public_domain":"This work is in the public domain."},"ago":{"second":"%s seconds ago","minute":"%s minutes ago","hour":"%s hours ago","day":"%s days ago","week":"%s weeks ago","month":"%s months ago","year":"%s years ago"},"create_time":"Created","update_time":"Updated","expired":"This post is written %s days ago, and the content may not be up to date."};
+    window.data = {"masonry":false};
+  </script>
+    
+    <!--- Fontawesome Part-->
+    
+<link rel="stylesheet" href="/fontawesome/fontawesome.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/brands.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/solid.min.css">
+
+    
+<link rel="stylesheet" href="/fontawesome/regular.min.css">
+
+    
+    
+    
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+	<div class="progress-bar-container">
+	
+
+	
+	<span class="pjax-progress-bar"></span>
+	<!--        <span class="swup-progress-icon">-->
+	<!--            <i class="fa-solid fa-circle-notch fa-spin"></i>-->
+	<!--        </span>-->
+	
+</div>
+
+<main class="page-container" id="swup">
+
+	
+	<style>
+    .page-container {
+        background: transparent !important;
+    }
+    .main-content-container {
+        background: transparent !important;
+    }
+    .home-banner-background {
+        filter: blur(18px) !important;
+        -webkit-filter: blur(18px) !important;
+    }
+    .article-content-container,
+    .post-page-container,
+    .comments-container,
+    .article-nav,
+    .toc-content-container,
+    .home-article-item,
+    .category-detail,
+    .category-list-content,
+    .sidebar-links,
+    .sidebar-content,
+    a.page-number,
+    a.extend,
+    .sidebar-links .links:hover,
+    .right-bottom-tools,
+    footer.footer {
+        background-color: var(--background-color-transparent-80) !important;
+        backdrop-filter: blur(16px) !important;
+        -webkit-backdrop-filter: blur(16px) !important;
+    }
+    .right-bottom-tools:hover,
+    a.page-number:hover,
+    a.extend:hover {
+        background-color: var(--primary-color) !important;
+    }
+    .site-info,
+    .home-article-sticky-label {
+        background-color: var(--background-color-transparent-15) !important;
+    }
+    .home-article-sticky-label {
+        backdrop-filter: none !important;
+    }
+
+    @media (max-width: 768px) {
+        .article-content-container,
+        .post-page-container,
+        .comments-container,
+        .article-nav,
+        .category-detail,
+        .category-list-content {
+            border-radius: 14px !important;
+        }
+        .article-title-regular {
+            font-size: clamp(1.45rem, 5.2vw, 2.1rem) !important;
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+            line-height: 1.3 !important;
+        }
+        .article-title-cover {
+            font-size: clamp(1.3rem, 4.8vw, 1.8rem) !important;
+            margin-left: 0.5rem !important;
+            margin-right: 0.5rem !important;
+            padding: 0.5rem 0.75rem !important;
+        }
+        .article-content {
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+        }
+        /* Mobile overflow prevention for code, tables, and math */
+        .markdown-body pre,
+        .markdown-body .highlight-container,
+        .markdown-body table,
+        .markdown-body .katex-display,
+        .markdown-body mjx-container {
+            max-width: 100% !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+        .markdown-body img {
+            max-width: 100% !important;
+            height: auto !important;
+        }
+    }
+</style>
+
+<div class="home-banner-background transition-fade fixed top-0 left-0 w-screen h-screen scale-125 sm:scale-110 box-border will-change-transform bg-cover">
+    <img src="/images/banner-light.jpg" alt="home-banner-background" class="w-full h-full object-cover dark:hidden">
+    <img src="/images/banner-dark.jpg" alt="home-banner-background" class="w-full h-full object-cover hidden dark:block">
+    <!-- Daytime Sunlight Sweep Animation (白天阳光密集温润划过 - 缩短间隔连续沐浴) -->
+<div class="sunlight-banner-effects dark:hidden pointer-events-none">
+    <div class="sun-flare-origin"></div>
+    <div class="sun-beam-sweep beam-1"></div>
+    <div class="sun-beam-sweep beam-2"></div>
+    <div class="sun-beam-sweep beam-3"></div>
+    <div class="sun-beam-sweep beam-4"></div>
+    <div class="sun-beam-sweep beam-5"></div>
+</div>
+
+<!-- Nighttime Meteor Shower Animation (夜间绚丽流星雨，密集交错) -->
+<div class="meteor-banner-effects hidden dark:block pointer-events-none">
+    <div class="meteor meteor-1"></div>
+    <div class="meteor meteor-2"></div>
+    <div class="meteor meteor-3"></div>
+    <div class="meteor meteor-4"></div>
+    <div class="meteor meteor-5"></div>
+    <div class="meteor meteor-6"></div>
+    <div class="meteor meteor-7"></div>
+    <div class="meteor meteor-8"></div>
+    <div class="meteor meteor-9"></div>
+    <div class="meteor meteor-10"></div>
+    <div class="meteor meteor-11"></div>
+    <div class="meteor meteor-12"></div>
+    <div class="meteor meteor-13"></div>
+    <div class="meteor meteor-14"></div>
+    <div class="meteor meteor-15"></div>
+    <div class="meteor meteor-16"></div>
+    <div class="meteor meteor-17"></div>
+    <div class="meteor meteor-18"></div>
+    <div class="meteor meteor-19"></div>
+    <div class="meteor meteor-20"></div>
+    <div class="meteor meteor-21"></div>
+    <div class="meteor meteor-22"></div>
+    <div class="meteor meteor-23"></div>
+    <div class="meteor meteor-24"></div>
+</div>
+
+<style>
+/* ==========================================================================
+   Daytime Sunlight Sweep (白天阳光划过 - 缓慢连续循环)
+   ========================================================================== */
+.sunlight-banner-effects {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none !important;
+    z-index: 1;
+}
+
+/* 晨光晕染中心（左上方日出位置） */
+.sun-flare-origin {
+    position: absolute;
+    top: -15%;
+    left: -10%;
+    width: 65vw;
+    height: 65vw;
+    max-width: 750px;
+    max-height: 750px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(255, 248, 220, 0.45) 0%,
+        rgba(255, 230, 160, 0.24) 30%,
+        rgba(255, 215, 130, 0.09) 58%,
+        transparent 75%
+    );
+    mix-blend-mode: screen;
+    pointer-events: none;
+    filter: blur(18px);
+    animation: sun-pulse 8s ease-in-out infinite alternate;
+}
+
+@keyframes sun-pulse {
+    0% {
+        transform: scale(0.96);
+        opacity: 0.65;
+    }
+    100% {
+        transform: scale(1.08);
+        opacity: 0.95;
+    }
+}
+
+/* 连续不断缓慢划过雪山的金色阳光束（周期缩短至9s，多束交替紧凑漫步） */
+.sun-beam-sweep {
+    position: absolute;
+    top: -55%;
+    left: -60%;
+    width: 80%;
+    height: 220%;
+    transform: translate3d(-45%, -12%, 0) rotate(36deg);
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0) 12%,
+        rgba(255, 250, 230, 0.18) 36%,
+        rgba(255, 240, 185, 0.42) 50%,
+        rgba(255, 250, 230, 0.18) 64%,
+        rgba(255, 255, 255, 0) 88%,
+        transparent 100%
+    );
+    mix-blend-mode: screen;
+    pointer-events: none;
+    filter: blur(30px);
+    animation: continuous-sunlight-sweep 9s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    will-change: transform, opacity;
+}
+
+/* 5条交错光芒带，相隔1.8秒紧密发射，无间断温润光影漫步 */
+.sun-beam-sweep.beam-1 {
+    animation-delay: 0s;
+}
+
+.sun-beam-sweep.beam-2 {
+    width: 65%;
+    filter: blur(36px);
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 248, 220, 0.1) 30%,
+        rgba(255, 235, 170, 0.32) 50%,
+        rgba(255, 248, 220, 0.1) 70%,
+        transparent 100%
+    );
+    animation-delay: 1.8s;
+}
+
+.sun-beam-sweep.beam-3 {
+    width: 85%;
+    filter: blur(32px);
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0) 18%,
+        rgba(255, 245, 205, 0.28) 50%,
+        rgba(255, 255, 255, 0) 82%,
+        transparent 100%
+    );
+    animation-delay: 3.6s;
+}
+
+.sun-beam-sweep.beam-4 {
+    width: 70%;
+    filter: blur(34px);
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 250, 230, 0.12) 28%,
+        rgba(255, 240, 190, 0.35) 50%,
+        rgba(255, 250, 230, 0.12) 72%,
+        transparent 100%
+    );
+    animation-delay: 5.4s;
+}
+
+.sun-beam-sweep.beam-5 {
+    width: 90%;
+    filter: blur(38px);
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 248, 210, 0.08) 22%,
+        rgba(255, 232, 160, 0.3) 50%,
+        rgba(255, 248, 210, 0.08) 78%,
+        transparent 100%
+    );
+    animation-delay: 7.2s;
+}
+
+@keyframes continuous-sunlight-sweep {
+    0% {
+        opacity: 0;
+        transform: translate3d(-45%, -12%, 0) rotate(36deg);
+    }
+    18% {
+        opacity: 0.88;
+    }
+    55% {
+        opacity: 0.92;
+    }
+    82% {
+        opacity: 0.65;
+    }
+    100% {
+        opacity: 0;
+        transform: translate3d(165%, 46%, 0) rotate(36deg);
+    }
+}
+
+/* ==========================================================================
+   Nighttime Meteor Shower (夜间绚丽密集流星雨)
+   ========================================================================== */
+.meteor-banner-effects {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none !important;
+    z-index: 1;
+}
+
+.meteor {
+    position: absolute;
+    width: 2.5px;
+    height: 2.5px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3),
+                0 0 8px 2px rgba(255, 255, 255, 0.95),
+                0 0 18px 5px rgba(160, 205, 255, 0.7);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate3d(0, 0, 0) rotate(-35deg);
+    animation: meteor-animation 7.5s linear infinite;
+    will-change: transform, opacity;
+}
+
+.meteor::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 135px;
+    height: 1.6px;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.98),
+        rgba(170, 215, 255, 0.55) 35%,
+        rgba(130, 185, 255, 0) 100%
+    );
+    border-radius: 999px;
+}
+
+@keyframes meteor-animation {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, 0, 0) rotate(-35deg);
+    }
+    2% {
+        opacity: 1;
+    }
+    26% {
+        opacity: 0.95;
+    }
+    34% {
+        opacity: 0;
+        transform: translate3d(-920px, 644px, 0) rotate(-35deg);
+    }
+    35%, 100% {
+        opacity: 0;
+        transform: translate3d(-920px, 644px, 0) rotate(-35deg);
+    }
+}
+
+/* 24 颗流星交错分布，频率密集，无论何时抬头都有多颗流星划过 */
+.meteor-1  { top: 2%;  right: 12%; animation-delay: 0.0s; }
+.meteor-2  { top: 8%;  right: 36%; animation-delay: 0.3s; } .meteor-2::before { width: 105px; }
+.meteor-3  { top: 1%;  right: 60%; animation-delay: 0.6s; } .meteor-3::before { width: 165px; height: 2px; }
+.meteor-4  { top: 16%; right: 24%; animation-delay: 0.9s; } .meteor-4::before { width: 115px; }
+.meteor-5  { top: 5%;  right: 78%; animation-delay: 1.2s; } .meteor-5::before { width: 145px; }
+.meteor-6  { top: 22%; right: 48%; animation-delay: 1.5s; } .meteor-6::before { width: 95px; }
+.meteor-7  { top: 2%;  right: 92%; animation-delay: 1.8s; } .meteor-7::before { width: 155px; }
+.meteor-8  { top: 28%; right: 66%; animation-delay: 2.1s; } .meteor-8::before { width: 120px; }
+.meteor-9  { top: 11%; right: 6%;  animation-delay: 2.4s; } .meteor-9::before { width: 130px; }
+.meteor-10 { top: 19%; right: 82%; animation-delay: 2.7s; } .meteor-10::before { width: 110px; }
+.meteor-11 { top: 4%;  right: 42%; animation-delay: 3.1s; } .meteor-11::before { width: 150px; height: 2px; }
+.meteor-12 { top: 14%; right: 18%; animation-delay: 3.4s; } .meteor-12::before { width: 100px; }
+.meteor-13 { top: 7%;  right: 70%; animation-delay: 3.7s; } .meteor-13::before { width: 170px; }
+.meteor-14 { top: 25%; right: 32%; animation-delay: 4.0s; } .meteor-14::before { width: 125px; }
+.meteor-15 { top: 10%; right: 88%; animation-delay: 4.3s; } .meteor-15::before { width: 140px; }
+.meteor-16 { top: 1%;  right: 28%; animation-delay: 4.6s; } .meteor-16::before { width: 110px; }
+.meteor-17 { top: 18%; right: 54%; animation-delay: 4.9s; } .meteor-17::before { width: 135px; }
+.meteor-18 { top: 30%; right: 14%; animation-delay: 5.2s; } .meteor-18::before { width: 100px; }
+.meteor-19 { top: 6%;  right: 96%; animation-delay: 5.5s; } .meteor-19::before { width: 160px; height: 2px; }
+.meteor-20 { top: 23%; right: 74%; animation-delay: 5.8s; } .meteor-20::before { width: 115px; }
+.meteor-21 { top: 12%; right: 38%; animation-delay: 6.2s; } .meteor-21::before { width: 145px; }
+.meteor-22 { top: 3%;  right: 50%; animation-delay: 6.5s; } .meteor-22::before { width: 125px; }
+.meteor-23 { top: 17%; right: 86%; animation-delay: 6.8s; } .meteor-23::before { width: 135px; }
+.meteor-24 { top: 27%; right: 26%; animation-delay: 7.1s; } .meteor-24::before { width: 150px; }
+
+@media (max-width: 768px) {
+    .meteor::before {
+        max-width: 80px !important;
+    }
+    .sun-flare-origin {
+        width: 85vw !important;
+        height: 85vw !important;
+        top: -10% !important;
+        left: -15% !important;
+    }
+    .sun-beam-sweep {
+        filter: blur(22px) !important;
+    }
+}
+</style>
+
+</div>
+
+	
+
+	<div class="main-content-container flex flex-col justify-between min-h-dvh">
+		<div class="main-content-header">
+			<header class="navbar-container px-6 md:px-12">
+    <div class="navbar-content transition-navbar ">
+        <div class="left">
+            
+                <a class="logo-image h-8 w-8 sm:w-10 sm:h-10 mr-3" href="/">
+                    <img src="/images/logo.jpg" class="w-full h-full rounded-xs">
+                </a>
+            
+            <a class="logo-title" href="/">
+                
+                Zoe Raina的笔记
+                
+            </a>
+        </div>
+
+        <div class="right">
+            <!-- PC -->
+            <div class="desktop">
+                <ul class="navbar-list">
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class=""
+                                   href="/"
+                                        >
+                                    <i class="fa-regular fa-house fa-fw"></i>
+                                    首页
+                                    
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown"
+                                   href="#"
+                                        onClick=&#34;return false;&#34;>
+                                    <i class="fa-regular fa-laptop-code fa-fw"></i>
+                                    DEMO学习
+                                    <i class="fa-solid fa-chevron-down fa-fw"></i>
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                        
+                                            <li>
+                                                <a href="/categories/demo%E5%AD%A6%E4%B9%A0/">
+                                                    全部笔记
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="/2026/11/05/demo1%E7%AC%94%E8%AE%B0/">
+                                                    DEMO1笔记
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="/2026/11/05/demo2%E7%AC%94%E8%AE%B0/">
+                                                    DEMO2笔记
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="/2026/11/05/git%E6%8C%87%E4%BB%A4%E4%BB%8B%E7%BB%8D/">
+                                                    GIT指令介绍
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="/2026/11/05/transformer%E8%AE%B2%E8%A7%A3/">
+                                                    TRANSFORMER讲解
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="/2026/11/05/%E5%B0%8F%E5%9C%9F%E5%A0%86%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
+                                                    小土堆学习笔记
+                                                </a>
+                                            </li>
+                                        
+                                    </ul>
+                                
+                            </li>
+                    
+                        
+                            
+
+                            <li class="navbar-item">
+                                <!-- Menu -->
+                                <a class="has-dropdown"
+                                   href="#"
+                                        onClick=&#34;return false;&#34;>
+                                    <i class="fa-regular fa-book-open-reader fa-fw"></i>
+                                    论文研读
+                                    <i class="fa-solid fa-chevron-down fa-fw"></i>
+                                </a>
+
+                                <!-- Submenu -->
+                                
+                                    <ul class="sub-menu">
+                                        
+                                            <li>
+                                                <a href="/categories/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/">
+                                                    全部论文
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="/2026/11/05/CausalMed%20Causality-Based%20Personalized%20Medication%20Recommendation%20Centered%20on%20Patient%20Health%20State/">
+                                                    CAUSALMED推荐模型
+                                                </a>
+                                            </li>
+                                        
+                                            <li>
+                                                <a href="/2026/11/05/SafeDrug%20Dual%20Molecular%20Graph%20Encoders%20for%20Safe%20Drug%20Recommendations/">
+                                                    SAFEDRUG安全用药
+                                                </a>
+                                            </li>
+                                        
+                                    </ul>
+                                
+                            </li>
+                    
+                    
+                </ul>
+            </div>
+            <!-- Mobile -->
+            <div class="mobile">
+                
+                <div class="icon-item navbar-bar">
+                    <div class="navbar-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile sheet -->
+    <div class="navbar-drawer h-dvh w-full absolute top-0 left-0 bg-background-color flex flex-col justify-between">
+        <ul class="drawer-navbar-list flex flex-col px-4 justify-center items-start">
+            
+                
+                    
+
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                           href="/"
+                        >
+                            <span>
+                                首页
+                            </span>
+                            
+                                <i class="fa-regular fa-house fa-sm fa-fw"></i>
+                            
+                        </a>
+                        
+
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item-sub text-base my-1.5 flex flex-col w-full">
+                        
+                        <div class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary cursor-pointer text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                             navbar-data-toggle="submenu-demo学习"
+                        >
+                            <span>
+                                DEMO学习
+                            </span>
+                            
+                                <i class="fa-solid fa-chevron-right fa-sm fa-fw transition-all"></i>
+                            
+                        </div>
+                        
+
+                        
+                            <div class="flex-col items-start px-2 py-2 hidden" data-target="submenu-demo学习">
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/categories/demo%E5%AD%A6%E4%B9%A0/">全部笔记</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/2026/11/05/demo1%E7%AC%94%E8%AE%B0/">DEMO1笔记</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/2026/11/05/demo2%E7%AC%94%E8%AE%B0/">DEMO2笔记</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/2026/11/05/git%E6%8C%87%E4%BB%A4%E4%BB%8B%E7%BB%8D/">GIT指令介绍</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/2026/11/05/transformer%E8%AE%B2%E8%A7%A3/">TRANSFORMER讲解</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/2026/11/05/%E5%B0%8F%E5%9C%9F%E5%A0%86%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">小土堆学习笔记</a>
+                                    </div>
+                                
+                            </div>
+                        
+                    </li>
+            
+                
+                    
+
+                    <li class="drawer-navbar-item-sub text-base my-1.5 flex flex-col w-full">
+                        
+                        <div class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary cursor-pointer text-2xl font-semibold group border-b border-border-color hover:border-primary w-full "
+                             navbar-data-toggle="submenu-论文研读"
+                        >
+                            <span>
+                                论文研读
+                            </span>
+                            
+                                <i class="fa-solid fa-chevron-right fa-sm fa-fw transition-all"></i>
+                            
+                        </div>
+                        
+
+                        
+                            <div class="flex-col items-start px-2 py-2 hidden" data-target="submenu-论文研读">
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/categories/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/">全部论文</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/2026/11/05/CausalMed%20Causality-Based%20Personalized%20Medication%20Recommendation%20Centered%20on%20Patient%20Health%20State/">CAUSALMED推荐模型</a>
+                                    </div>
+                                
+                                    <div class="drawer-navbar-item text-base flex flex-col justify-center items-start hover:underline active:underline hover:underline-offset-1 rounded-3xl">
+                                        <a class=" text-third-text-color text-xl"
+                                           href="/2026/11/05/SafeDrug%20Dual%20Molecular%20Graph%20Encoders%20for%20Safe%20Drug%20Recommendations/">SAFEDRUG安全用药</a>
+                                    </div>
+                                
+                            </div>
+                        
+                    </li>
+            
+
+            
+            
+                
+                    
+                    <li class="drawer-navbar-item text-base my-1.5 flex flex-col w-full">
+                        <a class="py-1.5 px-2 flex flex-row items-center justify-between gap-1 hover:!text-primary active:!text-primary text-2xl font-semibold group border-b border-border-color hover:border-primary w-full active"
+                           href="/categories"
+                        >
+                            <span>目录汇总</span>
+                            <i class="fa-regular fa-folder-tree fa-sm fa-fw"></i>
+                        </a>
+                    </li>
+                
+                    
+                    
+            
+        </ul>
+
+        <div class="statistics flex justify-around my-2.5">
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/tags">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">1</div>
+        <div class="label text-third-text-color text-sm">Tags</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/categories">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">2</div>
+        <div class="label text-third-text-color text-sm">Categories</div>
+    </a>
+    <a class="item tag-count-item flex flex-col justify-center items-center w-20" href="/archives">
+        <div class="number text-2xl sm:text-xl text-second-text-color font-semibold">8</div>
+        <div class="label text-third-text-color text-sm">Posts</div>
+    </a>
+</div>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+		</div>
+
+		<div class="main-content-body transition-fade-up">
+			
+
+			<div class="main-content">
+				<div class="page-template-container">
+	
+
+	
+	<div class="tag-name">
+    <i class="fa-solid fa-tag"></i>&nbsp;论文研读
+</div>
+<div class="tag-post-list">
+    
+<div class="archive-list-container">
+    
+        <section class="archive-item mb-spacing-unit last:mb-0">
+            <div class="archive-item-header flex flex-row items-center mb-2">
+                <span class="archive-year font-semibold text-3xl mr-2">2026</span>
+                <span class="archive-year-post-count text-xs md:text-sm font-bold rounded-small bg-third-background-color py-[2px] px-[10px] border border-border-color">2</span>
+            </div>
+            
+            <ul class="article-list pl-0 md:pl-8 text-lg leading-[1.5]">
+                
+                    
+                    
+                         <!-- Close the previous LI if not the first item -->
+                        <li class="article-item space-y-2 px-6 pt-10 pb-2 text-xl relative border-l-2 border-border-color" date-is='11-06'>
+                    
+                    <a href="/2026/11/06/Greedy%20Interventional%20Equivalence%20Search%20(GIES)/" class="block w-fit">
+                        <span class="article-title my-0.5 text-2xl">Greedy Interventional Equivalence Search (GIES)</span>
+                    </a>
+                    
+                
+                    
+                    
+                        
+                            </li>
+                         <!-- Close the previous LI if not the first item -->
+                        <li class="article-item space-y-2 px-6 pt-10 pb-2 text-xl relative border-l-2 border-border-color" date-is='11-05'>
+                    
+                    <a href="/2026/11/05/CausalMed%20Causality-Based%20Personalized%20Medication%20Recommendation%20Centered%20on%20Patient%20Health%20State/" class="block w-fit">
+                        <span class="article-title my-0.5 text-2xl">CausalMed: Causality-Based Personalized Medication Recommendation Centered on Patient Health State</span>
+                    </a>
+                    
+                
+                </li> <!-- Ensure the last item is properly closed -->
+            </ul>
+        </section>
+    
+</div>
+</div>
+	
+
+	<div class="page-template-content markdown-body">
+		
+
+		
+	</div>
+
+	<div class="page-template-comments">
+		
+	</div>
+</div>
+
+<div class="paginator">
+	<span class="page-number current">1</span>
+</div>
+  
+			</div>
+
+			
+		</div>
+
+		<div class="main-content-footer">
+			<footer class="footer mt-5 py-5 h-auto text-base text-third-text-color relative border-t-2 border-t-border-color">
+    <div class="info-container py-3 text-center">
+        
+        <div class="text-center">
+            &copy;
+            
+              <span>2022</span>
+              -
+            
+            2026&nbsp;&nbsp;<i class="fa-solid fa-heart fa-beat" style="--fa-animation-duration: 0.5s; color: #f54545"></i>&nbsp;&nbsp;<a href="/">Zoe Raina</a>
+            
+                
+                <p class="post-count space-x-0.5">
+                    <span>
+                        8 posts in total
+                    </span>
+                    
+                </p>
+            
+        </div>
+        
+            <script data-swup-reload-script src="https://cn.vercount.one/js"></script>
+            <div class="relative text-center lg:absolute lg:right-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-right">
+                
+                    <span id="busuanzi_container_site_uv" class="lg:!block">
+                        <span class="text-sm">VISITOR COUNT</span>
+                        <span id="busuanzi_value_site_uv"></span>
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv" class="lg:!block">
+                        <span class="text-sm">TOTAL PAGE VIEWS</span>
+                        <span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="relative text-center lg:absolute lg:left-[20px] lg:top-1/2 lg:-translate-y-1/2 lg:text-left">
+            <span class="lg:block text-sm">POWERED BY <?xml version="1.0" encoding="utf-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg class="relative top-[2px] inline-block align-baseline" version="1.1" id="圖層_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1rem" height="1rem" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve"><path fill="#0E83CD" d="M256.4,25.8l-200,115.5L56,371.5l199.6,114.7l200-115.5l0.4-230.2L256.4,25.8z M349,354.6l-18.4,10.7l-18.6-11V275H200v79.6l-18.4,10.7l-18.6-11v-197l18.5-10.6l18.5,10.8V237h112v-79.6l18.5-10.6l18.5,10.8V354.6z"/></svg><a target="_blank" class="text-base" href="https://hexo.io">Hexo</a></span>
+            <span class="text-sm lg:block">THEME&nbsp;<a class="text-base" target="_blank" href="https://github.com/EvanNotFound/hexo-theme-redefine">Redefine v2.9.0</a></span>
+        </div>
+        
+        
+            <div>
+                Blog up for <span class="odometer" id="runtime_days" ></span> days <span class="odometer" id="runtime_hours"></span> hrs <span class="odometer" id="runtime_minutes"></span> Min <span class="odometer" id="runtime_seconds"></span> Sec
+            </div>
+        
+        
+            <script data-swup-reload-script>
+                try {
+                    function odometer_init() {
+                    const elements = document.querySelectorAll('.odometer');
+                    elements.forEach(el => {
+                        new Odometer({
+                            el,
+                            format: '( ddd).dd',
+                            duration: 200
+                        });
+                    });
+                    }
+                    odometer_init();
+                } catch (error) {}
+            </script>
+        
+        
+            
+                
+
+                    
+                        <script data-swup-reload-script src="/js/katex-init.js"></script>
+                    
+        
+                
+        
+        
+    </div>  
+</footer>
+		</div>
+	</div>
+
+	
+
+	<div class="right-side-tools-container">
+		<div class="side-tools-container">
+	<ul class="hidden-tools-list">
+		<li class="right-bottom-tools tool-font-adjust-plus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-plus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-font-adjust-minus flex justify-center items-center">
+			<i class="fa-regular fa-magnifying-glass-minus"></i>
+		</li>
+
+		<li class="right-bottom-tools tool-dark-light-toggle flex justify-center items-center">
+			<i class="fa-regular fa-moon"></i>
+		</li>
+
+		<!-- rss -->
+		
+
+		
+
+		<li class="right-bottom-tools tool-scroll-to-bottom flex justify-center items-center">
+			<i class="fa-regular fa-arrow-down"></i>
+		</li>
+	</ul>
+
+	<ul class="visible-tools-list">
+		<li class="right-bottom-tools toggle-tools-list flex justify-center items-center">
+			<i class="fa-regular fa-cog fa-spin"></i>
+		</li>
+		
+		<li class="right-bottom-tools tool-scroll-to-top flex justify-center items-center">
+			<i class="arrow-up fas fa-arrow-up"></i>
+			<span class="percent"></span>
+		</li>
+		
+		
+	</ul>
+</div>
+	</div>
+
+	<div class="image-viewer-container" role="dialog" aria-modal="true" aria-label="Image viewer">
+	<button class="image-viewer-close" type="button" aria-label="Close">
+		<i class="fa-solid fa-xmark"></i>
+	</button>
+	<button class="image-viewer-prev" type="button" aria-label="Prev">
+		<i class="fa-solid fa-chevron-left"></i>
+	</button>
+	<div class="image-viewer-frame">
+		<img src="" alt="">
+	</div>
+	<div class="image-viewer-exif-panel hidden absolute left-1/2 bottom-20 -translate-x-1/2 w-[min(92vw,420px)] max-h-[60vh] overflow-hidden rounded-2xl bg-background-color-transparent-80 p-4 text-left shadow-redefine-flat backdrop-blur-md" role="dialog" aria-label="EXIF" aria-hidden="true">
+		<div class="flex items-center justify-between mb-3">
+			<span class="text-sm font-semibold text-first-text-color">EXIF</span>
+			<button class="image-viewer-exif-close flex h-8 w-8 items-center justify-center rounded-full bg-background-color-transparent-80 text-first-text-color transition hover:bg-background-color-transparent-40" type="button" aria-label="Close">
+				<i class="fa-solid fa-xmark text-[0.65rem]"></i>
+			</button>
+		</div>
+		<div class="image-viewer-exif-cards grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[50vh] overflow-y-auto pr-1 scrollbar-hide"></div>
+		<template class="image-viewer-exif-card-template">
+			<div class="rounded-lg bg-background-color-transparent-40 px-3 py-2">
+				<div class="image-viewer-exif-card-header flex items-center gap-2 mb-1">
+					<i class="image-viewer-exif-card-icon fa-solid fa-circle-info text-xs text-third-text-color"></i>
+					<div class="image-viewer-exif-card-title text-xs font-semibold text-first-text-color"></div>
+				</div>
+				<div class="image-viewer-exif-card-items flex flex-col gap-1"></div>
+			</div>
+		</template>
+	</div>
+	<button class="image-viewer-exif-toggle flex items-center gap-2 hidden absolute left-1/2 bottom-6 -translate-x-1/2 rounded-full border border-border-color bg-background-color-transparent-80 px-4 py-2 text-first-text-color backdrop-blur-md transition hover:bg-background-color-transparent-40" type="button" aria-label="EXIF" aria-expanded="false">
+		<i class="fa-solid fa-circle-info text-xs"></i>
+		<span class="text-xs font-semibold uppercase tracking-wider">EXIF</span>
+	</button>
+	<button class="image-viewer-next" type="button" aria-label="Next">
+		<i class="fa-solid fa-chevron-right"></i>
+	</button>
+</div>
+
+
+	
+
+</main>
+
+
+
+<script src="/js/build/libs/Swup.min.js"></script>
+
+<script src="/js/build/libs/SwupSlideTheme.min.js"></script>
+
+<script src="/js/build/libs/SwupScriptsPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupProgressPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupScrollPlugin.min.js"></script>
+
+<script src="/js/build/libs/SwupPreloadPlugin.min.js"></script>
+
+<script>
+    window.swup = new Swup({
+        plugins: [
+            new SwupScriptsPlugin({
+                optin: true,
+            }),
+            new SwupProgressPlugin(),
+            new SwupScrollPlugin({
+                offset: 80,
+            }),
+            new SwupSlideTheme({
+                mainElement: ".main-content-body",
+            }),
+            new SwupPreloadPlugin(),
+        ],
+        containers: ["#swup"],
+    });
+
+    window.dispatchEvent(
+        new CustomEvent("redefine:swup:ready", {
+            detail: {
+                swup: window.swup,
+            },
+        }),
+    );
+</script>
+
+
+
+	
+<script src="/js/build/main.js" type="module"></script>
+
+
+
+    
+<script src="/js/build/libs/odometer.min.js"></script>
+
+    
+<link rel="stylesheet" href="/assets/odometer-theme-minimal.css">
+
+
+
+
+
+
+
+  
+<script src="/js/build/libs/Typed.min.js"></script>
+
+
+
+
+
+
+
+
+
+
+<script src="/js/build/libs/moment-with-locales.min.js" data-swup-reload-script=""></script>
+
+
+
+	
+	<!-- Vinyl Record Music Player Component (网易云音乐旋转唱片控制器 - 左下角默认 · 目录不暂停 · 顺滑交互增强版) -->
+<div id="vinyl-player" class="vinyl-player-root dock-left" data-swup-ignore-script>
+    <!-- 展开式播放控制面板 -->
+    <div class="vinyl-control-card" id="vinyl-card">
+        <div class="vinyl-card-info">
+            <div class="vinyl-song-title" id="vinyl-title">Ditto (治愈bgm)</div>
+            <div class="vinyl-song-artist" id="vinyl-artist">康河好声音</div>
+        </div>
+        <div class="vinyl-card-actions">
+            <button class="vinyl-btn" id="vinyl-prev" title="上一首">
+                <i class="fa-solid fa-backward-step"></i>
+            </button>
+            <button class="vinyl-btn vinyl-btn-main" id="vinyl-toggle" title="播放 / 暂停">
+                <i class="fa-solid fa-play" id="vinyl-play-icon"></i>
+            </button>
+            <button class="vinyl-btn" id="vinyl-next" title="下一首">
+                <i class="fa-solid fa-forward-step"></i>
+            </button>
+        </div>
+        <!-- 迷你跳动音浪 -->
+        <div class="vinyl-wave-bars" id="vinyl-wave">
+            <span class="v-bar"></span>
+            <span class="v-bar"></span>
+            <span class="v-bar"></span>
+            <span class="v-bar"></span>
+        </div>
+    </div>
+
+    <!-- 旋转黑胶唱片主体与唱针（支持点击直接播放/收起、长按拖拽左右停靠） -->
+    <div class="vinyl-disc-wrapper" id="vinyl-disc-trigger" title="点击播放音乐 · 展开控制条 · 可长按拖拽到左侧或右侧">
+        <!-- 唱臂 / 唱针 -->
+        <div class="vinyl-tonearm" id="vinyl-tonearm">
+            <div class="tonearm-base"></div>
+            <div class="tonearm-stick"></div>
+            <div class="tonearm-head"></div>
+        </div>
+
+        <!-- 黑胶唱盘 -->
+        <div class="vinyl-disc" id="vinyl-disc">
+            <!-- 黑胶纹理光晕层 -->
+            <div class="vinyl-grooves"></div>
+            <!-- 中心专辑封面 -->
+            <div class="vinyl-cover-box">
+                <img id="vinyl-cover-img" src="https://p1.music.126.net/0mbgMMMScsR6RG8BW46iHw==/109951171874258363.jpg" alt="Cover" />
+                <div class="vinyl-center-hole"></div>
+            </div>
+        </div>
+
+        <!-- 悬浮播放状态小角标 -->
+        <div class="vinyl-status-badge" id="vinyl-badge">
+            <i class="fa-solid fa-music"></i>
+        </div>
+    </div>
+
+    <!-- 原生音频播放器 -->
+    <audio id="vinyl-audio" preload="auto"></audio>
+</div>
+
+<style>
+/* ==========================================================================
+   Vinyl Record Music Player Styles (默认左下角 · 可拖拽左右停靠 · 方向自适应)
+   ========================================================================== */
+.vinyl-player-root {
+    position: fixed;
+    z-index: 1002;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    font-family: var(--default-font-family, sans-serif);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+    will-change: transform, left, top, right;
+    bottom: 24px;
+    left: 24px;
+}
+
+.vinyl-player-root.is-expanded {
+    gap: 12px;
+}
+
+/* 停靠在左侧（默认）：唱片在左，控制条向右伸出 */
+.vinyl-player-root.dock-left {
+    flex-direction: row-reverse;
+    left: 24px;
+    right: auto;
+}
+
+/* 停靠在右侧：唱片在右，控制条向左伸出 */
+.vinyl-player-root.dock-right {
+    flex-direction: row;
+    right: 24px;
+    left: auto;
+}
+
+/* 拖拽吸附边缘平滑动画 */
+.vinyl-player-root.is-snapping {
+    transition: left 0.38s cubic-bezier(0.34, 1.56, 0.64, 1),
+                right 0.38s cubic-bezier(0.34, 1.56, 0.64, 1),
+                top 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+/* 拖拽中样式 */
+.vinyl-player-root.is-dragging {
+    transition: none !important;
+    cursor: grabbing !important;
+}
+.vinyl-player-root.is-dragging .vinyl-disc-wrapper {
+    cursor: grabbing !important;
+    transform: scale(1.15) !important;
+    filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.55)) !important;
+}
+
+/* 唱片主体包裹层 */
+.vinyl-disc-wrapper {
+    position: relative;
+    width: 62px;
+    height: 62px;
+    cursor: grab;
+    filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.38));
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+    touch-action: none;
+    flex-shrink: 0;
+}
+
+.vinyl-disc-wrapper:hover {
+    transform: scale(1.08);
+}
+
+/* 未播放状态下的呼吸微光提示，指引用户点击直接开始聆听 */
+.vinyl-player-root:not(.is-playing) .vinyl-disc-wrapper {
+    animation: disc-breathe 2.8s infinite ease-in-out;
+}
+
+@keyframes disc-breathe {
+    0%, 100% {
+        filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.38));
+    }
+    50% {
+        filter: drop-shadow(0 0 16px rgba(163, 31, 52, 0.65));
+    }
+}
+
+@media (max-width: 768px) {
+    .vinyl-player-root {
+        bottom: 16px;
+        left: 16px;
+    }
+    .vinyl-player-root.dock-left {
+        left: 16px;
+        right: auto;
+    }
+    .vinyl-player-root.dock-right {
+        right: 16px;
+        left: auto;
+    }
+    .vinyl-disc-wrapper {
+        width: 48px;
+        height: 48px;
+    }
+    .vinyl-tonearm {
+        top: -10px;
+        right: -3px;
+        transform-origin: 22px 3px;
+    }
+    .tonearm-stick {
+        height: 22px;
+    }
+}
+
+/* 黑胶圆盘 */
+.vinyl-disc {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle, #0a0a0a 0%, #181818 45%, #2a2a2a 50%, #151515 55%, #080808 100%);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.14), inset 0 0 10px rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: vinyl-spin-anim 12s linear infinite;
+    animation-play-state: paused;
+    will-change: transform;
+    pointer-events: none;
+}
+
+.vinyl-player-root.is-playing .vinyl-disc {
+    animation-play-state: running;
+}
+
+@keyframes vinyl-spin-anim {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 唱盘同心圆纹理与高光 */
+.vinyl-grooves {
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: repeating-radial-gradient(
+        circle,
+        transparent 0px,
+        transparent 2px,
+        rgba(255, 255, 255, 0.04) 2.5px,
+        transparent 3px
+    );
+    pointer-events: none;
+}
+
+.vinyl-grooves::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.18) 0%,
+        transparent 40%,
+        rgba(255, 255, 255, 0.1) 60%,
+        transparent 100%
+    );
+    pointer-events: none;
+}
+
+/* 中心封面 */
+.vinyl-cover-box {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 0 0 2px #181818, 0 0 6px rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .vinyl-cover-box {
+        width: 26px;
+        height: 26px;
+    }
+}
+
+.vinyl-cover-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+.vinyl-center-hole {
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.8), 0 0 0 1px #475569;
+}
+
+/* 唱针（Tonearm） */
+.vinyl-tonearm {
+    position: absolute;
+    top: -12px;
+    right: -4px;
+    width: 32px;
+    height: 40px;
+    z-index: 3;
+    pointer-events: none;
+    transform-origin: 26px 4px;
+    transform: rotate(-32deg);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.vinyl-player-root.is-playing .vinyl-tonearm {
+    transform: rotate(0deg);
+}
+
+.tonearm-base {
+    position: absolute;
+    top: 0;
+    right: 2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #e2e8f0 0%, #94a3b8 100%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.tonearm-stick {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 3px;
+    height: 26px;
+    background: linear-gradient(to bottom, #cbd5e1, #64748b);
+    border-radius: 1.5px;
+    transform-origin: top center;
+    transform: rotate(20deg);
+}
+
+.tonearm-head {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    width: 6px;
+    height: 9px;
+    background: #f59e0b;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    transform: rotate(15deg);
+}
+
+/* 状态角标 */
+.vinyl-status-badge {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    box-shadow: 0 2px 6px rgba(163, 31, 52, 0.4);
+    border: 1.5px solid var(--background-color);
+    transition: all 0.25s ease;
+    pointer-events: none;
+}
+
+.vinyl-player-root.is-playing .vinyl-status-badge {
+    animation: badge-pulse 2s infinite ease-in-out;
+}
+
+@keyframes badge-pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+/* ==========================================================================
+   控制卡片（默认收起 · 点击展开 · 自动收回 · 双向自适应）
+   ========================================================================== */
+.vinyl-control-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-radius: 18px;
+    background: var(--background-color-transparent-80);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid transparent;
+    box-shadow: var(--redefine-box-shadow-flat);
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+
+    /* 默认收起状态：宽度为0、透明、内边距为0 */
+    max-width: 0;
+    opacity: 0;
+    padding: 0;
+    pointer-events: none;
+
+    /* 平滑过渡 */
+    transition: max-width 0.42s cubic-bezier(0.34, 1.45, 0.64, 1),
+                opacity 0.3s ease,
+                padding 0.35s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease,
+                transform 0.42s cubic-bezier(0.34, 1.45, 0.64, 1);
+    will-change: max-width, opacity, transform;
+}
+
+/* 停靠在左侧（默认）：从左向右伸出 */
+.vinyl-player-root.dock-left .vinyl-control-card {
+    transform-origin: left center;
+    transform: scaleX(0.7) translateX(-18px);
+}
+
+/* 停靠在右侧时：从右向左伸出 */
+.vinyl-player-root.dock-right .vinyl-control-card {
+    transform-origin: right center;
+    transform: scaleX(0.7) translateX(18px);
+}
+
+/* 展开状态激活 */
+.vinyl-player-root.is-expanded .vinyl-control-card {
+    max-width: 360px;
+    opacity: 1;
+    padding: 8px 16px 8px 14px;
+    border-color: var(--border-color);
+    pointer-events: auto;
+    transform: scaleX(1) translateX(0);
+    box-shadow: var(--redefine-box-shadow-flat-hover);
+}
+
+.vinyl-card-info {
+    display: flex;
+    flex-direction: column;
+    max-width: 170px;
+}
+
+.vinyl-song-title {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--first-text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+}
+
+.vinyl-song-artist {
+    font-size: 0.74rem;
+    color: var(--third-text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    margin-top: 2px;
+}
+
+/* 按钮组 */
+.vinyl-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.vinyl-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    background: var(--second-background-color);
+    color: var(--second-text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.vinyl-btn:hover {
+    background: var(--primary-color);
+    color: #fff;
+    transform: scale(1.08);
+}
+
+.vinyl-btn-main {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    color: #fff;
+    font-size: 0.82rem;
+}
+
+.vinyl-btn-main:hover {
+    background: var(--primary-color);
+    filter: brightness(1.15);
+}
+
+/* 音浪跳动柱 */
+.vinyl-wave-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 2.5px;
+    height: 16px;
+    padding-left: 2px;
+}
+
+.v-bar {
+    width: 2.5px;
+    height: 4px;
+    background: var(--primary-color);
+    border-radius: 1px;
+    transition: height 0.2s ease;
+}
+
+.vinyl-player-root.is-playing .v-bar:nth-child(1) {
+    animation: sound-wave 0.8s ease-in-out infinite alternate;
+}
+.vinyl-player-root.is-playing .v-bar:nth-child(2) {
+    animation: sound-wave 0.6s ease-in-out infinite alternate 0.2s;
+}
+.vinyl-player-root.is-playing .v-bar:nth-child(3) {
+    animation: sound-wave 0.9s ease-in-out infinite alternate 0.4s;
+}
+.vinyl-player-root.is-playing .v-bar:nth-child(4) {
+    animation: sound-wave 0.7s ease-in-out infinite alternate 0.1s;
+}
+
+@keyframes sound-wave {
+    0% {
+        height: 3px;
+    }
+    100% {
+        height: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .vinyl-player-root.is-expanded {
+        gap: 8px;
+    }
+    .vinyl-player-root.is-expanded .vinyl-control-card {
+        max-width: min(250px, calc(100vw - 80px)) !important;
+        padding: 6px 10px !important;
+        gap: 8px !important;
+    }
+    .vinyl-card-info {
+        max-width: 100px !important;
+    }
+    .vinyl-song-title {
+        font-size: 0.78rem !important;
+    }
+    .vinyl-song-artist {
+        font-size: 0.68rem !important;
+    }
+    .vinyl-card-actions {
+        gap: 4px !important;
+    }
+    .vinyl-btn {
+        width: 26px !important;
+        height: 26px !important;
+        font-size: 0.7rem !important;
+    }
+    .vinyl-btn-main {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 0.75rem !important;
+    }
+    .vinyl-wave-bars {
+        display: none !important;
+    }
+}
+</style>
+
+<script data-swup-ignore-script>
+(function() {
+    // 歌单配置（使用网易云直链接口与官方原封面）
+    const PLAYLIST = [
+        {
+            id: "2738204719",
+            title: "Ditto (治愈bgm)",
+            artist: "康河好声音",
+            cover: "https://p1.music.126.net/0mbgMMMScsR6RG8BW46iHw==/109951171874258363.jpg",
+            src: "https://music.163.com/song/media/outer/url?id=2738204719.mp3"
+        },
+        {
+            id: "26908739",
+            title: "Variations On The Canon (卡农)",
+            artist: "George Winston",
+            cover: "https://p2.music.126.net/g8z5KwQuqkv-VCJmE2CilA==/5692171697095856.jpg",
+            src: "https://music.163.com/song/media/outer/url?id=26908739.mp3"
+        },
+        {
+            id: "516922570",
+            title: "G小调的巴赫 (Moonrise Edit)",
+            artist: "Vince Zhang",
+            cover: "https://p2.music.126.net/7EA2OIvIiJ5cHmwikD4_iQ==/109951162991116739.jpg",
+            src: "https://music.163.com/song/media/outer/url?id=516922570.mp3"
+        },
+        {
+            id: "512989806",
+            title: "A Story of Fate (三生树)",
+            artist: "Jannik",
+            cover: "https://p1.music.126.net/LjG28i7Shc6pR5X5uXF_Ng==/109951163043550939.jpg",
+            src: "https://music.163.com/song/media/outer/url?id=512989806.mp3"
+        }
+    ];
+
+    let currentIndex = 0;
+    let isPlaying = false;
+    let userHasInteracted = false;
+    let userManuallyPaused = false; // 用户是否在控制器上手动点击了暂停
+
+    // 拖拽与吸附停靠状态（默认左下角停靠）
+    let isPointerDown = false;
+    let hasMoved = false;
+    let startX = 0;
+    let startY = 0;
+    let initialRect = null;
+    let currentDock = "left";
+
+    // 自动收回计时器（4.5秒无操作自动收缩）
+    let autoCollapseTimeout = null;
+    const COLLAPSE_DELAY = 4500;
+
+    const rootDom = document.getElementById("vinyl-player");
+    const cardDom = document.getElementById("vinyl-card");
+    const audioDom = document.getElementById("vinyl-audio");
+    const titleDom = document.getElementById("vinyl-title");
+    const artistDom = document.getElementById("vinyl-artist");
+    const coverDom = document.getElementById("vinyl-cover-img");
+    const playIconDom = document.getElementById("vinyl-play-icon");
+    const toggleBtn = document.getElementById("vinyl-toggle");
+    const prevBtn = document.getElementById("vinyl-prev");
+    const nextBtn = document.getElementById("vinyl-next");
+    const discTrigger = document.getElementById("vinyl-disc-trigger");
+
+    if (!audioDom || !rootDom) return;
+
+    // 全站全场景无缝持续播放（进入博客文章、分类目录、主页等均不暂停）
+    function shouldPlayMusic() {
+        return true;
+    }
+
+    // =========================================================================
+    // 控制面板展开 / 收起 / 自动延时隐藏逻辑
+    // =========================================================================
+    function openCard() {
+        rootDom.classList.add("is-expanded");
+        resetAutoCollapseTimer();
+    }
+
+    function closeCard() {
+        rootDom.classList.remove("is-expanded");
+        clearTimeout(autoCollapseTimeout);
+    }
+
+    function toggleCard() {
+        if (rootDom.classList.contains("is-expanded")) {
+            closeCard();
+        } else {
+            openCard();
+        }
+    }
+
+    function resetAutoCollapseTimer() {
+        clearTimeout(autoCollapseTimeout);
+        if (rootDom.classList.contains("is-expanded")) {
+            autoCollapseTimeout = setTimeout(() => {
+                closeCard();
+            }, COLLAPSE_DELAY);
+        }
+    }
+
+    // 在控制卡片上活动时，重置倒计时
+    if (cardDom) {
+        cardDom.addEventListener("pointerdown", (e) => {
+            e.stopPropagation();
+            resetAutoCollapseTimer();
+        });
+        cardDom.addEventListener("pointerenter", () => resetAutoCollapseTimer());
+        cardDom.addEventListener("pointermove", () => resetAutoCollapseTimer());
+    }
+
+    // =========================================================================
+    // 左右停靠与持久化记忆（默认左下角：left: 24px）
+    // =========================================================================
+    function applyDock(dock, targetY, animate = true) {
+        currentDock = dock;
+        if (animate) {
+            rootDom.classList.add("is-snapping");
+            setTimeout(() => rootDom.classList.remove("is-snapping"), 400);
+        }
+
+        const isMobile = window.innerWidth <= 768;
+        const screenHeight = window.innerHeight;
+        const defaultY = screenHeight - (isMobile ? 74 : 88);
+        const safeY = Math.max(16, Math.min(screenHeight - (isMobile ? 68 : 82), targetY || defaultY));
+
+        if (dock === "left") {
+            rootDom.classList.remove("dock-right");
+            rootDom.classList.add("dock-left");
+            rootDom.style.left = isMobile ? "16px" : "24px";
+            rootDom.style.right = "auto";
+            rootDom.style.top = safeY + "px";
+            rootDom.style.bottom = "auto";
+        } else {
+            rootDom.classList.remove("dock-left");
+            rootDom.classList.add("dock-right");
+            rootDom.style.left = "auto";
+            rootDom.style.right = isMobile ? "16px" : "24px";
+            rootDom.style.top = safeY + "px";
+            rootDom.style.bottom = "auto";
+        }
+
+        try {
+            localStorage.setItem("vinyl_dock_pos_v2", JSON.stringify({
+                dock: currentDock,
+                topPercent: safeY / screenHeight
+            }));
+        } catch(e) {}
+    }
+
+    // 恢复历史停靠位置（默认左下角）
+    try {
+        const saved = JSON.parse(localStorage.getItem("vinyl_dock_pos_v2") || "{}");
+        if (saved && (saved.dock === "left" || saved.dock === "right") && saved.topPercent) {
+            const topY = Math.round(saved.topPercent * window.innerHeight);
+            applyDock(saved.dock, topY, false);
+        } else {
+            applyDock("left", null, false);
+        }
+    } catch(e) {
+        applyDock("left", null, false);
+    }
+
+    // 窗口尺寸变化自适应
+    window.addEventListener("resize", () => {
+        const rect = rootDom.getBoundingClientRect();
+        applyDock(currentDock, rect.top, false);
+    });
+
+    // =========================================================================
+    // 唱片交互（点击直接播放/收放、长按拖拽左右停靠）
+    // =========================================================================
+    if (discTrigger) {
+        discTrigger.addEventListener("pointerdown", (e) => {
+            if (e.button !== 0 && e.pointerType === "mouse") return;
+
+            isPointerDown = true;
+            hasMoved = false;
+            startX = e.clientX;
+            startY = e.clientY;
+            initialRect = rootDom.getBoundingClientRect();
+
+            try {
+                discTrigger.setPointerCapture(e.pointerId);
+            } catch(err) {}
+        });
+
+        discTrigger.addEventListener("pointermove", (e) => {
+            if (!isPointerDown) return;
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+
+            if (!hasMoved && Math.hypot(dx, dy) > 6) {
+                hasMoved = true;
+                rootDom.classList.add("is-dragging");
+                closeCard(); // 拖拽中收起长条，体验更轻盈
+            }
+
+            if (hasMoved) {
+                const currentX = initialRect.left + dx;
+                const currentY = initialRect.top + dy;
+                rootDom.style.left = currentX + "px";
+                rootDom.style.top = currentY + "px";
+                rootDom.style.right = "auto";
+                rootDom.style.bottom = "auto";
+            }
+        });
+
+        const handlePointerEnd = (e) => {
+            if (!isPointerDown) return;
+            isPointerDown = false;
+            rootDom.classList.remove("is-dragging");
+
+            try {
+                discTrigger.releasePointerCapture(e.pointerId);
+            } catch(err) {}
+
+            if (hasMoved) {
+                // 拖动结束：根据中线判断吸附至左侧或右侧
+                const currentRect = rootDom.getBoundingClientRect();
+                const centerX = currentRect.left + currentRect.width / 2;
+                const targetDock = centerX < window.innerWidth / 2 ? "left" : "right";
+                applyDock(targetDock, currentRect.top, true);
+            } else {
+                // 纯点击唱片：若未播放则立即开播并展开，若已播放则切换展开/收起
+                if (!isPlaying) {
+                    userManuallyPaused = false;
+                    playMusic();
+                    openCard();
+                } else {
+                    toggleCard();
+                }
+            }
+        };
+
+        discTrigger.addEventListener("pointerup", handlePointerEnd);
+        discTrigger.addEventListener("pointercancel", handlePointerEnd);
+    }
+
+    // =========================================================================
+    // 音频播放控制与生命周期管理
+    // =========================================================================
+    function updateUI(song) {
+        if (!song) return;
+        if (titleDom) titleDom.textContent = song.title;
+        if (artistDom) artistDom.textContent = song.artist;
+        if (coverDom) coverDom.src = song.cover;
+    }
+
+    function loadTrack(index) {
+        if (index < 0 || index >= PLAYLIST.length) index = 0;
+        currentIndex = index;
+        const song = PLAYLIST[currentIndex];
+        audioDom.src = song.src;
+        updateUI(song);
+    }
+
+    function playMusic() {
+        const playPromise = audioDom.play();
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                isPlaying = true;
+                userHasInteracted = true;
+                rootDom.classList.add("is-playing");
+                if (playIconDom) {
+                    playIconDom.className = "fa-solid fa-pause";
+                }
+            }).catch(err => {
+                console.warn("[Vinyl Player] Autoplay waiting for user gesture:", err);
+                initAutoplayUnlock();
+            });
+        }
+    }
+
+    function pauseMusic() {
+        audioDom.pause();
+        isPlaying = false;
+        rootDom.classList.remove("is-playing");
+        if (playIconDom) {
+            playIconDom.className = "fa-solid fa-play";
+        }
+    }
+
+    function togglePlay() {
+        resetAutoCollapseTimer();
+        if (isPlaying) {
+            userManuallyPaused = true;
+            pauseMusic();
+        } else {
+            userManuallyPaused = false;
+            playMusic();
+        }
+    }
+
+    function nextTrack(auto = false) {
+        resetAutoCollapseTimer();
+        currentIndex = (currentIndex + 1) % PLAYLIST.length;
+        loadTrack(currentIndex);
+        if (auto || isPlaying || shouldPlayMusic()) {
+            playMusic();
+        }
+    }
+
+    function prevTrack() {
+        resetAutoCollapseTimer();
+        currentIndex = (currentIndex - 1 + PLAYLIST.length) % PLAYLIST.length;
+        loadTrack(currentIndex);
+        playMusic();
+    }
+
+    // 歌曲播放结束时，自动循环下一首
+    audioDom.addEventListener("ended", () => {
+        nextTrack(true);
+    });
+
+    // 遇到播放错误时，自动尝试下一首，避免卡死
+    audioDom.addEventListener("error", () => {
+        console.warn("[Vinyl Player] Stream error, skipping to next track...");
+        setTimeout(() => {
+            if (!userManuallyPaused && shouldPlayMusic()) {
+                nextTrack(true);
+            }
+        }, 800);
+    });
+
+    // 核心需求：“全站无缝持续播放，进入博客文章、分类目录均不自动暂停”
+    function handleNavigationState() {
+        if (!userManuallyPaused && !isPlaying) {
+            playMusic();
+        }
+    }
+
+    // 突破浏览器自动播放限制：监听全局首次手势（触摸、点击、按键等），捕捉阶段触发
+    function initAutoplayUnlock() {
+        if (userHasInteracted) return;
+        const unlockEvents = ["pointerdown", "mousedown", "touchstart", "click", "keydown"];
+        const unlockHandler = () => {
+            userHasInteracted = true;
+            if (!userManuallyPaused && !isPlaying) {
+                playMusic();
+            }
+            unlockEvents.forEach(evt => {
+                document.removeEventListener(evt, unlockHandler, true);
+                window.removeEventListener(evt, unlockHandler, true);
+            });
+        };
+        unlockEvents.forEach(evt => {
+            document.addEventListener(evt, unlockHandler, { capture: true, passive: true });
+            window.addEventListener(evt, unlockHandler, { capture: true, passive: true });
+        });
+    }
+
+    // 绑定控制器按钮事件
+    if (toggleBtn) toggleBtn.addEventListener("click", (e) => { e.stopPropagation(); togglePlay(); });
+    if (prevBtn) prevBtn.addEventListener("click", (e) => { e.stopPropagation(); prevTrack(); });
+    if (nextBtn) nextBtn.addEventListener("click", (e) => { e.stopPropagation(); nextTrack(); });
+
+    // 初始化第一首
+    loadTrack(0);
+
+    // 注册全局手势解锁（随时准备在用户初次交互时开播）
+    initAutoplayUnlock();
+
+    // 首次进入页面时的开播尝试
+    if (!userManuallyPaused) {
+        playMusic();
+    }
+
+    // 监听 Swup 路由切换事件
+    const setupSwupHooks = (swupInstance) => {
+        if (!swupInstance || !swupInstance.hooks) return;
+        swupInstance.hooks.on("page:view", () => {
+            handleNavigationState();
+        });
+    };
+
+    if (window.swup) {
+        setupSwupHooks(window.swup);
+    } else {
+        window.addEventListener("redefine:swup:ready", (e) => {
+            const swup = window.swup || e?.detail?.swup;
+            setupSwupHooks(swup);
+        });
+    }
+
+    // 监听 popstate（浏览器前进后退）
+    window.addEventListener("popstate", () => {
+        setTimeout(handleNavigationState, 60);
+    });
+})();
+</script>
+
+</body>
+
+</html>
