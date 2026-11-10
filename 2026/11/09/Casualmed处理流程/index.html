@@ -94,7 +94,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/images/redefine-og.webp">
 <meta property="article:published_time" content="2026-11-09T08:21:31.000Z">
-<meta property="article:modified_time" content="2026-11-09T08:34:11.044Z">
+<meta property="article:modified_time" content="2026-11-10T03:32:51.461Z">
 <meta property="article:author" content="Zoe Raina">
 <meta property="article:tag" content="论文研读">
 <meta name="twitter:card" content="summary">
@@ -1028,8 +1028,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2026-11-09 16:34:11</span>
-            <span class="mobile">2026-11-09 16:34:11</span>
+            <span class="desktop">2026-11-10 11:32:51</span>
+            <span class="mobile">2026-11-10 11:32:51</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -1086,31 +1086,47 @@
 			<h1 id="casualmed处理流程"><a href="#casualmed处理流程" class="headerlink" title="casualmed处理流程"></a>casualmed处理流程</h1><h1 id="1-G-v-t-dm-text-and-G-v-t-pm-怎么来的"><a href="#1-G-v-t-dm-text-and-G-v-t-pm-怎么来的" class="headerlink" title="1.G_{v_t}^{dm} \text{ and } G_{v_t}^{pm}怎么来的"></a>1.<script type="math/tex">G_{v_t}^{dm} \text{ and } G_{v_t}^{pm}</script>怎么来的</h1><p>这两个图是用前面估计出的因果效应矩阵，结合当前就诊的实体，构建出的两张完全二部图。对应论文第 4.2 节和第 4.3.2 节（第 5 页）。</p>
 <p><strong>① 先得到因果效应矩阵</strong></p>
 <p>第 4.2 节先通过因果发现学习实体间的因果结构，再用基于后门准则调整的广义线性模型估计疾病/操作与药物之间的因果效应，得到：</p>
-<p>[<br>\mathbf M^{dm}\in\mathbb R^{|\mathcal D|\times|\mathcal M|},<br>\qquad<br>\mathbf M^{pm}\in\mathbb R^{|\mathcal P|\times|\mathcal M|}.<br>]</p>
-<p>其中：</p>
+<script type="math/tex; mode=display">
+\mathbf M^{dm}\in\mathbb R^{|\mathcal D|\times|\mathcal M|},
+\qquad
+\mathbf M^{pm}\in\mathbb R^{|\mathcal P|\times|\mathcal M|}.</script><p>其中：</p>
 <ul>
-<li>(\mathbf M^{dm}_{ik})：疾病 (d_i) 与药物 (m_k) 的因果效应值。</li>
-<li>(\mathbf M^{pm}_{jk})：操作 (p_j) 与药物 (m_k) 的因果效应值。</li>
+<li>$\mathbf M^{dm}_{ik}$：疾病 $d_i$ 与药物 $m_k$ 的因果效应值。</li>
+<li>$\mathbf M^{pm}_{jk}$：操作 $p_j$ 与药物 $m_k$ 的因果效应值。</li>
 </ul>
 <p>这里的矩阵覆盖整个实体词表。</p>
 <p><strong>② 取出这次就诊要用的节点</strong></p>
-<p>模型处理第 (t) 次就诊时，使用：</p>
-<p>[<br>\underbrace{\mathcal D_t}_{当前疾病},\qquad<br>\underbrace{\mathcal P_t}_{当前操作},\qquad<br>\underbrace{\mathcal M_{t-1}}_{上次就诊用药}.<br>]</p>
-<p>因此，两张图的节点分别是：</p>
-<p>[<br>V(G_{v_t}^{dm})=\mathcal D_t\cup\mathcal M_{t-1},<br>]</p>
-<p>[<br>V(G_{v_t}^{pm})=\mathcal P_t\cup\mathcal M_{t-1}.<br>]</p>
-<p>注意药物侧是 (\mathcal M_{t-1})。当前用药 (\mathcal M_t) 是待预测目标。</p>
+<p>模型处理第 $t$ 次就诊时，使用：</p>
+<script type="math/tex; mode=display">
+\underbrace{\mathcal D_t}_{当前疾病},\qquad
+\underbrace{\mathcal P_t}_{当前操作},\qquad
+\underbrace{\mathcal M_{t-1} }_{上次就诊用药}.</script><p>因此，两张图的节点分别是：</p>
+<script type="math/tex; mode=display">
+V(G_{v_t}^{dm})=\mathcal D_t\cup\mathcal M_{t-1},</script><script type="math/tex; mode=display">
+V(G_{v_t}^{pm})=\mathcal P_t\cup\mathcal M_{t-1}.</script><p>注意药物侧是 $\mathcal M_{t-1}$。当前用药 $\mathcal M_t$ 是待预测目标。</p>
 <p><strong>③ 两侧节点全部相连，从矩阵中查询每条边的效应</strong></p>
-<p>以 (G_{v_t}^{dm}) 为例：当前每个疾病都连接上次用药中的每个药物，因此是“完全二部图”。可以将构图过程写成：</p>
-<p>[<br>E^{dm}_t=\mathcal D_t\times\mathcal M_{t-1},<br>\qquad<br>e(d_i,m_k)=\mathbf M^{dm}_{ik}.<br>]</p>
-<p>操作—药物图同理：</p>
-<p>[<br>E^{pm}_t=\mathcal P_t\times\mathcal M_{t-1},<br>\qquad<br>e(p_j,m_k)=\mathbf M^{pm}_{jk}.<br>]</p>
-<p>例如，若当前有两个疾病，上次用了三种药，那么 (G_{v_t}^{dm}) 就有 (2+3=5) 个节点、(2\times3=6) 条跨侧连接。六条连接的效应值来自 (\mathbf M^{dm}) 对应的两行、三列。</p>
+<p>以 $G_{v_t}^{dm}$ 为例：当前每个疾病都连接上次用药中的每个药物，因此是“完全二部图”。可以将构图过程写成：</p>
+<script type="math/tex; mode=display">
+E^{dm}_t=\mathcal D_t\times\mathcal M_{t-1},
+\qquad
+e(d_i,m_k)=\mathbf M^{dm}_{ik}.</script><p>操作—药物图同理：</p>
+<script type="math/tex; mode=display">
+E^{pm}_t=\mathcal P_t\times\mathcal M_{t-1},
+\qquad
+e(p_j,m_k)=\mathbf M^{pm}_{jk}.</script><p>例如，若当前有两个疾病，上次用了三种药，那么 $G_{v_t}^{dm}$ 就有 $2+3=5$ 个节点、$2\times3=6$ 条跨侧连接。六条连接的效应值来自 $\mathbf M^{dm}$ 对应的两行、三列。</p>
 <p><strong>④ 按因果效应分组，作为 RGCN 的关系类型</strong></p>
 <p>论文把因果效应相近的边归为同一种关系类型，再输入 RGCN，更新疾病、操作和药物的表示。最终配置使用 5 种边类型。</p>
 <p>所以完整来源是：</p>
-<p>[<br>\boxed{<br>\text{EHR}<br>\xrightarrow{\text{因果发现与效应估计}}<br>\mathbf M^{dm},\mathbf M^{pm}<br>\xrightarrow{\text{选取当前疾病/操作、上次用药}}<br>G_{v_t}^{dm},G_{v_t}^{pm}<br>\xrightarrow{\text{边类型分组}}<br>\text{RGCN}<br>}<br>]</p>
-<p>论文说明了这个构建逻辑，但没有在正文中明确给出效应值分成 5 类的具体区间或算法。</p>
+<script type="math/tex; mode=display">
+\boxed{
+\text{EHR}
+\xrightarrow{\text{因果发现与效应估计} }
+\mathbf M^{dm},\mathbf M^{pm}
+\xrightarrow{\text{选取当前疾病/操作、上次用药} }
+G_{v_t}^{dm},G_{v_t}^{pm}
+\xrightarrow{\text{边类型分组} }
+\text{RGCN}
+}</script><p>论文说明了这个构建逻辑，但没有在正文中明确给出效应值分成 5 类的具体区间或算法。</p>
 <h1 id="2-结合例子怎么处理数据的，关系挖掘是怎么进行的，着重讲讲GIES算法，DSA算法，RGCN算法，GRU算法是怎么计算的，原论文中各个变量分别是哪一步的输出"><a href="#2-结合例子怎么处理数据的，关系挖掘是怎么进行的，着重讲讲GIES算法，DSA算法，RGCN算法，GRU算法是怎么计算的，原论文中各个变量分别是哪一步的输出" class="headerlink" title="2.结合例子怎么处理数据的，关系挖掘是怎么进行的，着重讲讲GIES算法，DSA算法，RGCN算法，GRU算法是怎么计算的，原论文中各个变量分别是哪一步的输出"></a>2.结合例子怎么处理数据的，关系挖掘是怎么进行的，着重讲讲GIES算法，DSA算法，RGCN算法，GRU算法是怎么计算的，原论文中各个变量分别是哪一步的输出</h1><p>可以。理解这篇论文，最关键的是先把下面四件事分开：</p>
 <ul>
 <li>GIES：从大量病历中学习“哪些实体之间可能有因果关系”。</li>
@@ -1134,15 +1150,15 @@
 <tbody>
 <tr>
 <td>疾病</td>
-<td>(d_1,d_2,d_3,d_4)</td>
+<td>$d_1,d_2,d_3,d_4$</td>
 </tr>
 <tr>
 <td>医疗操作</td>
-<td>(p_1)</td>
+<td>$p_1$</td>
 </tr>
 <tr>
 <td>药物</td>
-<td>(m_1,m_2,m_3)</td>
+<td>$m_1,m_2,m_3$</td>
 </tr>
 </tbody>
 </table>
@@ -1160,36 +1176,40 @@
 </thead>
 <tbody>
 <tr>
-<td>第一次 (v_1)</td>
-<td>({d_1,d_3})</td>
-<td>({p_1})</td>
-<td>({m_1,m_2})</td>
+<td>第一次 $v_1$</td>
+<td>${d_1,d_3}$</td>
+<td>${p_1}$</td>
+<td>${m_1,m_2}$</td>
 </tr>
 <tr>
-<td>第二次 (v_2)</td>
-<td>({d_1,d_2,d_3,d_4})</td>
-<td>({p_1})</td>
-<td>({m_1,m_3})</td>
+<td>第二次 $v_2$</td>
+<td>${d_1,d_2,d_3,d_4}$</td>
+<td>${p_1}$</td>
+<td>${m_1,m_3}$</td>
 </tr>
 </tbody>
 </table>
 </div>
 <p>现在要预测第二次就诊的用药。</p>
 <p>模型可以看到：</p>
-<p>[<br>\mathcal D_2={d_1,d_2,d_3,d_4},<br>\quad<br>\mathcal P_2={p_1},<br>\quad<br>\mathcal M_1={m_1,m_2}.<br>]</p>
-<p>训练时的正确答案是：</p>
-<p>[<br>\mathcal M_2={m_1,m_3}.<br>]</p>
-<p>(\mathcal M_2) 用来监督训练，不能作为本次就诊的输入。</p>
-<p>这也解释了论文为什么反复出现 (\mathcal M_{t-1})：它用的是上次就诊的药物。</p>
+<script type="math/tex; mode=display">
+\mathcal D_2=\{d_1,d_2,d_3,d_4\},
+\quad
+\mathcal P_2=\{p_1\},
+\quad
+\mathcal M_1=\{m_1,m_2\}.</script><p>训练时的正确答案是：</p>
+<script type="math/tex; mode=display">
+\mathcal M_2=\{m_1,m_3\}.</script><p>$\mathcal M_2$ 用来监督训练，不能作为本次就诊的输入。</p>
+<p>这也解释了论文为什么反复出现 $\mathcal M_{t-1}$：它用的是上次就诊的药物。</p>
 <hr>
 <h2 id="三、第一步：原始病历怎样变成模型能处理的数据"><a href="#三、第一步：原始病历怎样变成模型能处理的数据" class="headerlink" title="三、第一步：原始病历怎样变成模型能处理的数据"></a>三、第一步：原始病历怎样变成模型能处理的数据</h2><p>首先给每个疾病、操作和药物分配整数编号，再将每次就诊编码为 multi-hot 向量。</p>
 <p>例如第二次就诊：</p>
-<p>[<br>\mathcal D_2=[1,1,1,1],<br>]</p>
-<p>[<br>\mathcal P_2=[1],<br>]</p>
-<p>[<br>\mathcal M_1=[1,1,0].<br>]</p>
-<p>标签：</p>
-<p>[<br>\mathcal M_2=[1,0,1].<br>]</p>
-<p>这里的 1 表示出现，0 表示未出现。</p>
+<script type="math/tex; mode=display">
+\mathcal D_2=[1,1,1,1],</script><script type="math/tex; mode=display">
+\mathcal P_2=[1],</script><script type="math/tex; mode=display">
+\mathcal M_1=[1,1,0].</script><p>标签：</p>
+<script type="math/tex; mode=display">
+\mathcal M_2=[1,0,1].</script><p>这里的 1 表示出现，0 表示未出现。</p>
 <p>接下来，同一批病历会用于两类工作：</p>
 <div class="table-container">
 <table>
@@ -1214,12 +1234,14 @@
 </tbody>
 </table>
 </div>
-<p>一个容易混淆的点：因果关系需要从许多样本的统计差异中学习。单独一条“这个人有 (d_1)、用了 (m_1)”的病历，不足以识别因果关系。</p>
+<p>一个容易混淆的点：因果关系需要从许多样本的统计差异中学习。单独一条“这个人有 $d_1$、用了 $m_1$”的病历，不足以识别因果关系。</p>
 <hr>
 <h2 id="四、关系挖掘的第一部分：GIES-到底怎么算"><a href="#四、关系挖掘的第一部分：GIES-到底怎么算" class="headerlink" title="四、关系挖掘的第一部分：GIES 到底怎么算"></a>四、关系挖掘的第一部分：GIES 到底怎么算</h2><p>论文用：</p>
-<p>[<br>S(G,U)=\sum_{i=1}^{n}s(X_i,Pa_i^G)<br>\tag{2}<br>]</p>
-<p>[<br>G’=\operatorname{GIES}(S,G)<br>\tag{3}<br>]</p>
-<p>概括这一步。</p>
+<script type="math/tex; mode=display">
+S(G,U)=\sum_{i=1}^{n}s(X_i,Pa_i^G)
+\tag{2}</script><script type="math/tex; mode=display">
+G'=\operatorname{GIES}(S,G)
+\tag{3}</script><p>概括这一步。</p>
 <p>先把符号翻译成人话：</p>
 <div class="table-container">
 <table>
@@ -1231,61 +1253,63 @@
 </thead>
 <tbody>
 <tr>
-<td>(X_i)</td>
-<td>一个实体变量，例如“是否有疾病 (d_1)”</td>
+<td>$X_i$</td>
+<td>一个实体变量，例如“是否有疾病 $d_1$”</td>
 </tr>
 <tr>
-<td>(U)</td>
+<td>$U$</td>
 <td>从大量 EHR 中获得的实体联合分布</td>
 </tr>
 <tr>
-<td>(G)</td>
+<td>$G$</td>
 <td>当前候选因果图</td>
 </tr>
 <tr>
-<td>(Pa_i^G)</td>
-<td>图 (G) 中直接指向 (X_i) 的父节点</td>
+<td>$Pa_i^G$</td>
+<td>图 $G$ 中直接指向 $X_i$ 的父节点</td>
 </tr>
 <tr>
-<td>(s(X_i,Pa_i^G))</td>
-<td>用这些父节点解释 (X_i) 的局部得分</td>
+<td>$s(X_i,Pa_i^G)$</td>
+<td>用这些父节点解释 $X_i$ 的局部得分</td>
 </tr>
 <tr>
-<td>(S(G,U))</td>
+<td>$S(G,U)$</td>
 <td>所有局部得分相加，即整张图的得分</td>
 </tr>
 <tr>
-<td>(G’)</td>
+<td>$G’$</td>
 <td>搜索后获得的优化图</td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>这里的 (n) 是实体变量数量，不是就诊次数。</p>
+<p>这里的 $n$ 是实体变量数量，不是就诊次数。</p>
 <p>1．为什么要给图打分</p>
-<p>例如，我们想知道药物 (m_1) 的使用主要由哪个疾病解释。</p>
+<p>例如，我们想知道药物 $m_1$ 的使用主要由哪个疾病解释。</p>
 <p>候选结构可能是：</p>
-<p>[<br>d_1\rightarrow m_1,<br>]</p>
-<p>也可能是：</p>
-<p>[<br>d_2\rightarrow m_1,<br>]</p>
-<p>或者两个都指向 (m_1)。</p>
+<script type="math/tex; mode=display">
+d_1\rightarrow m_1,</script><p>也可能是：</p>
+<script type="math/tex; mode=display">
+d_2\rightarrow m_1,</script><p>或者两个都指向 $m_1$。</p>
 <p>GIES 的基本思路是：</p>
 <blockquote>
 <p>尝试修改图，比较修改前后的得分，保留最能提高得分的合法修改。</p>
 </blockquote>
 <p>评分一般同时考虑：</p>
-<p>[<br>\text{对数据的解释能力}<br>-<br>\text{图过于复杂的惩罚}.<br>]</p>
-<p>否则，把所有实体都连起来，往往能拟合数据，却没有多少解释价值。</p>
+<script type="math/tex; mode=display">
+\text{对数据的解释能力}
+-
+\text{图过于复杂的惩罚}.</script><p>否则，把所有实体都连起来，往往能拟合数据，却没有多少解释价值。</p>
 <p>2．用一份具体数据理解“排除虚假关联”</p>
 <p>假设有 100 次就诊：</p>
 <div class="table-container">
 <table>
 <thead>
 <tr>
-<th>是否有 (d_1)</th>
-<th>是否有 (d_2)</th>
+<th>是否有 $d_1$</th>
+<th>是否有 $d_2$</th>
 <th style="text-align:right">就诊数</th>
-<th style="text-align:right">使用 (m_1) 的次数</th>
+<th style="text-align:right">使用 $m_1$ 的次数</th>
 </tr>
 </thead>
 <tbody>
@@ -1316,63 +1340,66 @@
 </tbody>
 </table>
 </div>
-<p>只看 (d_2)：</p>
-<p>[<br>P(m_1=1\mid d_2=1)=\frac{32+2}{50}=0.68,<br>]</p>
-<p>[<br>P(m_1=1\mid d_2=0)=\frac{8+8}{50}=0.32.<br>]</p>
-<p>看起来，(d_2) 和用药 (m_1) 有明显关系。</p>
-<p>但是，按 (d_1) 分层后：</p>
-<p>当 (d_1=1)：</p>
-<p>[<br>P(m_1=1\mid d_1=1,d_2=1)=32/40=0.8,<br>]</p>
-<p>[<br>P(m_1=1\mid d_1=1,d_2=0)=8/10=0.8.<br>]</p>
-<p>当 (d_1=0)：</p>
-<p>[<br>P(m_1=1\mid d_1=0,d_2=1)=2/10=0.2,<br>]</p>
-<p>[<br>P(m_1=1\mid d_1=0,d_2=0)=8/40=0.2.<br>]</p>
-<p>于是：</p>
-<p>[<br>m_1\perp d_2\mid d_1.<br>]</p>
-<p>意思是：</p>
+<p>只看 $d_2$：</p>
+<script type="math/tex; mode=display">
+P(m_1=1\mid d_2=1)=\frac{32+2}{50}=0.68,</script><script type="math/tex; mode=display">
+P(m_1=1\mid d_2=0)=\frac{8+8}{50}=0.32.</script><p>看起来，$d_2$ 和用药 $m_1$ 有明显关系。</p>
+<p>但是，按 $d_1$ 分层后：</p>
+<p>当 $d_1=1$：</p>
+<script type="math/tex; mode=display">
+P(m_1=1\mid d_1=1,d_2=1)=32/40=0.8,</script><script type="math/tex; mode=display">
+P(m_1=1\mid d_1=1,d_2=0)=8/10=0.8.</script><p>当 $d_1=0$：</p>
+<script type="math/tex; mode=display">
+P(m_1=1\mid d_1=0,d_2=1)=2/10=0.2,</script><script type="math/tex; mode=display">
+P(m_1=1\mid d_1=0,d_2=0)=8/40=0.2.</script><p>于是：</p>
+<script type="math/tex; mode=display">
+m_1\perp d_2\mid d_1.</script><p>意思是：</p>
 <blockquote>
-<p>已知 (d_1) 后，(d_2) 不再为“是否使用 (m_1)”提供额外信息。</p>
+<p>已知 $d_1$ 后，$d_2$ 不再为“是否使用 $m_1$”提供额外信息。</p>
 </blockquote>
 <p>一个与此相容的结构是：</p>
-<p>[<br>d_2\leftarrow d_1\rightarrow m_1.<br>]</p>
-<p>这时，(d_2) 和 (m_1) 的关联来自共同原因 (d_1)。</p>
+<script type="math/tex; mode=display">
+d_2\leftarrow d_1\rightarrow m_1.</script><p>这时，$d_2$ 和 $m_1$ 的关联来自共同原因 $d_1$。</p>
 <p>这正是论文图 3 想表达的事情：同一次就诊中一起出现，不代表每对实体都有直接关系。</p>
 <p><strong>—GIES是怎么解决这个问题的？</strong></p>
-<p>GIES 能通过比较不同图结构的得分，发现“已经考虑 (d_1) 后，再加入 (d_2) 对预测用药 (m_1) 没有帮助”，从而倾向于不保留 (d_2-m_1) 的直接连接。</p>
+<p>GIES 能通过比较不同图结构的得分，发现“已经考虑 $d_1$ 后，再加入 $d_2$ 对预测用药 $m_1$ 没有帮助”，从而倾向于不保留 $d_2-m_1$ 的直接连接。</p>
 <p>但要分清两件事：去掉多余连接和确定因果箭头方向。这份数据可以支持前者，单靠它未必能完成后者。</p>
 <p>下面用你选中的数据，说明 GIES 怎样处理。</p>
 <p><strong>1．首先，GIES 看到的是这 100 条样本</strong></p>
 <p>每条样本包含三个变量：</p>
-<p>[ X=(d_1,d_2,m_1). ]</p>
-<p>例如，第一行统计表示：</p>
+<script type="math/tex; mode=display">
+X=(d_1,d_2,m_1).</script><p>例如，第一行统计表示：</p>
 <blockquote>
-<p>有 40 次就诊同时出现 (d_1,d_2)，其中 32 次使用了 (m_1)，8 次没有使用。</p>
+<p>有 40 次就诊同时出现 $d_1,d_2$，其中 32 次使用了 $m_1$，8 次没有使用。</p>
 </blockquote>
 <p>GIES 尝试寻找一张图，使这张图既能解释这些数据，又不过于复杂。</p>
 <p>它使用的评分可以概括为：</p>
-<p><strong>[ \boxed{\text{图的得分}=\text{拟合数据的能力}-\text{复杂度惩罚}} ]</strong></p>
-<p><strong>2．比较“谁可以解释 (m_1)”</strong></p>
-<p>先只看 (m_1) 这个节点的候选父节点，其他部分暂时固定。</p>
+<p>**</p>
+<script type="math/tex; mode=display">
+\boxed{\text{图的得分}=\text{拟合数据的能力}-\text{复杂度惩罚} }</script><p>**</p>
+<p><strong>2．比较“谁可以解释 $m_1$”</strong></p>
+<p>先只看 $m_1$ 这个节点的候选父节点，其他部分暂时固定。</p>
 <p>情况 A：没有父节点</p>
 <p>模型只能使用总体用药概率：</p>
-<p>[ P(m_1=1)=\frac{32+8+2+8}{100}=0.5. ]</p>
-<p>不管患者有什么疾病，都预测用药概率是 (0.5)，比较粗糙。</p>
-<p>情况 B：加入 (d_1) 作为父节点</p>
+<script type="math/tex; mode=display">
+P(m_1=1)=\frac{32+8+2+8}{100}=0.5.</script><p>不管患者有什么疾病，都预测用药概率是 $0.5$，比较粗糙。</p>
+<p>情况 B：加入 $d_1$ 作为父节点</p>
 <p>候选边为：</p>
-<p>[ d_1\rightarrow m_1. ]</p>
-<p>此时模型可以分别预测：</p>
-<p>[ P(m_1=1\mid d_1=1)=0.8, ][ P(m_1=1\mid d_1=0)=0.2. ]</p>
-<p>这比统一预测 (0.5) 更符合数据，因此拟合效果明显提高。</p>
-<p>情况 C：已有 (d_1)，再加入 (d_2)</p>
+<script type="math/tex; mode=display">
+d_1\rightarrow m_1.</script><p>此时模型可以分别预测：</p>
+<script type="math/tex; mode=display">
+P(m_1=1\mid d_1=1)=0.8,</script><script type="math/tex; mode=display">
+P(m_1=1\mid d_1=0)=0.2.</script><p>这比统一预测 $0.5$ 更符合数据，因此拟合效果明显提高。</p>
+<p>情况 C：已有 $d_1$，再加入 $d_2$</p>
 <p>候选结构变为：</p>
-<p>[ d_1\rightarrow m_1\leftarrow d_2. ]</p>
-<p>模型能够分别估计四种情况：</p>
+<script type="math/tex; mode=display">
+d_1\rightarrow m_1\leftarrow d_2.</script><p>模型能够分别估计四种情况：</p>
 <div class="table-container">
 <table>
 <thead>
 <tr>
-<th>(d_1)</th>
-<th>(d_2)</th>
+<th>$d_1$</th>
+<th>$d_2$</th>
 <th>用药概率</th>
 </tr>
 </thead>
@@ -1400,27 +1427,27 @@
 </tbody>
 </table>
 </div>
-<p>发现了吗？四种情况虽然拆得更细，预测结果却与只考虑 (d_1) 时完全一样。</p>
+<p>发现了吗？四种情况虽然拆得更细，预测结果却与只考虑 $d_1$ 时完全一样。</p>
 <p>因此：</p>
-<p>[ \boxed{ \text{加入 }d_2 \Rightarrow \text{拟合没有改善，参数数量却增加} } ]</p>
-<p>评分就会下降。</p>
+<script type="math/tex; mode=display">
+\boxed{ \text{加入 }d_2 \Rightarrow \text{拟合没有改善，参数数量却增加} }</script><p>评分就会下降。</p>
 <hr>
 <p><strong>3．实际用评分算一次</strong></p>
 <p>这里用适合二元变量的离散 BIC 演示，不代表论文明确采用了这个具体评分：</p>
-<p>[ s=\log L-\frac{k}{2}\log N. ]</p>
-<p>其中：</p>
+<script type="math/tex; mode=display">
+s=\log L-\frac{k}{2}\log N.</script><p>其中：</p>
 <ul>
-<li>(\log L)：拟合数据的程度，越大越好；</li>
-<li>(k)：自由参数数量；</li>
-<li>(N=100)：样本数量。</li>
+<li>$\log L$：拟合数据的程度，越大越好；</li>
+<li>$k$：自由参数数量；</li>
+<li>$N=100$：样本数量。</li>
 </ul>
-<p>对 (m_1) 来说：</p>
+<p>对 $m_1$ 来说：</p>
 <div class="table-container">
 <table>
 <thead>
 <tr>
 <th><strong>父节点集合</strong></th>
-<th><strong>要估计几个用药概率 (k)</strong></th>
+<th><strong>要估计几个用药概率 $k$</strong></th>
 <th><strong>最大对数似然</strong></th>
 <th><strong>BIC 得分</strong></th>
 </tr>
@@ -1429,36 +1456,36 @@
 <tr>
 <td><strong>无</strong></td>
 <td><strong>1</strong></td>
-<td><strong>(-69.31)</strong></td>
-<td><strong>(-71.62)</strong></td>
+<td><strong>$-69.31$</strong></td>
+<td><strong>$-71.62$</strong></td>
 </tr>
 <tr>
-<td><strong>只有 (d_1)</strong></td>
+<td><strong>只有 $d_1$</strong></td>
 <td><strong>2</strong></td>
-<td><strong>(-50.04)</strong></td>
-<td><strong>(-54.65)</strong></td>
+<td><strong>$-50.04$</strong></td>
+<td><strong>$-54.65$</strong></td>
 </tr>
 <tr>
-<td><strong>只有 (d_2)</strong></td>
+<td><strong>只有 $d_2$</strong></td>
 <td><strong>2</strong></td>
-<td><strong>(-62.69)</strong></td>
-<td><strong>(-67.29)</strong></td>
+<td><strong>$-62.69$</strong></td>
+<td><strong>$-67.29$</strong></td>
 </tr>
 <tr>
-<td><strong>(d_1,d_2)</strong></td>
+<td><strong>$d_1,d_2$</strong></td>
 <td><strong>4</strong></td>
-<td><strong>(-50.04)</strong></td>
-<td><strong>(-59.25)</strong></td>
+<td><strong>$-50.04$</strong></td>
+<td><strong>$-59.25$</strong></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>注意最后两种含 (d_1) 的模型：</p>
-<p>[ \log L_{\, {d_1} } = \log L_{\, {d_1,d_2} }. ]</p>
-<p>拟合程度相同，但后者多了两个参数，因此：</p>
-<p>[ s_{\, {d_1,d_2} }-s_{\, {d_1} } = -\frac{4-2}{2}\log100 \approx-4.61. ]</p>
-<p>多连 (d_2\rightarrow m_1) 这条边，反而扣了约 (4.61) 分。</p>
-<p>这就是评分如何体现“(d_2) 没有提供额外信息”。</p>
+<p>注意最后两种含 $d_1$ 的模型：</p>
+<script type="math/tex; mode=display">
+\log L_{\, \{d_1\} } = \log L_{\, \{d_1,d_2\} }.</script><p>拟合程度相同，但后者多了两个参数，因此：</p>
+<script type="math/tex; mode=display">
+s_{\, \{d_1,d_2\} }-s_{\, \{d_1\} } = -\frac{4-2}{2}\log100 \approx-4.61.</script><p>多连 $d_2\rightarrow m_1$ 这条边，反而扣了约 $4.61$ 分。</p>
+<p>这就是评分如何体现“$d_2$ 没有提供额外信息”。</p>
 <hr>
 <p><strong>4．GIES 怎样利用这个得分进行搜索？</strong></p>
 <p>标准 GIES 通过插入、删除和改变方向等合法操作，在图的等价类之间搜索。</p>
@@ -1475,21 +1502,21 @@
 </thead>
 <tbody>
 <tr>
-<td>(m_1) 没有父节点</td>
-<td>加入 (d_1\rightarrow m_1)</td>
-<td>(+16.97)</td>
+<td>$m_1$ 没有父节点</td>
+<td>加入 $d_1\rightarrow m_1$</td>
+<td>$+16.97$</td>
 <td>接受</td>
 </tr>
 <tr>
-<td>已有 (d_1\rightarrow m_1)</td>
-<td>再加入 (d_2\rightarrow m_1)</td>
-<td>(-4.61)</td>
+<td>已有 $d_1\rightarrow m_1$</td>
+<td>再加入 $d_2\rightarrow m_1$</td>
+<td>$-4.61$</td>
 <td>拒绝</td>
 </tr>
 <tr>
 <td>已经同时连接两个父节点</td>
-<td>删除 (d_2\rightarrow m_1)</td>
-<td>(+4.61)</td>
+<td>删除 $d_2\rightarrow m_1$</td>
+<td>$+4.61$</td>
 <td>接受</td>
 </tr>
 </tbody>
@@ -1506,62 +1533,64 @@
 </blockquote>
 <p>条件独立关系通过评分间接体现出来。</p>
 <hr>
-<p><strong>5．为什么不能直接断言它找到了 (d_2\leftarrow d_1\rightarrow m_1)？</strong></p>
+<p><strong>5．为什么不能直接断言它找到了 $d_2\leftarrow d_1\rightarrow m_1$？</strong></p>
 <p>因为从这份观察数据中，下面几个结构可能无法区分：</p>
-<p>[ d_2\leftarrow d_1\rightarrow m_1, ]</p>
-<p>[[ d_2\rightarrow d_1\rightarrow m_1, ]]</p>
-<p>[ d_2\leftarrow d_1\leftarrow m_1. ]</p>
-<p>它们都可以表达：</p>
-<p>[ d_2\perp m_1\mid d_1. ]</p>
-<p>所以，更准确的结论是：</p>
-<p>这份数据支持一个没有 (d_2-m_1) 直接连接、以 (d_1) 为中间节点的结构；它不能独自证明 (d_1) 一定是另外两者的共同原因。</p>
+<script type="math/tex; mode=display">
+d_2\leftarrow d_1\rightarrow m_1,</script><script type="math/tex; mode=display">
+ d_2\rightarrow d_1\rightarrow m_1,</script><script type="math/tex; mode=display">
+d_2\leftarrow d_1\leftarrow m_1.</script><p>它们都可以表达：</p>
+<script type="math/tex; mode=display">
+d_2\perp m_1\mid d_1.</script><p>所以，更准确的结论是：</p>
+<p>这份数据支持一个没有 $d_2-m_1$ 直接连接、以 $d_1$ 为中间节点的结构；它不能独自证明 $d_1$ 一定是另外两者的共同原因。</p>
 <p>GIES 可以利用已知干预目标的数据进一步帮助识别方向；如果只有观察数据，方向识别仍然受限制。结果也依赖样本量、评分选择及因果假设，不能保证每次都恢复真实结构。</p>
 <p>因此，在这个例子里，GIES 最值得理解的能力是：</p>
-<p><strong>[ \boxed{ \text{发现 }d_2\text{ 与 }m_1\text{ 的表面关联} \ \xrightarrow{\text{考虑 }d_1\text{ 并比较评分}}\ \text{判断二者不需要直接连边} } ]</strong></p>
+<p>**</p>
+<script type="math/tex; mode=display">
+\boxed{ \text{发现 }d_2\text{ 与 }m_1\text{ 的表面关联} \ \xrightarrow{\text{考虑 }d_1\text{ 并比较评分} }\ \text{判断二者不需要直接连边} }</script><p>**</p>
 <p><strong>3．评分计算</strong></p>
-<p>论文没有明确给出 (s(\cdot)) 的具体形式。为了演示，我们选择常见的离散变量 BIC 评分：</p>
-<p>[<br>s=\log L(\hat\theta)-\frac{k}{2}\log N,<br>]</p>
-<p>其中：</p>
+<p>论文没有明确给出 $s(\cdot)$ 的具体形式。为了演示，我们选择常见的离散变量 BIC 评分：</p>
+<script type="math/tex; mode=display">
+s=\log L(\hat\theta)-\frac{k}{2}\log N,</script><p>其中：</p>
 <ul>
-<li>(L(\hat\theta))：该结构下最大似然；</li>
-<li>(k)：需要估计的自由参数数量；</li>
-<li>(N=100)：样本数。</li>
+<li>$L(\hat\theta)$：该结构下最大似然；</li>
+<li>$k$：需要估计的自由参数数量；</li>
+<li>$N=100$：样本数。</li>
 </ul>
-<p>对于“是否使用 (m_1)”这个变量，上面的数据得到：</p>
+<p>对于“是否使用 $m_1$”这个变量，上面的数据得到：</p>
 <div class="table-container">
 <table>
 <thead>
 <tr>
-<th>(m_1) 的候选父节点</th>
+<th>$m_1$ 的候选父节点</th>
 <th style="text-align:right">局部 BIC 得分</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>无父节点</td>
-<td style="text-align:right">(-71.62)</td>
+<td style="text-align:right">$-71.62$</td>
 </tr>
 <tr>
-<td>只有 (d_1)</td>
-<td style="text-align:right">(-54.65)</td>
+<td>只有 $d_1$</td>
+<td style="text-align:right">$-54.65$</td>
 </tr>
 <tr>
-<td>只有 (d_2)</td>
-<td style="text-align:right">(-67.29)</td>
+<td>只有 $d_2$</td>
+<td style="text-align:right">$-67.29$</td>
 </tr>
 <tr>
-<td>同时有 (d_1,d_2)</td>
-<td style="text-align:right">(-59.25)</td>
+<td>同时有 $d_1,d_2$</td>
+<td style="text-align:right">$-59.25$</td>
 </tr>
 </tbody>
 </table>
 </div>
 <p>得分越高越好。</p>
-<p>例如，为 (m_1) 加入父节点 (d_1)，得分提高：</p>
-<p>[<br>-54.65-(-71.62)=16.97.<br>]</p>
-<p>而在已有 (d_1) 的情况下，再加入 (d_2)：</p>
-<p>[<br>-59.25-(-54.65)=-4.60.<br>]</p>
-<p>额外加入 (d_2) 没有提高拟合效果，却增加了参数，因此得分下降。</p>
+<p>例如，为 $m_1$ 加入父节点 $d_1$，得分提高：</p>
+<script type="math/tex; mode=display">
+-54.65-(-71.62)=16.97.</script><p>而在已有 $d_1$ 的情况下，再加入 $d_2$：</p>
+<script type="math/tex; mode=display">
+-59.25-(-54.65)=-4.60.</script><p>额外加入 $d_2$ 没有提高拟合效果，却增加了参数，因此得分下降。</p>
 <p><strong>4．GIES 的搜索过程</strong></p>
 <p>标准 GIES 的核心包含三个搜索阶段：</p>
 <div class="table-container">
@@ -1593,15 +1622,15 @@
 </table>
 </div>
 <p>每一步都比较：</p>
-<p>[<br>\Delta S=S(G_{\text{new}},U)-S(G_{\text{old}},U).<br>]</p>
-<p>选择得分提升最大的合法操作，并遵守无环性和等价类相关约束；各阶段可按实现重复进行。</p>
+<script type="math/tex; mode=display">
+\Delta S=S(G_{\text{new} },U)-S(G_{\text{old} },U).</script><p>选择得分提升最大的合法操作，并遵守无环性和等价类相关约束；各阶段可按实现重复进行。</p>
 <p>但还有一个很关键的细节：</p>
 <p>GIES 搜索的是因果图的等价类，而非把每一种箭头方向都当作完全独立的候选。</p>
 <p>例如，只看观察数据，下面这些结构可能无法区分：</p>
-<p>[<br>d_2\leftarrow d_1\rightarrow m_1,<br>]</p>
-<p>[<br>d_2\rightarrow d_1\rightarrow m_1.<br>]</p>
-<p>它们可能表达相同的条件独立关系。</p>
-<p>因此，上面那张表不能单独证明箭头一定从 (d_1) 指向 (d_2)。</p>
+<script type="math/tex; mode=display">
+d_2\leftarrow d_1\rightarrow m_1,</script><script type="math/tex; mode=display">
+d_2\rightarrow d_1\rightarrow m_1.</script><p>它们可能表达相同的条件独立关系。</p>
+<p>因此，上面那张表不能单独证明箭头一定从 $d_1$ 指向 $d_2$。</p>
 <p>GIES 名字中的 Intervention 指干预信息。若有已知干预目标的数据，可能帮助进一步区分方向。但论文没有充分交代：</p>
 <ul>
 <li>具体使用什么评分；</li>
@@ -1611,10 +1640,14 @@
 </ul>
 <hr>
 <h2 id="五、GIES-的输出怎样变成每次就诊的图"><a href="#五、GIES-的输出怎样变成每次就诊的图" class="headerlink" title="五、GIES 的输出怎样变成每次就诊的图"></a><strong>五、GIES 的输出怎样变成每次就诊的图</strong></h2><p>论文写的是：对各次就诊得到病理关系图：</p>
-<p>[<br>\mathcal G={G_{v_1},G_{v_2},\ldots}.<br>]</p>
-<p>随后提取同类型实体之间的关系，得到：</p>
-<p>[<br>G_{v_t}^{d},<br>\qquad<br>G_{v_t}^{p},<br>\qquad<br>G_{v_{t-1}}^{m}.<br>]</p>
-<p>分别对应：</p>
+<script type="math/tex; mode=display">
+\mathcal G=\{G_{v_1},G_{v_2},\ldots\}.</script><p>随后提取同类型实体之间的关系，得到：</p>
+<script type="math/tex; mode=display">
+G_{v_t}^{d},
+\qquad
+G_{v_t}^{p},
+\qquad
+G_{v_{t-1} }^{m}.</script><p>分别对应：</p>
 <ul>
 <li>当前疾病之间的图；</li>
 <li>当前操作之间的图；</li>
@@ -1622,23 +1655,45 @@
 </ul>
 <p>这里论文存在实现细节缺口。它没有清楚说明：是先在总体数据上学习结构，再提取当前实体的子图，还是针对相关样本另行估计局部结构。单条 multi-hot 记录本身不能独立支撑统计意义上的 GIES。</p>
 <p>为了继续计算，我们假设经过关系挖掘，第二次就诊的疾病图是：</p>
-<p>[<br>d_1\rightarrow d_3\rightarrow d_2,<br>\qquad<br>d_4\text{ 无连接}.<br>]</p>
-<p>这张图接下来交给 DSA。</p>
+<script type="math/tex; mode=display">
+d_1\rightarrow d_3\rightarrow d_2,
+\qquad
+d_4\text{ 无连接}.</script><p>这张图接下来交给 DSA。</p>
 <hr>
 <h2 id="六、关系挖掘的第二部分：因果效应矩阵怎样得到"><a href="#六、关系挖掘的第二部分：因果效应矩阵怎样得到" class="headerlink" title="六、关系挖掘的第二部分：因果效应矩阵怎样得到"></a><strong>六、关系挖掘的第二部分：因果效应矩阵怎样得到</strong></h2><p>GIES 主要解决结构问题：哪些变量之间有关系。因果估计进一步解决数量问题：这个效应有多大。</p>
 <p>论文明确设定：</p>
-<p>[<br>\text{疾病/操作：处理变量},<br>\qquad<br>\text{是否用药：结果变量}.<br>]</p>
-<p>例如：</p>
-<p>[<br>A=\mathbf 1(d_1\text{ 出现}),<br>\qquad<br>Y=\mathbf 1(m_1\text{ 被使用}).<br>]</p>
-<p>如果从因果图找到满足后门准则的调整变量 (Z)，一种常见估计目标是：</p>
-<p>[<br>\operatorname{ATE}<br>=<br>E[Y\mid do(A=1)]<br>-<br>E[Y\mid do(A=0)].<br>]</p>
-<p>后门调整可写成：</p>
-<p>[<br>E[Y\mid do(A=a)]<br>=<br>\sum_z E[Y\mid A=a,Z=z]P(Z=z).<br>]</p>
-<p>实际计算时，可以先拟合一个广义线性模型。例如对于二元用药变量，用逻辑回归：</p>
-<p>[<br>P(Y=1\mid A,Z)<br>=<br>\operatorname{sigmoid}<br>(\beta_0+\beta_AA+\boldsymbol\beta_Z^\top Z).<br>]</p>
-<p>再对每个样本分别代入 (A=1)、(A=0)，求预测概率差并平均：</p>
-<p>[<br>\widehat{\operatorname{ATE}}<br>=<br>\frac1N\sum_{s=1}^{N}<br>\left[<br>\hat P(Y=1\mid A=1,Z_s)<br>-<br>\hat P(Y=1\mid A=0,Z_s)<br>\right].<br>]</p>
-<div class="table-container">
+<script type="math/tex; mode=display">
+\text{疾病/操作：处理变量},
+\qquad
+\text{是否用药：结果变量}.</script><p>例如：</p>
+<script type="math/tex; mode=display">
+A=\mathbf 1(d_1\text{ 出现}),
+\qquad
+Y=\mathbf 1(m_1\text{ 被使用}).</script><p>如果从因果图找到满足后门准则的调整变量 $Z$，一种常见估计目标是：</p>
+<script type="math/tex; mode=display">
+\operatorname{ATE}
+=
+E[Y\mid do(A=1)]
+-
+E[Y\mid do(A=0)].</script><p>后门调整可写成：</p>
+<script type="math/tex; mode=display">
+E[Y\mid do(A=a)]
+=
+\sum_z E[Y\mid A=a,Z=z]P(Z=z).</script><p>实际计算时，可以先拟合一个广义线性模型。例如对于二元用药变量，用逻辑回归：</p>
+<script type="math/tex; mode=display">
+P(Y=1\mid A,Z)
+=
+\operatorname{sigmoid}
+(\beta_0+\beta_AA+\boldsymbol\beta_Z^\top Z).</script><p>再对每个样本分别代入 $A=1$、$A=0$，求预测概率差并平均：</p>
+<script type="math/tex; mode=display">
+\widehat{\operatorname{ATE} }
+=
+\frac1N\sum_{s=1}^{N}
+\left[
+\hat P(Y=1\mid A=1,Z_s)
+-
+\hat P(Y=1\mid A=0,Z_s)
+\right].</script><div class="table-container">
 <table>
 <thead>
 <tr>
@@ -1649,74 +1704,74 @@
 </thead>
 <tbody>
 <tr>
-<td>(A)</td>
+<td>$A$</td>
 <td>处理变量</td>
-<td>是否有疾病 (d_1)：有为 1，无为 0</td>
+<td>是否有疾病 $d_1$：有为 1，无为 0</td>
 </tr>
 <tr>
-<td>(Y)</td>
+<td>$Y$</td>
 <td>结果变量</td>
-<td>是否使用药物 (m_1)：使用为 1，否则为 0</td>
+<td>是否使用药物 $m_1$：使用为 1，否则为 0</td>
 </tr>
 <tr>
-<td>(Z)</td>
+<td>$Z$</td>
 <td>用于调整混杂的变量集合</td>
 <td>例如年龄、某些既往疾病；具体选择须满足后门调整条件</td>
 </tr>
 <tr>
-<td>(N)</td>
+<td>$N$</td>
 <td>用于求平均的样本总数</td>
 <td>例如 1000 条就诊样本</td>
 </tr>
 <tr>
-<td>(s)</td>
+<td>$s$</td>
 <td>当前样本的编号</td>
-<td>(s=1,2,\ldots,N)</td>
+<td>$s=1,2,\ldots,N$</td>
 </tr>
 <tr>
-<td>(Z_s)</td>
-<td>第 (s) 个样本的调整变量取值</td>
+<td>$Z_s$</td>
+<td>第 $s$ 个样本的调整变量取值</td>
 <td>如第 1 条记录：年龄 60 岁、有某种既往疾病</td>
 </tr>
 <tr>
-<td>(\hat P)</td>
+<td>$\hat P$</td>
 <td>拟合模型估计的概率</td>
 <td>如逻辑回归预测的用药概率</td>
 </tr>
 <tr>
-<td>(\sum_{s=1}^{N})</td>
+<td>$\sum_{s=1}^{N}$</td>
 <td>将所有样本的概率差相加</td>
-<td>从第 1 条累加到第 (N) 条</td>
+<td>从第 1 条累加到第 $N$ 条</td>
 </tr>
 <tr>
-<td>(\widehat{\operatorname{ATE}})</td>
+<td>$\widehat{\operatorname{ATE} }$</td>
 <td>估计出的平均处理效应</td>
-<td>疾病 (d_1) 对使用 (m_1) 概率的平均影响</td>
+<td>疾病 $d_1$ 对使用 $m_1$ 概率的平均影响</td>
 </tr>
 </tbody>
 </table>
 </div>
 <p>这是帮助理解的常见实现方式。论文只写了“后门调整的广义线性模型”，没有给出足够细节，不能确定矩阵每个元素恰好按上述 ATE 定义计算。</p>
-<p>注意：(Z_s) 可以是一个向量，如：</p>
-<p>[ Z_s=(\text{年龄},\text{既往疾病标记},\ldots). ]</p>
-<p>下标 (s) 只是说“这是第几个样本的取值”。</p>
+<p>注意：$Z_s$ 可以是一个向量，如：</p>
+<script type="math/tex; mode=display">
+Z_s=(\text{年龄},\text{既往疾病标记},\ldots).</script><p>下标 $s$ 只是说“这是第几个样本的取值”。</p>
 <p>对每个样本，具体做什么？</p>
-<p>以第 (s) 条记录为例，固定它的 (Z_s)，让模型计算两遍：</p>
-<p>第一次，把处理变量设为 (A=1)：</p>
-<p>[ \hat p_s^{(1)} = \hat P(Y=1\mid A=1,Z_s). ]</p>
-<p>第二次，保留相同的 (Z_s)，只把处理变量改为 (A=0)：</p>
-<p>[ \hat p_s^{(0)} = \hat P(Y=1\mid A=0,Z_s). ]</p>
-<p>然后相减：</p>
-<p>[ \Delta_s=\hat p_s^{(1)}-\hat p_s^{(0)}. ]</p>
-<p>不管这条记录实际的 (A) 是 0 还是 1，都进行这两次预测。我们无法同时观察同一个样本在两种状态下的真实结果，因此这里用模型估计。</p>
+<p>以第 $s$ 条记录为例，固定它的 $Z_s$，让模型计算两遍：</p>
+<p>第一次，把处理变量设为 $A=1$：</p>
+<script type="math/tex; mode=display">
+\hat p_s^{(1)} = \hat P(Y=1\mid A=1,Z_s).</script><p>第二次，保留相同的 $Z_s$，只把处理变量改为 $A=0$：</p>
+<script type="math/tex; mode=display">
+\hat p_s^{(0)} = \hat P(Y=1\mid A=0,Z_s).</script><p>然后相减：</p>
+<script type="math/tex; mode=display">
+\Delta_s=\hat p_s^{(1)}-\hat p_s^{(0)}.</script><p>不管这条记录实际的 $A$ 是 0 还是 1，都进行这两次预测。我们无法同时观察同一个样本在两种状态下的真实结果，因此这里用模型估计。</p>
 <div class="table-container">
 <table>
 <thead>
 <tr>
-<th>样本编号 (s)</th>
-<th>固定的调整变量 (Z_s)</th>
-<th>设 (A=1) 时的用药概率</th>
-<th>设 (A=0) 时的用药概率</th>
+<th>样本编号 $s$</th>
+<th>固定的调整变量 $Z_s$</th>
+<th>设 $A=1$ 时的用药概率</th>
+<th>设 $A=0$ 时的用药概率</th>
 <th>概率差</th>
 </tr>
 </thead>
@@ -1745,38 +1800,56 @@
 </tbody>
 </table>
 </div>
-<p>ATE 算出来是一个数，这里为 (0.4)。</p>
+<p>ATE 算出来是一个数，这里为 $0.4$。</p>
 <p>在因果识别假设成立、模型估计合理的前提下，它表示：</p>
 <blockquote>
-<p>在这批样本所代表的人群中，将 (A) 从 0 设为 1，使使用药物 (m_1) 的概率平均提高 <strong>40 个百分点</strong>。</p>
+<p>在这批样本所代表的人群中，将 $A$ 从 0 设为 1，使使用药物 $m_1$ 的概率平均提高 <strong>40 个百分点</strong>。</p>
 </blockquote>
 <p>它不表示“用药概率等于 40%”，也不表示“药物治疗有效率为 40%”。</p>
 <p>对于这里的二元结果：</p>
-<p>[ -1\le \operatorname{ATE}\le1. ]</p>
-<ul>
+<script type="math/tex; mode=display">
+-1\le \operatorname{ATE}\le1.</script><ul>
 <li>正数：处理使结果发生概率平均增加；</li>
 <li>负数：平均降低；</li>
 <li>0：平均差为零，但不同样本的效应可能互相抵消。</li>
 </ul>
-<p>这个公式算的是疾病对用药概率的效应，因为我们设定了 (A=) 是否患病、(Y=) 是否用药。若要研究药物对康复的疗效，就需要重新定义 (A) 为是否接受该药物，(Y) 为康复等结局。</p>
+<p>这个公式算的是疾病对用药概率的效应，因为我们设定了 $A=$ 是否患病、$Y=$ 是否用药。若要研究药物对康复的疗效，就需要重新定义 $A$ 为是否接受该药物，$Y$ 为康复等结局。</p>
 <hr>
 <p>最终得到：</p>
-<p>[<br>\mathbf M^{dm}\in<br>\mathbb R^{|\mathcal D|\times|\mathcal M|},<br>]</p>
-<p>[<br>\mathbf M^{pm}\in<br>\mathbb R^{|\mathcal P|\times|\mathcal M|}.<br>]</p>
-<p>教学例子中，假设：</p>
-<p>[<br>\mathbf M^{dm}=<br>\begin{array}{c|ccc}<br> &amp;m_1&amp;m_2&amp;m_3\\\hline<br>d_1&amp;0.9&amp;0.1&amp;0.2\\<br>d_2&amp;0.1&amp;0.9&amp;0.1\\<br>d_3&amp;0.6&amp;0.7&amp;0.3\\<br>d_4&amp;0.1&amp;0.2&amp;0.8<br>\end{array}.<br>]</p>
-<p>[<br>\mathbf M^{pm}=<br>\begin{array}{c|ccc}<br>&amp;m_1&amp;m_2&amp;m_3\\\hline<br>p_1&amp;0.8&amp;0.2&amp;0.5<br>\end{array}.<br>]</p>
-<p>需要特别纠正一个直觉：</p>
+<script type="math/tex; mode=display">
+\mathbf M^{dm}\in
+\mathbb R^{|\mathcal D|\times|\mathcal M|},</script><script type="math/tex; mode=display">
+\mathbf M^{pm}\in
+\mathbb R^{|\mathcal P|\times|\mathcal M|}.</script><p>教学例子中，假设：</p>
+<script type="math/tex; mode=display">
+\mathbf M^{dm}=
+\begin{array}{c|ccc}
+ &m_1&m_2&m_3\\\hline
+d_1&0.9&0.1&0.2\\
+d_2&0.1&0.9&0.1\\
+d_3&0.6&0.7&0.3\\
+d_4&0.1&0.2&0.8
+\end{array}.</script><script type="math/tex; mode=display">
+\mathbf M^{pm}=
+\begin{array}{c|ccc}
+&m_1&m_2&m_3\\\hline
+p_1&0.8&0.2&0.5
+\end{array}.</script><p>需要特别纠正一个直觉：</p>
 <blockquote>
 <p>按论文设定，这里估计的是疾病/操作对用药变量的效应，不能直接解释成“药物对疾病的临床疗效”。</p>
 </blockquote>
 <hr>
 <h2 id="七、实体表示：疾病编号怎样变成向量"><a href="#七、实体表示：疾病编号怎样变成向量" class="headerlink" title="七、实体表示：疾病编号怎样变成向量"></a><strong>七、实体表示：疾病编号怎样变成向量</strong></h2><p>回到推荐模型。</p>
 <p>论文建立三张可训练嵌入表：</p>
-<p>[<br>\mathbf E_d,\qquad \mathbf E_p,\qquad \mathbf E_m.<br>]</p>
-<p>查表得到：</p>
-<p>[<br>\mathbf h_{d_i}=\mathbf E_d(d_i),<br>\quad<br>\mathbf h_{p_j}=\mathbf E_p(p_j),<br>\quad<br>\mathbf h_{m_k}=\mathbf E_m(m_k).<br>\tag{1}<br>]</p>
-<p>这些初始向量是模型参数，在推荐训练中更新。</p>
+<script type="math/tex; mode=display">
+\mathbf E_d,\qquad \mathbf E_p,\qquad \mathbf E_m.</script><p>查表得到：</p>
+<script type="math/tex; mode=display">
+\mathbf h_{d_i}=\mathbf E_d(d_i),
+\quad
+\mathbf h_{p_j}=\mathbf E_p(p_j),
+\quad
+\mathbf h_{m_k}=\mathbf E_m(m_k).
+\tag{1}</script><p>这些初始向量是模型参数，在推荐训练中更新。</p>
 <p>论文最终使用 64 维。为了能手算，例子只用 2 维：</p>
 <div class="table-container">
 <table>
@@ -1788,32 +1861,32 @@
 </thead>
 <tbody>
 <tr>
-<td>(d_1)</td>
-<td>((1,0))</td>
+<td>$d_1$</td>
+<td>$(1,0)$</td>
 </tr>
 <tr>
-<td>(d_2)</td>
-<td>((0,1))</td>
+<td>$d_2$</td>
+<td>$(0,1)$</td>
 </tr>
 <tr>
-<td>(d_3)</td>
-<td>((1,1))</td>
+<td>$d_3$</td>
+<td>$(1,1)$</td>
 </tr>
 <tr>
-<td>(d_4)</td>
-<td>((0.5,0.5))</td>
+<td>$d_4$</td>
+<td>$(0.5,0.5)$</td>
 </tr>
 <tr>
-<td>(m_1)</td>
-<td>((1,0))</td>
+<td>$m_1$</td>
+<td>$(1,0)$</td>
 </tr>
 <tr>
-<td>(m_2)</td>
-<td>((0,1))</td>
+<td>$m_2$</td>
+<td>$(0,1)$</td>
 </tr>
 <tr>
-<td>(p_1)</td>
-<td>((0.5,1))</td>
+<td>$p_1$</td>
+<td>$(0.5,1)$</td>
 </tr>
 </tbody>
 </table>
@@ -1823,8 +1896,9 @@
 <hr>
 <h2 id="八、DSA-怎么计算：先按因果角色分类，再按组加权"><a href="#八、DSA-怎么计算：先按因果角色分类，再按组加权" class="headerlink" title="八、DSA 怎么计算：先按因果角色分类，再按组加权"></a><strong>八、DSA 怎么计算：先按因果角色分类，再按组加权</strong></h2><p>DSA 对应公式（4）—（6）。</p>
 <p>它先看当前疾病图：</p>
-<p>[<br>d_1\rightarrow d_3\rightarrow d_2,<br>\qquad d_4\text{ 孤立}.<br>]</p>
-<p>1．按图中的位置分成四组</p>
+<script type="math/tex; mode=display">
+d_1\rightarrow d_3\rightarrow d_2,
+\qquad d_4\text{ 孤立}.</script><p>1．按图中的位置分成四组</p>
 <p>按照论文的描述，可以理解为：</p>
 <div class="table-container">
 <table>
@@ -1837,50 +1911,65 @@
 </thead>
 <tbody>
 <tr>
-<td>(\mathcal D_t^1)</td>
+<td>$\mathcal D_t^1$</td>
 <td>原因类：影响其他疾病，自身无其他疾病指向</td>
-<td>({d_1})</td>
+<td>${d_1}$</td>
 </tr>
 <tr>
-<td>(\mathcal D_t^2)</td>
+<td>$\mathcal D_t^2$</td>
 <td>结果类：被其他疾病影响，不再指向其他疾病</td>
-<td>({d_2})</td>
+<td>${d_2}$</td>
 </tr>
 <tr>
-<td>(\mathcal D_t^3)</td>
+<td>$\mathcal D_t^3$</td>
 <td>中间类：既影响别人，又被别人影响</td>
-<td>({d_3})</td>
+<td>${d_3}$</td>
 </tr>
 <tr>
-<td>(\mathcal D_t^4)</td>
+<td>$\mathcal D_t^4$</td>
 <td>独立类：无疾病间连接</td>
-<td>({d_4})</td>
+<td>${d_4}$</td>
 </tr>
 </tbody>
 </table>
 </div>
 <p>对应：</p>
-<p>[<br>\mathcal D_t^j<br>=<br>\operatorname{Classify}(d_i,G_{v_t}^d).<br>\tag{4}<br>]</p>
-<p>这里的 Classify 主要表达根据因果图的位置分组。正文没有给出一个单独神经分类器的训练公式。</p>
+<script type="math/tex; mode=display">
+\mathcal D_t^j
+=
+\operatorname{Classify}(d_i,G_{v_t}^d).
+\tag{4}</script><p>这里的 Classify 主要表达根据因果图的位置分组。正文没有给出一个单独神经分类器的训练公式。</p>
 <p>2．每组向量先求和</p>
-<p>论文用 (\mathbf h_t^{D^j}) 表示第 (j) 组疾病向量之和：</p>
-<p>[<br>\mathbf h_t^{D^j}<br>=<br>\sum_{d_i\in\mathcal D_t^j}\mathbf h_{d_i}.<br>]</p>
-<p>本例每组只有一个疾病，因此四个组向量为：</p>
-<p>[<br>(1,0),\quad(0,1),\quad(1,1),\quad(0.5,0.5).<br>]</p>
-<p>如果某组有多个疾病，就将它们相加。</p>
+<p>论文用 $\mathbf h_t^{D^j}$ 表示第 $j$ 组疾病向量之和：</p>
+<script type="math/tex; mode=display">
+\mathbf h_t^{D^j}
+=
+\sum_{d_i\in\mathcal D_t^j}\mathbf h_{d_i}.</script><p>本例每组只有一个疾病，因此四个组向量为：</p>
+<script type="math/tex; mode=display">
+(1,0),\quad(0,1),\quad(1,1),\quad(0.5,0.5).</script><p>如果某组有多个疾病，就将它们相加。</p>
 <p>3．计算每个组的重要性得分</p>
 <p>设教学参数为：</p>
-<p>[<br>\mathbf W=(1,0),\qquad b=0.<br>]</p>
-<p>则：</p>
-<p>[<br>a_j=\mathbf W\mathbf h_t^{D^j}+b.<br>]</p>
-<p>四组得分：</p>
-<p>[<br>a=(1,0,1,0.5).<br>]</p>
-<p>4．用 Softmax 变成权重<br>[<br>w_t^j<br>=<br>\frac{\exp(a_j)}<br>{\sum_{k=1}^{4}\exp(a_k)}.<br>\tag{6}<br>]</p>
-<p>结果为：</p>
-<p>[<br>w_t\approx(0.3362,0.1237,0.3362,0.2039).<br>]</p>
-<p>四个权重之和为 1。</p>
-<p>5．组权重乘到该组每个疾病的原始向量上<br>[<br>\mathbf h_{d_i}^{r}<br>=<br>\mathbf h_{d_i}\,w_t^j,<br>\qquad d_i\in\mathcal D_t^j.<br>\tag{5}<br>]</p>
-<p>因此：</p>
+<script type="math/tex; mode=display">
+\mathbf W=(1,0),\qquad b=0.</script><p>则：</p>
+<script type="math/tex; mode=display">
+a_j=\mathbf W\mathbf h_t^{D^j}+b.</script><p>四组得分：</p>
+<script type="math/tex; mode=display">
+a=(1,0,1,0.5).</script><p>4．用 Softmax 变成权重</p>
+<script type="math/tex; mode=display">
+w_t^j
+=
+\frac{\exp(a_j)}
+{\sum_{k=1}^{4}\exp(a_k)}.
+\tag{6}</script><p>结果为：</p>
+<script type="math/tex; mode=display">
+w_t\approx(0.3362,0.1237,0.3362,0.2039).</script><p>四个权重之和为 1。</p>
+<p>5．组权重乘到该组每个疾病的原始向量上</p>
+<script type="math/tex; mode=display">
+\mathbf h_{d_i}^{r}
+=
+\mathbf h_{d_i}\,w_t^j,
+\qquad d_i\in\mathcal D_t^j.
+\tag{5}</script><p>因此：</p>
 <div class="table-container">
 <table>
 <thead>
@@ -1891,70 +1980,94 @@
 </thead>
 <tbody>
 <tr>
-<td>(d_1)</td>
-<td>((0.3362,0))</td>
+<td>$d_1$</td>
+<td>$(0.3362,0)$</td>
 </tr>
 <tr>
-<td>(d_2)</td>
-<td>((0,0.1237))</td>
+<td>$d_2$</td>
+<td>$(0,0.1237)$</td>
 </tr>
 <tr>
-<td>(d_3)</td>
-<td>((0.3362,0.3362))</td>
+<td>$d_3$</td>
+<td>$(0.3362,0.3362)$</td>
 </tr>
 <tr>
-<td>(d_4)</td>
-<td>((0.1020,0.1020))</td>
+<td>$d_4$</td>
+<td>$(0.1020,0.1020)$</td>
 </tr>
 </tbody>
 </table>
 </div>
 <p>这就是：</p>
-<p>[<br>\boxed{\text{DSA 输出：}\mathbf h_d^r}<br>]</p>
-<p>操作和药物也按类似思路处理，得到：</p>
-<p>[<br>\mathbf h_p^r,\qquad \mathbf h_m^r.<br>]</p>
-<p>这里要抓住三个特点：</p>
+<script type="math/tex; mode=display">
+\boxed{\text{DSA 输出：}\mathbf h_d^r}</script><p>操作和药物也按类似思路处理，得到：</p>
+<script type="math/tex; mode=display">
+\mathbf h_p^r,\qquad \mathbf h_m^r.</script><p>这里要抓住三个特点：</p>
 <ul>
 <li>同组实体使用同一个组权重，不是每个疾病都单独做一次自由注意力。</li>
 <li>“原因类疾病”并没有被公式硬编码成最大权重，权重由可训练参数决定。</li>
 <li>“动态”来自当前就诊图和分组变化。同一个疾病在另一种疾病组合中，可能换组，因而获得不同表示。</li>
 </ul>
 <p>比如另一患者的图是：</p>
-<p>[<br>d_2\rightarrow d_1.<br>]</p>
-<p>那么 (d_1) 就可能从原因类变成结果类。</p>
+<script type="math/tex; mode=display">
+d_2\rightarrow d_1.</script><p>那么 $d_1$ 就可能从原因类变成结果类。</p>
 <p>DSA 本身不是在时间轴上递归计算；时间建模主要由后面的 GRU 完成。</p>
 <hr>
 <h2 id="九、RGCN-怎么计算：按不同关系类型收集邻居信息"><a href="#九、RGCN-怎么计算：按不同关系类型收集邻居信息" class="headerlink" title="九、RGCN 怎么计算：按不同关系类型收集邻居信息"></a><strong>九、RGCN 怎么计算：按不同关系类型收集邻居信息</strong></h2><p>RGCN 对应公式（7）—（8）。</p>
 <p>1．先构建你上一条的两张图</p>
 <p>当前疾病：</p>
-<p>[<br>\mathcal D_2={d_1,d_2,d_3,d_4}.<br>]</p>
-<p>上次药物：</p>
-<p>[<br>\mathcal M_1={m_1,m_2}.<br>]</p>
-<p>所以：</p>
-<p>[<br>G_{v_2}^{dm}<br>]</p>
-<p>左边有 4 个疾病，右边有 2 个药物，两边完全连接，共：</p>
-<p>[<br>4\times2=8<br>]</p>
-<p>条边。</p>
+<script type="math/tex; mode=display">
+\mathcal D_2=\{d_1,d_2,d_3,d_4\}.</script><p>上次药物：</p>
+<script type="math/tex; mode=display">
+\mathcal M_1=\{m_1,m_2\}.</script><p>所以：</p>
+<script type="math/tex; mode=display">
+G_{v_2}^{dm}</script><p>左边有 4 个疾病，右边有 2 个药物，两边完全连接，共：</p>
+<script type="math/tex; mode=display">
+4\times2=8</script><p>条边。</p>
 <p>从效应矩阵中取出对应部分：</p>
-<p>[<br>\begin{array}{c|cc}<br>&amp;m_1&amp;m_2\\\hline<br>d_1&amp;0.9&amp;0.1\\<br>d_2&amp;0.1&amp;0.9\\<br>d_3&amp;0.6&amp;0.7\\<br>d_4&amp;0.1&amp;0.2<br>\end{array}.<br>]</p>
-<p>操作—药物图：</p>
-<p>[<br>G_{v_2}^{pm}<br>]</p>
-<p>则连接 (p_1) 与 (m_1,m_2)。</p>
+<script type="math/tex; mode=display">
+\begin{array}{c|cc}
+&m_1&m_2\\\hline
+d_1&0.9&0.1\\
+d_2&0.1&0.9\\
+d_3&0.6&0.7\\
+d_4&0.1&0.2
+\end{array}.</script><p>操作—药物图：</p>
+<script type="math/tex; mode=display">
+G_{v_2}^{pm}</script><p>则连接 $p_1$ 与 $m_1,m_2$。</p>
 <p><strong>2．把效应相近的边划为同一关系类型</strong></p>
 <p>论文最终配置是 5 种边类型，但没有明确给出分组边界。</p>
 <p>为手算，我们简化成两类：</p>
-<p>[<br>r=<br>\begin{cases}<br>\text{强关系},&amp;\text{效应}\ge0.7,\\<br>\text{弱关系},&amp;\text{效应}&lt;0.7.<br>\end{cases}<br>]</p>
-<p>于是：</p>
+<script type="math/tex; mode=display">
+r=
+\begin{cases}
+\text{强关系},&\text{效应}\ge0.7,\\
+\text{弱关系},&\text{效应}<0.7.
+\end{cases}</script><p>于是：</p>
 <ul>
-<li>(d_1-m_1)：强；</li>
-<li>(d_1-m_2)：弱；</li>
-<li>(d_2-m_1)：弱；</li>
-<li>(d_2-m_2)：强。</li>
+<li>$d_1-m_1$：强；</li>
+<li>$d_1-m_2$：弱；</li>
+<li>$d_2-m_1$：弱；</li>
+<li>$d_2-m_2$：强。</li>
 </ul>
 <p>其余同理。</p>
 <p>关键区别：在论文的 RGCN 公式里，效应值主要用于划分关系类型，消息变换由该类型对应的矩阵决定。公式没有直接写成“0.9 乘药物向量”。</p>
-<p><strong>3．展开论文公式</strong><br>[<br>\mathbf h_{d_i}^{l+1}<br>=<br>\sigma\left[<br>\mathbf W_0^l\mathbf h_{d_i}^l<br>+<br>\sum_{r\in\mathcal R}<br>\mathbf W_r^l<br>\left(<br>\frac1{c_{d_i,r}}<br>\sum_{j\in\mathcal N_r(d_i)}<br>\mathbf h_j^l<br>\right)<br>\right].<br>\tag{7}<br>]</p>
-<p>逐项看：</p>
+<p><strong>3．展开论文公式</strong></p>
+<script type="math/tex; mode=display">
+\mathbf h_{d_i}^{l+1}
+=
+\sigma\left[
+\mathbf W_0^l\mathbf h_{d_i}^l
++
+\sum_{r\in\mathcal R}
+\mathbf W_r^l
+\left(
+\frac1{c_{d_i,r} }
+\sum_{j\in\mathcal N_r(d_i)}
+\mathbf h_j^l
+\right)
+\right].
+\tag{7}</script><p>逐项看：</p>
 <div class="table-container">
 <table>
 <thead>
@@ -1965,53 +2078,66 @@
 </thead>
 <tbody>
 <tr>
-<td>(\mathbf h_{d_i}^l)</td>
-<td>当前第 (l) 层的疾病向量</td>
+<td>$\mathbf h_{d_i}^l$</td>
+<td>当前第 $l$ 层的疾病向量</td>
 </tr>
 <tr>
-<td>(\mathbf W_0^l\mathbf h_{d_i}^l)</td>
+<td>$\mathbf W_0^l\mathbf h_{d_i}^l$</td>
 <td>保留并变换节点自身的信息</td>
 </tr>
 <tr>
-<td>(\mathcal N_r(d_i))</td>
-<td>通过关系类型 (r) 与该疾病连接的药物</td>
+<td>$\mathcal N_r(d_i)$</td>
+<td>通过关系类型 $r$ 与该疾病连接的药物</td>
 </tr>
 <tr>
-<td>(\sum_j\mathbf h_j^l/c_{d_i,r})</td>
+<td>$\sum_j\mathbf h_j^l/c_{d_i,r}$</td>
 <td>聚合这一类邻居，常见做法是取平均</td>
 </tr>
 <tr>
-<td>(\mathbf W_r^l)</td>
+<td>$\mathbf W_r^l$</td>
 <td>这种关系类型专用的变换矩阵</td>
 </tr>
 <tr>
-<td>(\sigma)</td>
+<td>$\sigma$</td>
 <td>激活函数</td>
 </tr>
 <tr>
-<td>(\mathbf h_{d_i}^{l+1})</td>
+<td>$\mathbf h_{d_i}^{l+1}$</td>
 <td>更新后的疾病表示</td>
 </tr>
 </tbody>
 </table>
 </div>
 <p>论文还规定：</p>
-<p>[<br>\mathbf W_r^l=\mathbf I+\boldsymbol\Theta_r^l.<br>\tag{8}<br>]</p>
-<p>即关系变换矩阵由单位矩阵加可训练修正量构成。</p>
-<p><strong>4．手算疾病 (d_1) 的一次更新</strong></p>
+<script type="math/tex; mode=display">
+\mathbf W_r^l=\mathbf I+\boldsymbol\Theta_r^l.
+\tag{8}</script><p>即关系变换矩阵由单位矩阵加可训练修正量构成。</p>
+<p><strong>4．手算疾病 $d_1$ 的一次更新</strong></p>
 <p>设：</p>
-<p>[<br>\mathbf W_0=\mathbf I,<br>\qquad<br>\mathbf W_{\text{强}}=\mathbf I,<br>\qquad<br>\mathbf W_{\text{弱}}=0.2\mathbf I.<br>]</p>
-<p>这些设定也满足式（8）：强关系的 (\Theta=0)，弱关系的 (\Theta=-0.8I)。</p>
+<script type="math/tex; mode=display">
+\mathbf W_0=\mathbf I,
+\qquad
+\mathbf W_{\text{强} }=\mathbf I,
+\qquad
+\mathbf W_{\text{弱} }=0.2\mathbf I.</script><p>这些设定也满足式（8）：强关系的 $\Theta=0$，弱关系的 $\Theta=-0.8I$。</p>
 <p>激活函数取 ReLU，归一化系数取该关系下的邻居数量。</p>
-<p>对于 (d_1)：</p>
+<p>对于 $d_1$：</p>
 <ul>
-<li>自己的向量是 ((1,0))；</li>
-<li>强关系邻居为 (m_1)，向量 ((1,0))；</li>
-<li>弱关系邻居为 (m_2)，向量 ((0,1))。</li>
+<li>自己的向量是 $(1,0)$；</li>
+<li>强关系邻居为 $m_1$，向量 $(1,0)$；</li>
+<li>弱关系邻居为 $m_2$，向量 $(0,1)$。</li>
 </ul>
 <p>所以：</p>
-<p>[<br>\begin{aligned}<br>\mathbf h_{d_1}^{1}<br>&amp;=<br>\operatorname{ReLU}<br>\left[<br>(1,0)+(1,0)+0.2(0,1)<br>\right]\\<br>&amp;=(2,0.2).<br>\end{aligned}<br>]</p>
-<p>更新后的 (d_1) 向量里包含了与它相连的药物信息。</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\mathbf h_{d_1}^{1}
+&=
+\operatorname{ReLU}
+\left[
+(1,0)+(1,0)+0.2(0,1)
+\right]\\
+&=(2,0.2).
+\end{aligned}</script><p>更新后的 $d_1$ 向量里包含了与它相连的药物信息。</p>
 <p>同样计算其他疾病，得到：</p>
 <div class="table-container">
 <table>
@@ -2023,87 +2149,149 @@
 </thead>
 <tbody>
 <tr>
-<td>(d_1)</td>
-<td>((2,0.2))</td>
+<td>$d_1$</td>
+<td>$(2,0.2)$</td>
 </tr>
 <tr>
-<td>(d_2)</td>
-<td>((0.2,2))</td>
+<td>$d_2$</td>
+<td>$(0.2,2)$</td>
 </tr>
 <tr>
-<td>(d_3)</td>
-<td>((1.2,2))</td>
+<td>$d_3$</td>
+<td>$(1.2,2)$</td>
 </tr>
 <tr>
-<td>(d_4)</td>
-<td>((0.6,0.6))</td>
+<td>$d_4$</td>
+<td>$(0.6,0.6)$</td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>最后一行为什么是 ((0.6,0.6))？</p>
-<p>因为 (d_4) 的两个药物邻居都属于弱关系，先求平均：</p>
-<p>[<br>\frac{(1,0)+(0,1)}2=(0.5,0.5),<br>]</p>
-<p>再更新：</p>
-<p>[<br>(0.5,0.5)+0.2(0.5,0.5)=(0.6,0.6).<br>]</p>
-<p><strong>5．为什么论文用两层</strong></p>
+<p>最后一行为什么是 $(0.6,0.6)$？</p>
+<p>因为 $d_4$ 的两个药物邻居都属于弱关系，先求平均：</p>
+<script type="math/tex; mode=display">
+\frac{(1,0)+(0,1)}2=(0.5,0.5),</script><p>再更新：</p>
+<script type="math/tex; mode=display">
+(0.5,0.5)+0.2(0.5,0.5)=(0.6,0.6).</script><p><strong>5．为什么论文用两层</strong></p>
 <p>一层让疾病获得相邻药物的信息，药物也可以按相应消息传递设置获得疾病信息。</p>
 <p>再经过一层，信息可以跨两跳传播，例如：</p>
-<p>[<br>d_1\rightarrow m_1\rightarrow d_3.<br>]</p>
-<p>因此，两层能进一步融合图上的相关实体信息。</p>
+<script type="math/tex; mode=display">
+d_1\rightarrow m_1\rightarrow d_3.</script><p>因此，两层能进一步融合图上的相关实体信息。</p>
 <p>同一层的节点更新使用上一层的向量，通常同时计算，不应先更新一个节点、立即拿它的新值更新其他节点。</p>
 <p>论文最终用两层 RGCN。为了展示手算，上面只走了一层。最终输出记作：</p>
-<p>[<br>\boxed{<br>\mathbf h_d^e,\quad<br>\mathbf h_p^e,\quad<br>\mathbf h_m^e<br>}<br>]</p>
-<p>它们是 RGCN 分支的实体表示。</p>
+<script type="math/tex; mode=display">
+\boxed{
+\mathbf h_d^e,\quad
+\mathbf h_p^e,\quad
+\mathbf h_m^e
+}</script><p>它们是 RGCN 分支的实体表示。</p>
 <hr>
 <h2 id="十、怎样把两条分支合成一次就诊的向量"><a href="#十、怎样把两条分支合成一次就诊的向量" class="headerlink" title="十、怎样把两条分支合成一次就诊的向量"></a><strong>十、怎样把两条分支合成一次就诊的向量</strong></h2><p>现在，每个实体有两种更新表示：</p>
-<p>[<br>\underbrace{\mathbf h_{d_i}^{r}}_{\text{DSA：角色权重}}<br>\qquad<br>\underbrace{\mathbf h_{d_i}^{e}}_{\text{RGCN：关系信息}}.<br>]</p>
-<p>论文写作：</p>
-<p>[<br>\mathbf h_{\mathcal D_t}<br>=<br>\operatorname{Agg}(\mathbf h_d^r,\mathbf h_d^e),<br>]</p>
-<p>[<br>\mathbf h_{\mathcal P_t}<br>=<br>\operatorname{Agg}(\mathbf h_p^r,\mathbf h_p^e),<br>]</p>
-<p>[<br>\mathbf h_{\mathcal M_{t-1}}<br>=<br>\operatorname{Agg}(\mathbf h_m^r,\mathbf h_m^e).<br>\tag{9}<br>]</p>
-<p>正文描述了残差式融合、逐元素相加和集合聚合，但没有将 Agg 完全展开。</p>
+<script type="math/tex; mode=display">
+\underbrace{\mathbf h_{d_i}^{r} }_{\text{DSA：角色权重} }
+\qquad
+\underbrace{\mathbf h_{d_i}^{e} }_{\text{RGCN：关系信息} }.</script><p>论文写作：</p>
+<script type="math/tex; mode=display">
+\mathbf h_{\mathcal D_t}
+=
+\operatorname{Agg}(\mathbf h_d^r,\mathbf h_d^e),</script><script type="math/tex; mode=display">
+\mathbf h_{\mathcal P_t}
+=
+\operatorname{Agg}(\mathbf h_p^r,\mathbf h_p^e),</script><script type="math/tex; mode=display">
+\mathbf h_{\mathcal M_{t-1} }
+=
+\operatorname{Agg}(\mathbf h_m^r,\mathbf h_m^e).
+\tag{9}</script><p>正文描述了残差式融合、逐元素相加和集合聚合，但没有将 Agg 完全展开。</p>
 <p>为了继续例子，我们采用与加法聚合描述相符的简化形式：</p>
-<p>[<br>\mathbf h_{\mathcal D_2}<br>=<br>\sum_{d_i\in\mathcal D_2}<br>\left(<br>\mathbf h_{d_i}^r+\mathbf h_{d_i}^e<br>\right).<br>]</p>
-<p>将前面的数值相加：</p>
-<p>[<br>\mathbf h_{\mathcal D_2}<br>\approx(4.7744,5.3618).<br>]</p>
-<p>操作和药物也分别得到集合向量。</p>
+<script type="math/tex; mode=display">
+\mathbf h_{\mathcal D_2}
+=
+\sum_{d_i\in\mathcal D_2}
+\left(
+\mathbf h_{d_i}^r+\mathbf h_{d_i}^e
+\right).</script><p>将前面的数值相加：</p>
+<script type="math/tex; mode=display">
+\mathbf h_{\mathcal D_2}
+\approx(4.7744,5.3618).</script><p>操作和药物也分别得到集合向量。</p>
 <p>然后拼接：</p>
-<p>[<br>\mathbf h_{v_2}<br>=<br>[<br>\mathbf h_{\mathcal D_2}<br>\Vert<br>\mathbf h_{\mathcal P_2}<br>\Vert<br>\mathbf h_{\mathcal M_1}<br>].<br>\tag{10}<br>]</p>
-<p>这里：</p>
+<script type="math/tex; mode=display">
+\mathbf h_{v_2}
+=
+[
+\mathbf h_{\mathcal D_2}
+\Vert
+\mathbf h_{\mathcal P_2}
+\Vert
+\mathbf h_{\mathcal M_1}
+].
+\tag{10}</script><p>这里：</p>
 <ul>
 <li>相加保留原来的维度；  </li>
 <li>拼接把三个向量接起来。</li>
 </ul>
 <p>因此，若每个集合表示为 64 维，直接按式（10）拼接就是：</p>
-<p>[<br>\mathbf h_{v_t}\in\mathbb R^{192}.<br>]</p>
-<p>至此，一次就诊已经变成一个固定长度向量。</p>
+<script type="math/tex; mode=display">
+\mathbf h_{v_t}\in\mathbb R^{192}.</script><p>至此，一次就诊已经变成一个固定长度向量。</p>
 <hr>
 <h2 id="十一、GRU-怎么计算：把多次就诊整合起来"><a href="#十一、GRU-怎么计算：把多次就诊整合起来" class="headerlink" title="十一、GRU 怎么计算：把多次就诊整合起来"></a><strong>十一、GRU 怎么计算：把多次就诊整合起来</strong></h2><p>前面的计算对每次就诊都进行一次，得到：</p>
-<p>[<br>\mathbf h_{v_1},\mathbf h_{v_2},\ldots,\mathbf h_{v_t}.<br>]</p>
-<p>GRU 按时间依次读取。</p>
+<script type="math/tex; mode=display">
+\mathbf h_{v_1},\mathbf h_{v_2},\ldots,\mathbf h_{v_t}.</script><p>GRU 按时间依次读取。</p>
 <p>论文只写：</p>
-<p>[<br>\mathbf h_H<br>=<br>\mathbf o_{v_t}<br>=<br>\operatorname{GRU}<br>(\mathbf o_{v_{t-1}},\mathbf h_{v_t}).<br>\tag{11}<br>]</p>
-<p>其中：</p>
+<script type="math/tex; mode=display">
+\mathbf h_H
+=
+\mathbf o_{v_t}
+=
+\operatorname{GRU}
+(\mathbf o_{v_{t-1} },\mathbf h_{v_t}).
+\tag{11}</script><p>其中：</p>
 <ul>
-<li>(\mathbf h_{v_t})：当前就诊向量；</li>
-<li>(\mathbf o_{v_{t-1}})：之前就诊累积的隐藏状态；</li>
-<li>(\mathbf o_{v_t})：读入当前就诊后的新隐藏状态；</li>
-<li>(\mathbf h_H)：最终患者表示。</li>
+<li>$\mathbf h_{v_t}$：当前就诊向量；</li>
+<li>$\mathbf o_{v_{t-1} }$：之前就诊累积的隐藏状态；</li>
+<li>$\mathbf o_{v_t}$：读入当前就诊后的新隐藏状态；</li>
+<li>$\mathbf h_H$：最终患者表示。</li>
 </ul>
 <p><strong>1．展开 GRU 内部公式</strong></p>
 <p>令：</p>
-<p>[<br>\mathbf x_t=\mathbf h_{v_t},<br>\qquad<br>\mathbf o_{t-1}=\mathbf o_{v_{t-1}}.<br>]</p>
-<p>一种常见 GRU 写法是：</p>
+<script type="math/tex; mode=display">
+\mathbf x_t=\mathbf h_{v_t},
+\qquad
+\mathbf o_{t-1}=\mathbf o_{v_{t-1} }.</script><p>一种常见 GRU 写法是：</p>
 <p>重置门：</p>
-<p>[<br>\mathbf r_t<br>=<br>\operatorname{sigmoid}<br>(<br>\mathbf W_r\mathbf x_t+<br>\mathbf U_r\mathbf o_{t-1}+<br>\mathbf b_r<br>).<br>]</p>
-<p>更新门：</p>
-<p>[<br>\mathbf z_t<br>=<br>\operatorname{sigmoid}<br>(<br>\mathbf W_z\mathbf x_t+<br>\mathbf U_z\mathbf o_{t-1}+<br>\mathbf b_z<br>).<br>]</p>
-<p>候选状态：</p>
-<p>[<br>\widetilde{\mathbf o}_t<br>=<br>\tanh<br>\left(<br>\mathbf W_h\mathbf x_t+<br>\mathbf U_h<br>(\mathbf r_t\odot\mathbf o_{t-1})+<br>\mathbf b_h<br>\right).<br>]</p>
-<p>新状态：</p>
-<p>[<br>\mathbf o_t<br>=<br>\mathbf z_t\odot\mathbf o_{t-1}<br>+<br>(1-\mathbf z_t)\odot\widetilde{\mathbf o}_t.<br>]</p>
-<p>其中 (\odot) 是逐元素相乘。</p>
+<script type="math/tex; mode=display">
+\mathbf r_t
+=
+\operatorname{sigmoid}
+(
+\mathbf W_r\mathbf x_t+
+\mathbf U_r\mathbf o_{t-1}+
+\mathbf b_r
+).</script><p>更新门：</p>
+<script type="math/tex; mode=display">
+\mathbf z_t
+=
+\operatorname{sigmoid}
+(
+\mathbf W_z\mathbf x_t+
+\mathbf U_z\mathbf o_{t-1}+
+\mathbf b_z
+).</script><p>候选状态：</p>
+<script type="math/tex; mode=display">
+\widetilde{\mathbf o}_t
+=
+\tanh
+\left(
+\mathbf W_h\mathbf x_t+
+\mathbf U_h
+(\mathbf r_t\odot\mathbf o_{t-1})+
+\mathbf b_h
+\right).</script><p>新状态：</p>
+<script type="math/tex; mode=display">
+\mathbf o_t
+=
+\mathbf z_t\odot\mathbf o_{t-1}
++
+(1-\mathbf z_t)\odot\widetilde{\mathbf o}_t.</script><p>其中 $\odot$ 是逐元素相乘。</p>
 <p>按照这里的写法：</p>
 <div class="table-container">
 <table>
@@ -2115,19 +2303,19 @@
 </thead>
 <tbody>
 <tr>
-<td>(\mathbf r_t)</td>
+<td>$\mathbf r_t$</td>
 <td>控制多少历史信息参与构造候选状态</td>
 </tr>
 <tr>
-<td>(\mathbf z_t)</td>
+<td>$\mathbf z_t$</td>
 <td>控制保留多少旧状态</td>
 </tr>
 <tr>
-<td>(\widetilde{\mathbf o}_t)</td>
+<td>$\widetilde{\mathbf o}_t$</td>
 <td>根据当前就诊和历史信息生成的新候选</td>
 </tr>
 <tr>
-<td>(\mathbf o_t)</td>
+<td>$\mathbf o_t$</td>
 <td>旧状态与候选状态混合后的结果</td>
 </tr>
 </tbody>
@@ -2137,49 +2325,73 @@
 <p>2．用一个隐藏单元手算两次就诊</p>
 <p>为避免大矩阵，我们只保留一个隐藏单元，并假设候选状态的输入投影只读取就诊向量中的第一个分量。</p>
 <p>设：</p>
-<p>[<br>r_t=z_t=0.5,<br>]</p>
-<p>[<br>\widetilde o_t<br>=<br>\tanh(0.1x_t+0.5o_{t-1}),<br>]</p>
-<p>[<br>o_t=0.5o_{t-1}+0.5\widetilde o_t.<br>]</p>
-<p>这里 (x_t) 是被选中的输入分量。其余输入分量的权重暂设为 0，仅用于手算。</p>
+<script type="math/tex; mode=display">
+r_t=z_t=0.5,</script><script type="math/tex; mode=display">
+\widetilde o_t
+=
+\tanh(0.1x_t+0.5o_{t-1}),</script><script type="math/tex; mode=display">
+o_t=0.5o_{t-1}+0.5\widetilde o_t.</script><p>这里 $x_t$ 是被选中的输入分量。其余输入分量的权重暂设为 0，仅用于手算。</p>
 <p>初始化：</p>
-<p>[<br>o_0=0.<br>]</p>
-<p>假设第一次就诊对应的输入分量为：</p>
-<p>[<br>x_1=4.2365.<br>]</p>
-<p>则：</p>
-<p>[<br>\widetilde o_1<br>=<br>\tanh(0.42365)<br>\approx0.4,<br>]</p>
-<p>[<br>o_1=0.5\times0+0.5\times0.4=0.2.<br>]</p>
-<p>第二次就诊，我们使用前面计算出的：</p>
-<p>[<br>x_2=4.7744.<br>]</p>
-<p>于是：</p>
-<p>[<br>\widetilde o_2<br>=<br>\tanh(0.1\times4.7744+0.5\times0.2)<br>]</p>
-<p>[<br>=<br>\tanh(0.57744)<br>\approx0.5208.<br>]</p>
-<p>最终：</p>
-<p>[<br>o_2<br>=<br>0.5\times0.2+0.5\times0.5208<br>=<br>0.3604.<br>]</p>
-<p>所以：</p>
-<p>[<br>\boxed{h_H=o_2=0.3604}.<br>]</p>
-<p>真实模型的隐藏状态是向量，每个维度都有相应的门值。</p>
+<script type="math/tex; mode=display">
+o_0=0.</script><p>假设第一次就诊对应的输入分量为：</p>
+<script type="math/tex; mode=display">
+x_1=4.2365.</script><p>则：</p>
+<script type="math/tex; mode=display">
+\widetilde o_1
+=
+\tanh(0.42365)
+\approx0.4,</script><script type="math/tex; mode=display">
+o_1=0.5\times0+0.5\times0.4=0.2.</script><p>第二次就诊，我们使用前面计算出的：</p>
+<script type="math/tex; mode=display">
+x_2=4.7744.</script><p>于是：</p>
+<script type="math/tex; mode=display">
+\widetilde o_2
+=
+\tanh(0.1\times4.7744+0.5\times0.2)</script><script type="math/tex; mode=display">
+=
+\tanh(0.57744)
+\approx0.5208.</script><p>最终：</p>
+<script type="math/tex; mode=display">
+o_2
+=
+0.5\times0.2+0.5\times0.5208
+=
+0.3604.</script><p>所以：</p>
+<script type="math/tex; mode=display">
+\boxed{h_H=o_2=0.3604}.</script><p>真实模型的隐藏状态是向量，每个维度都有相应的门值。</p>
 <p>图 2 中多个沿时间展开的 GRU 方块，可以理解为同一组参数在不同就诊时刻重复使用。</p>
 <hr>
 <h2 id="十二、患者向量怎样得到药物推荐"><a href="#十二、患者向量怎样得到药物推荐" class="headerlink" title="十二、患者向量怎样得到药物推荐"></a><strong>十二、患者向量怎样得到药物推荐</strong></h2><p>论文接着计算：</p>
-<p>[<br>\operatorname{score}<br>=<br>\operatorname{sigmoid}<br>(<br>\operatorname{MLP}(\mathbf h_H)<br>).<br>\tag{12}<br>]</p>
-<p>输出维度是整个药物词表大小：</p>
-<p>[<br>|\mathcal M|.<br>]</p>
-<p>我们的词表有 3 种药，所以要输出 3 个分数。</p>
+<script type="math/tex; mode=display">
+\operatorname{score}
+=
+\operatorname{sigmoid}
+(
+\operatorname{MLP}(\mathbf h_H)
+).
+\tag{12}</script><p>输出维度是整个药物词表大小：</p>
+<script type="math/tex; mode=display">
+|\mathcal M|.</script><p>我们的词表有 3 种药，所以要输出 3 个分数。</p>
 <p>为了手算，令一个简化输出层为：</p>
-<p>[<br>\ell_1=3h_H-0.2,<br>]</p>
-<p>[<br>\ell_2=-2h_H-0.3,<br>]</p>
-<p>[<br>\ell_3=h_H+0.4.<br>]</p>
-<p>代入 (h_H=0.3604)：</p>
-<p>[<br>\boldsymbol\ell<br>\approx(0.8812,-1.0208,0.7604).<br>]</p>
-<p>经过 Sigmoid：</p>
-<p>[<br>\operatorname{score}<br>\approx(0.7071,0.2649,0.6814).<br>]</p>
-<p>以论文阈值 (\delta=0.5) 判断：</p>
-<p>[<br>\widehat{\mathcal M}_2<br>=<br>{m_1,m_3}.<br>\tag{13}<br>]</p>
-<p><strong>注意：虽然输入药物节点只有上次使用的 (m_1,m_2)，最终依然可以推荐 (m_3)。因为输出层给整个药物词表打分。</strong></p>
+<script type="math/tex; mode=display">
+\ell_1=3h_H-0.2,</script><script type="math/tex; mode=display">
+\ell_2=-2h_H-0.3,</script><script type="math/tex; mode=display">
+\ell_3=h_H+0.4.</script><p>代入 $h_H=0.3604$：</p>
+<script type="math/tex; mode=display">
+\boldsymbol\ell
+\approx(0.8812,-1.0208,0.7604).</script><p>经过 Sigmoid：</p>
+<script type="math/tex; mode=display">
+\operatorname{score}
+\approx(0.7071,0.2649,0.6814).</script><p>以论文阈值 $\delta=0.5$ 判断：</p>
+<script type="math/tex; mode=display">
+\widehat{\mathcal M}_2
+=
+\{m_1,m_3\}.
+\tag{13}</script><p><strong>注意：虽然输入药物节点只有上次使用的 $m_1,m_2$，最终依然可以推荐 $m_3$。因为输出层给整个药物词表打分。</strong></p>
 <hr>
 <h2 id="十三、训练时，哪些东西会被更新"><a href="#十三、训练时，哪些东西会被更新" class="headerlink" title="十三、训练时，哪些东西会被更新"></a><strong>十三、训练时，哪些东西会被更新</strong></h2><p>训练时，将药物分数与真实标签：</p>
-<p>[<br>[1,0,1]<br>]</p>
-<p>进行比较。</p>
+<script type="math/tex; mode=display">
+[1,0,1]</script><p>进行比较。</p>
 <p>论文用三种损失：</p>
 <div class="table-container">
 <table>
@@ -2191,37 +2403,49 @@
 </thead>
 <tbody>
 <tr>
-<td>(\mathcal L_{\mathrm{bce}})，式（14）</td>
+<td>$\mathcal L_{\mathrm{bce} }$，式（14）</td>
 <td>让每个药物的预测分数接近真实标签</td>
 </tr>
 <tr>
-<td>(\mathcal L_{\mathrm{multi}})，式（15）</td>
+<td>$\mathcal L_{\mathrm{multi} }$，式（15）</td>
 <td>让真实药物的分数高于非真实药物</td>
 </tr>
 <tr>
-<td>(\mathcal L_{\mathrm{ddi}})，式（16）</td>
+<td>$\mathcal L_{\mathrm{ddi} }$，式（16）</td>
 <td>惩罚有相互作用风险的药物组合</td>
 </tr>
 </tbody>
 </table>
 </div>
 <p>总损失：</p>
-<p>[<br>\mathcal L<br>=<br>\alpha<br>\left[<br>\beta\mathcal L_{\mathrm{bce}}<br>+<br>(1-\beta)\mathcal L_{\mathrm{multi}}<br>\right]<br>+<br>(1-\alpha)\mathcal L_{\mathrm{ddi}}.<br>\tag{17}<br>]</p>
-<p>其中：</p>
+<script type="math/tex; mode=display">
+\mathcal L
+=
+\alpha
+\left[
+\beta\mathcal L_{\mathrm{bce} }
++
+(1-\beta)\mathcal L_{\mathrm{multi} }
+\right]
++
+(1-\alpha)\mathcal L_{\mathrm{ddi} }.
+\tag{17}</script><p>其中：</p>
 <ul>
-<li>(\beta)：平衡 BCE 和多标签排序损失；</li>
-<li>(\alpha)：根据当前 DDI rate 调整准确性损失与 DDI 损失的比例；</li>
-<li>(\gamma)：DDI 可接受阈值；</li>
-<li>(k_p)：控制 (\alpha) 调整幅度的参数。</li>
+<li>$\beta$：平衡 BCE 和多标签排序损失；</li>
+<li>$\alpha$：根据当前 DDI rate 调整准确性损失与 DDI 损失的比例；</li>
+<li>$\gamma$：DDI 可接受阈值；</li>
+<li>$k_p$：控制 $\alpha$ 调整幅度的参数。</li>
 </ul>
 <p>药物相互作用矩阵：</p>
-<p>[<br>\mathbf M^{ddi}_{ij}=1<br>]</p>
-<p>表示药物 (m_i,m_j) 存在相互作用。</p>
-<p><strong>(\mathbf M^{ddi}) 和 (\mathbf M^{dm},\mathbf M^{pm}) 来源不同：前者是药物相互作用数据，后两者是关系挖掘得到的因果效应矩阵。</strong></p>
+<script type="math/tex; mode=display">
+\mathbf M^{ddi}_{ij}=1</script><p>表示药物 $m_i,m_j$ 存在相互作用。</p>
+<p><strong>$\mathbf M^{ddi}$ 和 $\mathbf M^{dm},\mathbf M^{pm}$ 来源不同：前者是药物相互作用数据，后两者是关系挖掘得到的因果效应矩阵。</strong></p>
 <p>反向传播主要更新：</p>
-<p>[<br>\boxed{<br>\text{嵌入表、DSA 参数、RGCN 参数、GRU 参数、MLP 参数}<br>}<br>]</p>
-<p>GIES 的离散图搜索和前面的因果效应估计，是另一类计算，论文没有给出它们随推荐损失一起端到端反向传播的公式。</p>
-<p>还有一个符号上的坑：论文在阈值判定和损失公式中都用了类似 (\hat m_i) 的记法。<strong>计算 BCE 和 DDI 损失时应使用阈值化之前的连续分数，才能正常训练。</strong></p>
+<script type="math/tex; mode=display">
+\boxed{
+\text{嵌入表、DSA 参数、RGCN 参数、GRU 参数、MLP 参数}
+}</script><p>GIES 的离散图搜索和前面的因果效应估计，是另一类计算，论文没有给出它们随推荐损失一起端到端反向传播的公式。</p>
+<p>还有一个符号上的坑：论文在阈值判定和损失公式中都用了类似 $\hat m_i$ 的记法。<strong>计算 BCE 和 DDI 损失时应使用阈值化之前的连续分数，才能正常训练。</strong></p>
 <hr>
 <h2 id="十四、原论文主要变量分别是哪一步的输入、参数和输出"><a href="#十四、原论文主要变量分别是哪一步的输入、参数和输出" class="headerlink" title="十四、原论文主要变量分别是哪一步的输入、参数和输出"></a><strong>十四、原论文主要变量分别是哪一步的输入、参数和输出</strong></h2><p>这张表可以对照公式阅读：</p>
 <div class="table-container">
@@ -2235,162 +2459,162 @@
 </thead>
 <tbody>
 <tr>
-<td>(\mathcal D,\mathcal P,\mathcal M)</td>
+<td>$\mathcal D,\mathcal P,\mathcal M$</td>
 <td>数据整理</td>
 <td>全部疾病、操作、药物词表</td>
 </tr>
 <tr>
-<td>(H={v_1,\ldots,v_t})</td>
+<td>$H={v_1,\ldots,v_t}$</td>
 <td>病历整理</td>
 <td>一个患者的就诊序列</td>
 </tr>
 <tr>
-<td>(\mathcal D_t,\mathcal P_t,\mathcal M_t)</td>
-<td>原始第 (t) 次就诊</td>
+<td>$\mathcal D_t,\mathcal P_t,\mathcal M_t$</td>
+<td>原始第 $t$ 次就诊</td>
 <td>当前疾病、操作和实际用药</td>
 </tr>
 <tr>
-<td>(\mathcal M_{t-1})</td>
+<td>$\mathcal M_{t-1}$</td>
 <td>上次就诊</td>
 <td>当前推荐模型的药物输入</td>
 </tr>
 <tr>
-<td>(U)</td>
+<td>$U$</td>
 <td>对大量病历做统计</td>
 <td>实体联合分布</td>
 </tr>
 <tr>
-<td>(X_i)</td>
+<td>$X_i$</td>
 <td>关系挖掘的数据表示</td>
 <td>一个实体随机变量</td>
 </tr>
 <tr>
-<td>(G)</td>
+<td>$G$</td>
 <td>因果搜索初始化或中间状态</td>
 <td>候选因果图</td>
 </tr>
 <tr>
-<td>(Pa_i^G)</td>
+<td>$Pa_i^G$</td>
 <td>当前候选图</td>
-<td>(X_i) 的父节点集合</td>
+<td>$X_i$ 的父节点集合</td>
 </tr>
 <tr>
-<td>(s,S)</td>
+<td>$s,S$</td>
 <td>图评分</td>
 <td>局部评分、全图评分</td>
 </tr>
 <tr>
-<td>(G’)</td>
+<td>$G’$</td>
 <td>GIES</td>
 <td>优化后的图或相应等价类表示</td>
 </tr>
 <tr>
-<td>(G_{v_t})</td>
+<td>$G_{v_t}$</td>
 <td>就诊相关的因果结构构建</td>
 <td>当前就诊的病理关系图</td>
 </tr>
 <tr>
-<td>(\mathcal G)</td>
+<td>$\mathcal G$</td>
 <td>汇总各次就诊图</td>
-<td>({G_{v_1},G_{v_2},\ldots})</td>
+<td>${G_{v_1},G_{v_2},\ldots}$</td>
 </tr>
 <tr>
-<td>(\mathbf M^{dm},\mathbf M^{pm})</td>
+<td>$\mathbf M^{dm},\mathbf M^{pm}$</td>
 <td>因果效应估计</td>
 <td>疾病—药物、操作—药物效应矩阵</td>
 </tr>
 <tr>
-<td>(\mathbf E_d,\mathbf E_p,\mathbf E_m)</td>
+<td>$\mathbf E_d,\mathbf E_p,\mathbf E_m$</td>
 <td>推荐模型初始化并训练</td>
 <td>三张嵌入参数表</td>
 </tr>
 <tr>
-<td>(\mathbf h_{d_i},\mathbf h_{p_j},\mathbf h_{m_k})</td>
+<td>$\mathbf h_{d_i},\mathbf h_{p_j},\mathbf h_{m_k}$</td>
 <td>查嵌入表，式（1）</td>
 <td>实体初始向量</td>
 </tr>
 <tr>
-<td>(G_{v_t}^d,G_{v_t}^p,G_{v_{t-1}}^m)</td>
+<td>$G_{v_t}^d,G_{v_t}^p,G_{v_{t-1} }^m$</td>
 <td>提取同类型实体关系</td>
 <td>DSA 使用的图</td>
 </tr>
 <tr>
-<td>(\mathcal D_t^j)</td>
+<td>$\mathcal D_t^j$</td>
 <td>Classify，式（4）</td>
-<td>当前疾病的第 (j) 个因果角色组</td>
+<td>当前疾病的第 $j$ 个因果角色组</td>
 </tr>
 <tr>
-<td>(\mathbf h_t^{D^j})</td>
+<td>$\mathbf h_t^{D^j}$</td>
 <td>组内向量求和</td>
-<td>第 (j) 组的表示</td>
+<td>第 $j$ 组的表示</td>
 </tr>
 <tr>
-<td>(w_t^j)</td>
+<td>$w_t^j$</td>
 <td>DSA 的 Softmax，式（6）</td>
-<td>第 (j) 组的权重</td>
+<td>第 $j$ 组的权重</td>
 </tr>
 <tr>
-<td>(\mathbf h_d^r,\mathbf h_p^r,\mathbf h_m^r)</td>
+<td>$\mathbf h_d^r,\mathbf h_p^r,\mathbf h_m^r$</td>
 <td>DSA，式（5）</td>
 <td>按角色加权后的实体向量</td>
 </tr>
 <tr>
-<td>(G_{v_t}^{dm},G_{v_t}^{pm})</td>
+<td>$G_{v_t}^{dm},G_{v_t}^{pm}$</td>
 <td>当前实体＋因果效应矩阵</td>
 <td>RGCN 使用的二部图</td>
 </tr>
 <tr>
-<td>(\mathcal R)</td>
+<td>$\mathcal R$</td>
 <td>效应分组</td>
 <td>关系类型集合</td>
 </tr>
 <tr>
-<td>(\mathcal N_r(d_i),c_{d_i,r})</td>
+<td>$\mathcal N_r(d_i),c_{d_i,r}$</td>
 <td>当前二部图及归一化规则</td>
 <td>某类邻居集合、归一化因子</td>
 </tr>
 <tr>
-<td>(\mathbf W_0^l,\mathbf W_r^l,\Theta_r^l)</td>
+<td>$\mathbf W_0^l,\mathbf W_r^l,\Theta_r^l$</td>
 <td>RGCN 的可训练参数</td>
 <td>自身变换、关系变换及其修正量</td>
 </tr>
 <tr>
-<td>(\mathbf h_{d_i}^l)</td>
-<td>RGCN 第 (l) 层</td>
+<td>$\mathbf h_{d_i}^l$</td>
+<td>RGCN 第 $l$ 层</td>
 <td>该层节点表示</td>
 </tr>
 <tr>
-<td>(\mathbf h_d^e,\mathbf h_p^e,\mathbf h_m^e)</td>
+<td>$\mathbf h_d^e,\mathbf h_p^e,\mathbf h_m^e$</td>
 <td>RGCN 最后一层</td>
 <td>融合异质关系后的实体表示</td>
 </tr>
 <tr>
-<td>(\mathbf h_{\mathcal D_t},\mathbf h_{\mathcal P_t},\mathbf h_{\mathcal M_{t-1}})</td>
+<td>$\mathbf h_{\mathcal D_t},\mathbf h_{\mathcal P_t},\mathbf h_{\mathcal M_{t-1} }$</td>
 <td>Agg，式（9）</td>
 <td>三类实体的集合表示</td>
 </tr>
 <tr>
-<td>(\mathbf h_{v_t})</td>
+<td>$\mathbf h_{v_t}$</td>
 <td>拼接，式（10）</td>
 <td>一次就诊的向量</td>
 </tr>
 <tr>
-<td>(\mathbf o_{v_t})</td>
+<td>$\mathbf o_{v_t}$</td>
 <td>GRU，式（11）</td>
-<td>读到第 (t) 次就诊后的隐藏状态</td>
+<td>读到第 $t$ 次就诊后的隐藏状态</td>
 </tr>
 <tr>
-<td>(\mathbf h_H)</td>
+<td>$\mathbf h_H$</td>
 <td>最后一个 GRU 状态</td>
 <td>患者历史表示</td>
 </tr>
 <tr>
-<td>(\operatorname{score})</td>
+<td>$\operatorname{score}$</td>
 <td>MLP＋Sigmoid，式（12）</td>
 <td>整个药物词表的预测分数</td>
 </tr>
 <tr>
-<td>(\widehat{\mathcal M}_t)</td>
+<td>$\widehat{\mathcal M}_t$</td>
 <td>阈值判定，式（13）</td>
 <td>最终推荐药物集合</td>
 </tr>
@@ -2399,7 +2623,7 @@
 </div>
 <p>再提醒一个阅读时很容易串掉的符号：</p>
 <blockquote>
-<p>(\mathbf h_d^{r}) 中的上标 (r) 用来标记 DSA 分支的结果；RGCN 求和中的 (r\in\mathcal R) 则表示“关系类型”。它们在不同位置承担不同含义。</p>
+<p>$\mathbf h_d^{r}$ 中的上标 $r$ 用来标记 DSA 分支的结果；RGCN 求和中的 $r\in\mathcal R$ 则表示“关系类型”。它们在不同位置承担不同含义。</p>
 </blockquote>
 <hr>
 <h2 id="十五、这篇论文确实有哪些地方没写清"><a href="#十五、这篇论文确实有哪些地方没写清" class="headerlink" title="十五、这篇论文确实有哪些地方没写清"></a><strong>十五、这篇论文确实有哪些地方没写清</strong></h2><p>你觉得迷糊，有一部分原因是正文省略了关键实现，而不只是公式难：</p>
@@ -2448,21 +2672,28 @@
 </table>
 </div>
 <p>读图 2 时，可以沿着这四个输出检查自己是否理解了：</p>
-<p>[<br>\boxed{<br>\begin{aligned}<br>\text{GIES}&amp;\longrightarrow \text{关系结构}\\<br>\text{DSA}&amp;\longrightarrow \mathbf h^r\text{：考虑当前因果角色的实体向量}\\<br>\text{RGCN}&amp;\longrightarrow \mathbf h^e\text{：吸收相关实体信息的向量}\\<br>\text{GRU}&amp;\longrightarrow \mathbf h_H\text{：整合历史就诊的患者向量}<br>\end{aligned}<br>}<br>]</p>
-<h1 id="3-病例图的格式，病例图是怎么构建的？"><a href="#3-病例图的格式，病例图是怎么构建的？" class="headerlink" title="3.病例图的格式，病例图是怎么构建的？"></a>3.病例图的格式，病例图是怎么构建的？</h1><h2 id="1．-v-1、v-2-是就诊记录，不是患者编号"><a href="#1．-v-1、v-2-是就诊记录，不是患者编号" class="headerlink" title="1．(v_1、v_2) 是就诊记录，不是患者编号"></a><strong>1．(v_1、v_2) 是就诊记录，不是患者编号</strong></h2><p>假设患者 A 有两次就诊：</p>
-<p>[ H^{(A)}={v_1^{(A)},v_2^{(A)}}. ]</p>
-<p>患者 B 也有两次：</p>
-<p>[ H^{(B)}={v_1^{(B)},v_2^{(B)}}. ]</p>
-<p>论文为简洁，讨论单个患者时省略患者上标，直接写：</p>
-<p>[ H={v_1,v_2,\ldots,v_t}. ]</p>
-<p>每次就诊记录包含：</p>
-<p>[ v_t={\mathcal D_t,\mathcal P_t,\mathcal M_t}, ]</p>
-<p>分别是这次记录的疾病、医疗操作和用药。</p>
+<script type="math/tex; mode=display">
+\boxed{
+\begin{aligned}
+\text{GIES}&\longrightarrow \text{关系结构}\\
+\text{DSA}&\longrightarrow \mathbf h^r\text{：考虑当前因果角色的实体向量}\\
+\text{RGCN}&\longrightarrow \mathbf h^e\text{：吸收相关实体信息的向量}\\
+\text{GRU}&\longrightarrow \mathbf h_H\text{：整合历史就诊的患者向量}
+\end{aligned}
+}</script><h1 id="3-病例图的格式，病例图是怎么构建的？"><a href="#3-病例图的格式，病例图是怎么构建的？" class="headerlink" title="3.病例图的格式，病例图是怎么构建的？"></a>3.病例图的格式，病例图是怎么构建的？</h1><h2 id="1．-v-1、v-2-是就诊记录，不是患者编号"><a href="#1．-v-1、v-2-是就诊记录，不是患者编号" class="headerlink" title="1．$v_1、v_2$ 是就诊记录，不是患者编号"></a><strong>1．$v_1、v_2$ 是就诊记录，不是患者编号</strong></h2><p>假设患者 A 有两次就诊：</p>
+<script type="math/tex; mode=display">
+H^{(A)}=\{v_1^{(A)},v_2^{(A)}\}.</script><p>患者 B 也有两次：</p>
+<script type="math/tex; mode=display">
+H^{(B)}=\{v_1^{(B)},v_2^{(B)}\}.</script><p>论文为简洁，讨论单个患者时省略患者上标，直接写：</p>
+<script type="math/tex; mode=display">
+H=\{v_1,v_2,\ldots,v_t\}.</script><p>每次就诊记录包含：</p>
+<script type="math/tex; mode=display">
+v_t=\{\mathcal D_t,\mathcal P_t,\mathcal M_t\},</script><p>分别是这次记录的疾病、医疗操作和用药。</p>
 <p>这里的“就诊”是数据集划分的一次医疗事件，可以对应一次住院记录，不能直接理解为一次门诊挂号。</p>
 <h2 id="2．每次就诊真的都有一张病理关系图吗？"><a href="#2．每次就诊真的都有一张病理关系图吗？" class="headerlink" title="2．每次就诊真的都有一张病理关系图吗？"></a>2．每次就诊真的都有一张病理关系图吗？</h2><p>按照论文的表述，是的：模型为每次就诊关联一张病理关系图。</p>
 <p>论文第 4.2 节写，得到覆盖各次就诊的图集合：</p>
-<p>[ \mathcal G={G_{v_1},G_{v_2},\ldots}. ]</p>
-<p>但必须区分：</p>
+<script type="math/tex; mode=display">
+\mathcal G=\{G_{v_1},G_{v_2},\ldots\}.</script><p>但必须区分：</p>
 <div class="table-container">
 <table>
 <thead>
@@ -2499,11 +2730,11 @@
 </ul>
 <p>先只看疾病部分，最容易理解。</p>
 <p>假设某次就诊记录了四种疾病：</p>
-<p>[ \mathcal D_1={d_1,d_2,d_3,d_4}. ]</p>
-<p>为了说明表示方法，假设学习并选取出来的疾病关系是：</p>
-<p>[ d_1\rightarrow d_3,\qquad d_3\rightarrow d_2, ]</p>
-<p>而 (d_4) 与其他疾病没有连接。</p>
-<p>那么疾病子图 (G_{v_1}^{d}) 就是：</p>
+<script type="math/tex; mode=display">
+\mathcal D_1=\{d_1,d_2,d_3,d_4\}.</script><p>为了说明表示方法，假设学习并选取出来的疾病关系是：</p>
+<script type="math/tex; mode=display">
+d_1\rightarrow d_3,\qquad d_3\rightarrow d_2,</script><p>而 $d_4$ 与其他疾病没有连接。</p>
+<p>那么疾病子图 $G_{v_1}^{d}$ 就是：</p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
@@ -2512,42 +2743,42 @@
                 ></p>
 <p>这张图表达：</p>
 <ul>
-<li>(d_1) 直接影响 (d_3)；</li>
-<li>(d_3) 直接影响 (d_2)；</li>
-<li>(d_1) 可以通过 (d_3) 间接影响 (d_2)；</li>
-<li>图中没有发现 (d_4) 与其他疾病的直接关系。</li>
+<li>$d_1$ 直接影响 $d_3$；</li>
+<li>$d_3$ 直接影响 $d_2$；</li>
+<li>$d_1$ 可以通过 $d_3$ 间接影响 $d_2$；</li>
+<li>图中没有发现 $d_4$ 与其他疾病的直接关系。</li>
 </ul>
 <p>这些是示意关系，不是实际疾病的临床结论。模型图中的箭头也需要相应因果假设支持。</p>
 <p>还要注意：</p>
-<p>[ d_1\rightarrow d_3\rightarrow d_2 ]</p>
-<p>不代表三种疾病一定按这次记录中的时间先后出现。这里表示因果结构，并非直接表示发病时间线。</p>
+<script type="math/tex; mode=display">
+d_1\rightarrow d_3\rightarrow d_2</script><p>不代表三种疾病一定按这次记录中的时间先后出现。这里表示因果结构，并非直接表示发病时间线。</p>
 <hr>
 <h2 id="4．这张图在计算机里怎么表示？"><a href="#4．这张图在计算机里怎么表示？" class="headerlink" title="4．这张图在计算机里怎么表示？"></a><strong>4．这张图在计算机里怎么表示？</strong></h2><p>最基本的数学表示是：</p>
-<p>[ G_{v_1}^{d}=(V_1^d,E_1^d). ]</p>
-<p>其中，节点集合：</p>
-<p>[ V_1^d={d_1,d_2,d_3,d_4}, ]</p>
-<p>边集合：</p>
-<p>[ E_1^d={(d_1,d_3),(d_3,d_2)}. ]</p>
-<p>一条有向边：</p>
-<p>[ (d_1,d_3) ]</p>
-<p>就是：</p>
-<p>[ d_1\rightarrow d_3. ]</p>
-<p>可以保存成边列表：</p>
+<script type="math/tex; mode=display">
+G_{v_1}^{d}=(V_1^d,E_1^d).</script><p>其中，节点集合：</p>
+<script type="math/tex; mode=display">
+V_1^d=\{d_1,d_2,d_3,d_4\},</script><p>边集合：</p>
+<script type="math/tex; mode=display">
+E_1^d=\{(d_1,d_3),(d_3,d_2)\}.</script><p>一条有向边：</p>
+<script type="math/tex; mode=display">
+(d_1,d_3)</script><p>就是：</p>
+<script type="math/tex; mode=display">
+d_1\rightarrow d_3.</script><p>可以保存成边列表：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">起点    终点</span><br><span class="line">d1      d3</span><br><span class="line">d3      d2</span><br></pre></td></tr></table></figure></div>
 <p>也可以保存成邻接矩阵。按节点顺序：</p>
-<p>[ [d_1,d_2,d_3,d_4], ]</p>
-<p>约定“行是起点、列是终点”，则：</p>
-<p>[ \mathbf A_{v_1}^{d} = \begin{array}{c|cccc} &amp;d_1&amp;d_2&amp;d_3&amp;d_4\\\hline d_1&amp;0&amp;0&amp;1&amp;0\\ d_2&amp;0&amp;0&amp;0&amp;0\\ d_3&amp;0&amp;1&amp;0&amp;0\\ d_4&amp;0&amp;0&amp;0&amp;0 \end{array}. ]</p>
-<p>例如：</p>
-<p>[ A_{1,3}=1 ]</p>
-<p>表示有边 (d_1\rightarrow d_3)。</p>
+<script type="math/tex; mode=display">
+[d_1,d_2,d_3,d_4],</script><p>约定“行是起点、列是终点”，则：</p>
+<script type="math/tex; mode=display">
+\mathbf A_{v_1}^{d} = \begin{array}{c|cccc} &d_1&d_2&d_3&d_4\\\hline d_1&0&0&1&0\\ d_2&0&0&0&0\\ d_3&0&1&0&0\\ d_4&0&0&0&0 \end{array}.</script><p>例如：</p>
+<script type="math/tex; mode=display">
+A_{1,3}=1</script><p>表示有边 $d_1\rightarrow d_3$。</p>
 <p>这里的 1 只表示有连接，不表示因果效应等于 1。因果效应大小是另一步估计的数量。</p>
 <h2 id="5．换一次就诊，图为什么可能改变？"><a href="#5．换一次就诊，图为什么可能改变？" class="headerlink" title="5．换一次就诊，图为什么可能改变？"></a><strong>5．换一次就诊，图为什么可能改变？</strong></h2><p>假设第二次就诊只有：</p>
-<p>[ \mathcal D_2={d_2,d_3,d_4}. ]</p>
-<p>一种直观的构建方式是：先从大量病历学习关系结构，再保留当前出现的实体及其相互关系。</p>
+<script type="math/tex; mode=display">
+\mathcal D_2=\{d_2,d_3,d_4\}.</script><p>一种直观的构建方式是：先从大量病历学习关系结构，再保留当前出现的实体及其相互关系。</p>
 <p>按这种方式，第二次的疾病图就是：</p>
-<p>[ G_{v_2}^{d}: \qquad d_3\rightarrow d_2, \qquad d_4\text{ 孤立}. ]</p>
-<p>对比：</p>
+<script type="math/tex; mode=display">
+G_{v_2}^{d}: \qquad d_3\rightarrow d_2, \qquad d_4\text{ 孤立}.</script><p>对比：</p>
 <div class="table-container">
 <table>
 <thead>
@@ -2559,14 +2790,14 @@
 </thead>
 <tbody>
 <tr>
-<td>(v_1)</td>
-<td>(d_1,d_2,d_3,d_4)</td>
-<td>(d_1\rightarrow d_3\rightarrow d_2)，(d_4) 孤立</td>
+<td>$v_1$</td>
+<td>$d_1,d_2,d_3,d_4$</td>
+<td>$d_1\rightarrow d_3\rightarrow d_2$，$d_4$ 孤立</td>
 </tr>
 <tr>
-<td>(v_2)</td>
-<td>(d_2,d_3,d_4)</td>
-<td>(d_3\rightarrow d_2)，(d_4) 孤立</td>
+<td>$v_2$</td>
+<td>$d_2,d_3,d_4$</td>
+<td>$d_3\rightarrow d_2$，$d_4$ 孤立</td>
 </tr>
 </tbody>
 </table>
@@ -2574,11 +2805,11 @@
 <p>这是帮助理解“每次就诊对应一张图”的构建示例，不能据此断言作者代码就是这样实现的。</p>
 <p>这个例子还能解释 DSA 的作用：</p>
 <ul>
-<li>第一次，(d_3) 有入边也有出边，属于“中间类”；</li>
-<li>第二次，当前子图中 (d_3) 只有出边，属于“原因类”。</li>
+<li>第一次，$d_3$ 有入边也有出边，属于“中间类”；</li>
+<li>第二次，当前子图中 $d_3$ 只有出边，属于“原因类”。</li>
 </ul>
-<p>因此，即使疾病编号仍是 (d_3)，它在当前图中的位置变了，DSA 就可能给它不同的权重。这反映的是当前图中的角色变化，不意味着疾病的医学机制随意改变。</p>
-<h2 id="6．-G-v-t-、-G-v-t-d-和-G-v-t-dm-要分开看"><a href="#6．-G-v-t-、-G-v-t-d-和-G-v-t-dm-要分开看" class="headerlink" title="6．(G_{v_t})、(G_{v_t}^{d}) 和 (G_{v_t}^{dm}) 要分开看"></a><strong>6．(G_{v_t})、(G_{v_t}^{d}) 和 (G_{v_t}^{dm}) 要分开看</strong></h2><div class="table-container">
+<p>因此，即使疾病编号仍是 $d_3$，它在当前图中的位置变了，DSA 就可能给它不同的权重。这反映的是当前图中的角色变化，不意味着疾病的医学机制随意改变。</p>
+<h2 id="6．-G-v-t-、-G-v-t-d-和-G-v-t-dm-要分开看"><a href="#6．-G-v-t-、-G-v-t-d-和-G-v-t-dm-要分开看" class="headerlink" title="6．$G_{v_t}$、$G_{v_t}^{d}$ 和 $G_{v_t}^{dm}$ 要分开看"></a><strong>6．$G_{v_t}$、$G_{v_t}^{d}$ 和 $G_{v_t}^{dm}$ 要分开看</strong></h2><div class="table-container">
 <table>
 <thead>
 <tr>
@@ -2589,32 +2820,32 @@
 </thead>
 <tbody>
 <tr>
-<td>(G_{v_t})</td>
+<td>$G_{v_t}$</td>
 <td>当前就诊对应的医疗实体因果关系图</td>
 <td>提供结构信息</td>
 </tr>
 <tr>
-<td>(G_{v_t}^{d})</td>
+<td>$G_{v_t}^{d}$</td>
 <td>当前疾病之间的关系图</td>
 <td>DSA 按疾病角色分类</td>
 </tr>
 <tr>
-<td>(G_{v_t}^{p})</td>
+<td>$G_{v_t}^{p}$</td>
 <td>当前操作之间的关系图</td>
 <td>DSA 处理操作</td>
 </tr>
 <tr>
-<td>(G_{v_{t-1}}^{m})</td>
+<td>$G_{v_{t-1} }^{m}$</td>
 <td>上次用药之间的关系图</td>
 <td>DSA 处理历史药物</td>
 </tr>
 <tr>
-<td>(G_{v_t}^{dm})</td>
+<td>$G_{v_t}^{dm}$</td>
 <td>当前疾病与上次药物构成的二部图，关系类型来自效应分组</td>
 <td>RGCN 交换信息</td>
 </tr>
 <tr>
-<td>(G_{v_t}^{pm})</td>
+<td>$G_{v_t}^{pm}$</td>
 <td>当前操作与上次药物构成的二部图</td>
 <td>RGCN 交换信息</td>
 </tr>
@@ -2636,7 +2867,7 @@
         
             <li>
                 <strong>Updated at
-                    :</strong> 2026-11-09 16:34:11
+                    :</strong> 2026-11-10 11:32:51
             </li>
         
         <li>
@@ -2773,7 +3004,7 @@
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">Casualmed处理流程</div>
-		<ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#casualmed%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B"><span class="nav-text">casualmed处理流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-G-v-t-dm-text-and-G-v-t-pm-%E6%80%8E%E4%B9%88%E6%9D%A5%E7%9A%84"><span class="nav-text">1.G_{v_t}^{dm} \text{ and } G_{v_t}^{pm}怎么来的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E7%BB%93%E5%90%88%E4%BE%8B%E5%AD%90%E6%80%8E%E4%B9%88%E5%A4%84%E7%90%86%E6%95%B0%E6%8D%AE%E7%9A%84%EF%BC%8C%E5%85%B3%E7%B3%BB%E6%8C%96%E6%8E%98%E6%98%AF%E6%80%8E%E4%B9%88%E8%BF%9B%E8%A1%8C%E7%9A%84%EF%BC%8C%E7%9D%80%E9%87%8D%E8%AE%B2%E8%AE%B2GIES%E7%AE%97%E6%B3%95%EF%BC%8CDSA%E7%AE%97%E6%B3%95%EF%BC%8CRGCN%E7%AE%97%E6%B3%95%EF%BC%8CGRU%E7%AE%97%E6%B3%95%E6%98%AF%E6%80%8E%E4%B9%88%E8%AE%A1%E7%AE%97%E7%9A%84%EF%BC%8C%E5%8E%9F%E8%AE%BA%E6%96%87%E4%B8%AD%E5%90%84%E4%B8%AA%E5%8F%98%E9%87%8F%E5%88%86%E5%88%AB%E6%98%AF%E5%93%AA%E4%B8%80%E6%AD%A5%E7%9A%84%E8%BE%93%E5%87%BA"><span class="nav-text">2.结合例子怎么处理数据的，关系挖掘是怎么进行的，着重讲讲GIES算法，DSA算法，RGCN算法，GRU算法是怎么计算的，原论文中各个变量分别是哪一步的输出</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%85%88%E7%9C%8B%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B%EF%BC%9A%E7%97%85%E5%8E%86%E6%9C%80%E7%BB%88%E6%80%8E%E6%A0%B7%E5%8F%98%E6%88%90%E6%8E%A8%E8%8D%90%E8%8D%AF%E7%89%A9"><span class="nav-text">一、先看完整流程：病历最终怎样变成推荐药物</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%87%86%E5%A4%87%E4%B8%80%E4%B8%AA%E8%B4%AF%E7%A9%BF%E5%85%A8%E6%96%87%E7%9A%84%E6%82%A3%E8%80%85%E4%BE%8B%E5%AD%90"><span class="nav-text">二、准备一个贯穿全文的患者例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%8E%9F%E5%A7%8B%E7%97%85%E5%8E%86%E6%80%8E%E6%A0%B7%E5%8F%98%E6%88%90%E6%A8%A1%E5%9E%8B%E8%83%BD%E5%A4%84%E7%90%86%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="nav-text">三、第一步：原始病历怎样变成模型能处理的数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%85%B3%E7%B3%BB%E6%8C%96%E6%8E%98%E7%9A%84%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86%EF%BC%9AGIES-%E5%88%B0%E5%BA%95%E6%80%8E%E4%B9%88%E7%AE%97"><span class="nav-text">四、关系挖掘的第一部分：GIES 到底怎么算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81GIES-%E7%9A%84%E8%BE%93%E5%87%BA%E6%80%8E%E6%A0%B7%E5%8F%98%E6%88%90%E6%AF%8F%E6%AC%A1%E5%B0%B1%E8%AF%8A%E7%9A%84%E5%9B%BE"><span class="nav-text">五、GIES 的输出怎样变成每次就诊的图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%85%B3%E7%B3%BB%E6%8C%96%E6%8E%98%E7%9A%84%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86%EF%BC%9A%E5%9B%A0%E6%9E%9C%E6%95%88%E5%BA%94%E7%9F%A9%E9%98%B5%E6%80%8E%E6%A0%B7%E5%BE%97%E5%88%B0"><span class="nav-text">六、关系挖掘的第二部分：因果效应矩阵怎样得到</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%AE%9E%E4%BD%93%E8%A1%A8%E7%A4%BA%EF%BC%9A%E7%96%BE%E7%97%85%E7%BC%96%E5%8F%B7%E6%80%8E%E6%A0%B7%E5%8F%98%E6%88%90%E5%90%91%E9%87%8F"><span class="nav-text">七、实体表示：疾病编号怎样变成向量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81DSA-%E6%80%8E%E4%B9%88%E8%AE%A1%E7%AE%97%EF%BC%9A%E5%85%88%E6%8C%89%E5%9B%A0%E6%9E%9C%E8%A7%92%E8%89%B2%E5%88%86%E7%B1%BB%EF%BC%8C%E5%86%8D%E6%8C%89%E7%BB%84%E5%8A%A0%E6%9D%83"><span class="nav-text">八、DSA 怎么计算：先按因果角色分类，再按组加权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81RGCN-%E6%80%8E%E4%B9%88%E8%AE%A1%E7%AE%97%EF%BC%9A%E6%8C%89%E4%B8%8D%E5%90%8C%E5%85%B3%E7%B3%BB%E7%B1%BB%E5%9E%8B%E6%94%B6%E9%9B%86%E9%82%BB%E5%B1%85%E4%BF%A1%E6%81%AF"><span class="nav-text">九、RGCN 怎么计算：按不同关系类型收集邻居信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E6%80%8E%E6%A0%B7%E6%8A%8A%E4%B8%A4%E6%9D%A1%E5%88%86%E6%94%AF%E5%90%88%E6%88%90%E4%B8%80%E6%AC%A1%E5%B0%B1%E8%AF%8A%E7%9A%84%E5%90%91%E9%87%8F"><span class="nav-text">十、怎样把两条分支合成一次就诊的向量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81GRU-%E6%80%8E%E4%B9%88%E8%AE%A1%E7%AE%97%EF%BC%9A%E6%8A%8A%E5%A4%9A%E6%AC%A1%E5%B0%B1%E8%AF%8A%E6%95%B4%E5%90%88%E8%B5%B7%E6%9D%A5"><span class="nav-text">十一、GRU 怎么计算：把多次就诊整合起来</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E6%82%A3%E8%80%85%E5%90%91%E9%87%8F%E6%80%8E%E6%A0%B7%E5%BE%97%E5%88%B0%E8%8D%AF%E7%89%A9%E6%8E%A8%E8%8D%90"><span class="nav-text">十二、患者向量怎样得到药物推荐</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E8%AE%AD%E7%BB%83%E6%97%B6%EF%BC%8C%E5%93%AA%E4%BA%9B%E4%B8%9C%E8%A5%BF%E4%BC%9A%E8%A2%AB%E6%9B%B4%E6%96%B0"><span class="nav-text">十三、训练时，哪些东西会被更新</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E5%8E%9F%E8%AE%BA%E6%96%87%E4%B8%BB%E8%A6%81%E5%8F%98%E9%87%8F%E5%88%86%E5%88%AB%E6%98%AF%E5%93%AA%E4%B8%80%E6%AD%A5%E7%9A%84%E8%BE%93%E5%85%A5%E3%80%81%E5%8F%82%E6%95%B0%E5%92%8C%E8%BE%93%E5%87%BA"><span class="nav-text">十四、原论文主要变量分别是哪一步的输入、参数和输出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94%E3%80%81%E8%BF%99%E7%AF%87%E8%AE%BA%E6%96%87%E7%A1%AE%E5%AE%9E%E6%9C%89%E5%93%AA%E4%BA%9B%E5%9C%B0%E6%96%B9%E6%B2%A1%E5%86%99%E6%B8%85"><span class="nav-text">十五、这篇论文确实有哪些地方没写清</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E7%97%85%E4%BE%8B%E5%9B%BE%E7%9A%84%E6%A0%BC%E5%BC%8F%EF%BC%8C%E7%97%85%E4%BE%8B%E5%9B%BE%E6%98%AF%E6%80%8E%E4%B9%88%E6%9E%84%E5%BB%BA%E7%9A%84%EF%BC%9F"><span class="nav-text">3.病例图的格式，病例图是怎么构建的？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%EF%BC%8E-v-1%E3%80%81v-2-%E6%98%AF%E5%B0%B1%E8%AF%8A%E8%AE%B0%E5%BD%95%EF%BC%8C%E4%B8%8D%E6%98%AF%E6%82%A3%E8%80%85%E7%BC%96%E5%8F%B7"><span class="nav-text">1．(v_1、v_2) 是就诊记录，不是患者编号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%EF%BC%8E%E6%AF%8F%E6%AC%A1%E5%B0%B1%E8%AF%8A%E7%9C%9F%E7%9A%84%E9%83%BD%E6%9C%89%E4%B8%80%E5%BC%A0%E7%97%85%E7%90%86%E5%85%B3%E7%B3%BB%E5%9B%BE%E5%90%97%EF%BC%9F"><span class="nav-text">2．每次就诊真的都有一张病理关系图吗？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%EF%BC%8E%E2%80%9C%E7%97%85%E7%90%86%E5%85%B3%E7%B3%BB%E5%9B%BE%E2%80%9D%E5%88%B0%E5%BA%95%E9%95%BF%E4%BB%80%E4%B9%88%E6%A0%B7%EF%BC%9F"><span class="nav-text">3．“病理关系图”到底长什么样？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%EF%BC%8E%E8%BF%99%E5%BC%A0%E5%9B%BE%E5%9C%A8%E8%AE%A1%E7%AE%97%E6%9C%BA%E9%87%8C%E6%80%8E%E4%B9%88%E8%A1%A8%E7%A4%BA%EF%BC%9F"><span class="nav-text">4．这张图在计算机里怎么表示？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5%EF%BC%8E%E6%8D%A2%E4%B8%80%E6%AC%A1%E5%B0%B1%E8%AF%8A%EF%BC%8C%E5%9B%BE%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AF%E8%83%BD%E6%94%B9%E5%8F%98%EF%BC%9F"><span class="nav-text">5．换一次就诊，图为什么可能改变？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6%EF%BC%8E-G-v-t-%E3%80%81-G-v-t-d-%E5%92%8C-G-v-t-dm-%E8%A6%81%E5%88%86%E5%BC%80%E7%9C%8B"><span class="nav-text">6．(G_{v_t})、(G_{v_t}^{d}) 和 (G_{v_t}^{dm}) 要分开看</span></a></li></ol></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#casualmed%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B"><span class="nav-text">casualmed处理流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-G-v-t-dm-text-and-G-v-t-pm-%E6%80%8E%E4%B9%88%E6%9D%A5%E7%9A%84"><span class="nav-text">1.G_{v_t}^{dm} \text{ and } G_{v_t}^{pm}怎么来的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E7%BB%93%E5%90%88%E4%BE%8B%E5%AD%90%E6%80%8E%E4%B9%88%E5%A4%84%E7%90%86%E6%95%B0%E6%8D%AE%E7%9A%84%EF%BC%8C%E5%85%B3%E7%B3%BB%E6%8C%96%E6%8E%98%E6%98%AF%E6%80%8E%E4%B9%88%E8%BF%9B%E8%A1%8C%E7%9A%84%EF%BC%8C%E7%9D%80%E9%87%8D%E8%AE%B2%E8%AE%B2GIES%E7%AE%97%E6%B3%95%EF%BC%8CDSA%E7%AE%97%E6%B3%95%EF%BC%8CRGCN%E7%AE%97%E6%B3%95%EF%BC%8CGRU%E7%AE%97%E6%B3%95%E6%98%AF%E6%80%8E%E4%B9%88%E8%AE%A1%E7%AE%97%E7%9A%84%EF%BC%8C%E5%8E%9F%E8%AE%BA%E6%96%87%E4%B8%AD%E5%90%84%E4%B8%AA%E5%8F%98%E9%87%8F%E5%88%86%E5%88%AB%E6%98%AF%E5%93%AA%E4%B8%80%E6%AD%A5%E7%9A%84%E8%BE%93%E5%87%BA"><span class="nav-text">2.结合例子怎么处理数据的，关系挖掘是怎么进行的，着重讲讲GIES算法，DSA算法，RGCN算法，GRU算法是怎么计算的，原论文中各个变量分别是哪一步的输出</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%85%88%E7%9C%8B%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B%EF%BC%9A%E7%97%85%E5%8E%86%E6%9C%80%E7%BB%88%E6%80%8E%E6%A0%B7%E5%8F%98%E6%88%90%E6%8E%A8%E8%8D%90%E8%8D%AF%E7%89%A9"><span class="nav-text">一、先看完整流程：病历最终怎样变成推荐药物</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%87%86%E5%A4%87%E4%B8%80%E4%B8%AA%E8%B4%AF%E7%A9%BF%E5%85%A8%E6%96%87%E7%9A%84%E6%82%A3%E8%80%85%E4%BE%8B%E5%AD%90"><span class="nav-text">二、准备一个贯穿全文的患者例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%8E%9F%E5%A7%8B%E7%97%85%E5%8E%86%E6%80%8E%E6%A0%B7%E5%8F%98%E6%88%90%E6%A8%A1%E5%9E%8B%E8%83%BD%E5%A4%84%E7%90%86%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="nav-text">三、第一步：原始病历怎样变成模型能处理的数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%85%B3%E7%B3%BB%E6%8C%96%E6%8E%98%E7%9A%84%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86%EF%BC%9AGIES-%E5%88%B0%E5%BA%95%E6%80%8E%E4%B9%88%E7%AE%97"><span class="nav-text">四、关系挖掘的第一部分：GIES 到底怎么算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81GIES-%E7%9A%84%E8%BE%93%E5%87%BA%E6%80%8E%E6%A0%B7%E5%8F%98%E6%88%90%E6%AF%8F%E6%AC%A1%E5%B0%B1%E8%AF%8A%E7%9A%84%E5%9B%BE"><span class="nav-text">五、GIES 的输出怎样变成每次就诊的图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%85%B3%E7%B3%BB%E6%8C%96%E6%8E%98%E7%9A%84%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86%EF%BC%9A%E5%9B%A0%E6%9E%9C%E6%95%88%E5%BA%94%E7%9F%A9%E9%98%B5%E6%80%8E%E6%A0%B7%E5%BE%97%E5%88%B0"><span class="nav-text">六、关系挖掘的第二部分：因果效应矩阵怎样得到</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%AE%9E%E4%BD%93%E8%A1%A8%E7%A4%BA%EF%BC%9A%E7%96%BE%E7%97%85%E7%BC%96%E5%8F%B7%E6%80%8E%E6%A0%B7%E5%8F%98%E6%88%90%E5%90%91%E9%87%8F"><span class="nav-text">七、实体表示：疾病编号怎样变成向量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81DSA-%E6%80%8E%E4%B9%88%E8%AE%A1%E7%AE%97%EF%BC%9A%E5%85%88%E6%8C%89%E5%9B%A0%E6%9E%9C%E8%A7%92%E8%89%B2%E5%88%86%E7%B1%BB%EF%BC%8C%E5%86%8D%E6%8C%89%E7%BB%84%E5%8A%A0%E6%9D%83"><span class="nav-text">八、DSA 怎么计算：先按因果角色分类，再按组加权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81RGCN-%E6%80%8E%E4%B9%88%E8%AE%A1%E7%AE%97%EF%BC%9A%E6%8C%89%E4%B8%8D%E5%90%8C%E5%85%B3%E7%B3%BB%E7%B1%BB%E5%9E%8B%E6%94%B6%E9%9B%86%E9%82%BB%E5%B1%85%E4%BF%A1%E6%81%AF"><span class="nav-text">九、RGCN 怎么计算：按不同关系类型收集邻居信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E6%80%8E%E6%A0%B7%E6%8A%8A%E4%B8%A4%E6%9D%A1%E5%88%86%E6%94%AF%E5%90%88%E6%88%90%E4%B8%80%E6%AC%A1%E5%B0%B1%E8%AF%8A%E7%9A%84%E5%90%91%E9%87%8F"><span class="nav-text">十、怎样把两条分支合成一次就诊的向量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81GRU-%E6%80%8E%E4%B9%88%E8%AE%A1%E7%AE%97%EF%BC%9A%E6%8A%8A%E5%A4%9A%E6%AC%A1%E5%B0%B1%E8%AF%8A%E6%95%B4%E5%90%88%E8%B5%B7%E6%9D%A5"><span class="nav-text">十一、GRU 怎么计算：把多次就诊整合起来</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E6%82%A3%E8%80%85%E5%90%91%E9%87%8F%E6%80%8E%E6%A0%B7%E5%BE%97%E5%88%B0%E8%8D%AF%E7%89%A9%E6%8E%A8%E8%8D%90"><span class="nav-text">十二、患者向量怎样得到药物推荐</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E8%AE%AD%E7%BB%83%E6%97%B6%EF%BC%8C%E5%93%AA%E4%BA%9B%E4%B8%9C%E8%A5%BF%E4%BC%9A%E8%A2%AB%E6%9B%B4%E6%96%B0"><span class="nav-text">十三、训练时，哪些东西会被更新</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E5%8E%9F%E8%AE%BA%E6%96%87%E4%B8%BB%E8%A6%81%E5%8F%98%E9%87%8F%E5%88%86%E5%88%AB%E6%98%AF%E5%93%AA%E4%B8%80%E6%AD%A5%E7%9A%84%E8%BE%93%E5%85%A5%E3%80%81%E5%8F%82%E6%95%B0%E5%92%8C%E8%BE%93%E5%87%BA"><span class="nav-text">十四、原论文主要变量分别是哪一步的输入、参数和输出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94%E3%80%81%E8%BF%99%E7%AF%87%E8%AE%BA%E6%96%87%E7%A1%AE%E5%AE%9E%E6%9C%89%E5%93%AA%E4%BA%9B%E5%9C%B0%E6%96%B9%E6%B2%A1%E5%86%99%E6%B8%85"><span class="nav-text">十五、这篇论文确实有哪些地方没写清</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E7%97%85%E4%BE%8B%E5%9B%BE%E7%9A%84%E6%A0%BC%E5%BC%8F%EF%BC%8C%E7%97%85%E4%BE%8B%E5%9B%BE%E6%98%AF%E6%80%8E%E4%B9%88%E6%9E%84%E5%BB%BA%E7%9A%84%EF%BC%9F"><span class="nav-text">3.病例图的格式，病例图是怎么构建的？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%EF%BC%8E-v-1%E3%80%81v-2-%E6%98%AF%E5%B0%B1%E8%AF%8A%E8%AE%B0%E5%BD%95%EF%BC%8C%E4%B8%8D%E6%98%AF%E6%82%A3%E8%80%85%E7%BC%96%E5%8F%B7"><span class="nav-text">1．$v_1、v_2$ 是就诊记录，不是患者编号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%EF%BC%8E%E6%AF%8F%E6%AC%A1%E5%B0%B1%E8%AF%8A%E7%9C%9F%E7%9A%84%E9%83%BD%E6%9C%89%E4%B8%80%E5%BC%A0%E7%97%85%E7%90%86%E5%85%B3%E7%B3%BB%E5%9B%BE%E5%90%97%EF%BC%9F"><span class="nav-text">2．每次就诊真的都有一张病理关系图吗？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%EF%BC%8E%E2%80%9C%E7%97%85%E7%90%86%E5%85%B3%E7%B3%BB%E5%9B%BE%E2%80%9D%E5%88%B0%E5%BA%95%E9%95%BF%E4%BB%80%E4%B9%88%E6%A0%B7%EF%BC%9F"><span class="nav-text">3．“病理关系图”到底长什么样？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%EF%BC%8E%E8%BF%99%E5%BC%A0%E5%9B%BE%E5%9C%A8%E8%AE%A1%E7%AE%97%E6%9C%BA%E9%87%8C%E6%80%8E%E4%B9%88%E8%A1%A8%E7%A4%BA%EF%BC%9F"><span class="nav-text">4．这张图在计算机里怎么表示？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5%EF%BC%8E%E6%8D%A2%E4%B8%80%E6%AC%A1%E5%B0%B1%E8%AF%8A%EF%BC%8C%E5%9B%BE%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AF%E8%83%BD%E6%94%B9%E5%8F%98%EF%BC%9F"><span class="nav-text">5．换一次就诊，图为什么可能改变？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6%EF%BC%8E-G-v-t-%E3%80%81-G-v-t-d-%E5%92%8C-G-v-t-dm-%E8%A6%81%E5%88%86%E5%BC%80%E7%9C%8B"><span class="nav-text">6．$G_{v_t}$、$G_{v_t}^{d}$ 和 $G_{v_t}^{dm}$ 要分开看</span></a></li></ol></li></ol>
 
 	</div>
 </div>

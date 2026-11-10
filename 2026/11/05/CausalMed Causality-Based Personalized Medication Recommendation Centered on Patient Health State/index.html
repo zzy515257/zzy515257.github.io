@@ -94,7 +94,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/images/redefine-og.webp">
 <meta property="article:published_time" content="2026-11-05T06:39:24.000Z">
-<meta property="article:modified_time" content="2026-11-06T07:02:35.565Z">
+<meta property="article:modified_time" content="2026-11-10T03:44:04.111Z">
 <meta property="article:author" content="Zoe Raina">
 <meta property="article:tag" content="论文研读">
 <meta name="twitter:card" content="summary">
@@ -1028,8 +1028,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2026-11-06 15:02:35</span>
-            <span class="mobile">2026-11-06 15:02:35</span>
+            <span class="desktop">2026-11-10 11:44:04</span>
+            <span class="mobile">2026-11-10 11:44:04</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -1181,8 +1181,7 @@ P(Y \mid do(X = x)) = \sum_{z} P(Y \mid X = x, Z = z) P(Z = z)</script><p>直观
 <li><p>假设全院所有人（不管是轻症还是重症）都被强制喂了强效药，死亡率会是多少？</p>
 <script type="math/tex; mode=display">\text{真实效果} = (轻症用药死亡率 \times 90\%) + (重症用药死亡率 \times 10\%)</script><script type="math/tex; mode=display">= (0\% \times 90\%) + (20\% \times 10\%) = 2\%</script></li>
 <li><p>假设全院所有人都不给强效药，死亡率会是多少？</p>
-<script type="math/tex; mode=display">\text{对照效果} = (轻症不用药死亡率 \times 90\%) + (重症不用药死亡率 \times 10\%)</script><p>$$= (5\% \times 90\%) + (50\% \times 10\%) = 9.5\%</p>
-</li>
+<script type="math/tex; mode=display">\text{对照效果} = (轻症不用药死亡率 \times 90\%) + (重症不用药死亡率 \times 10\%)</script><script type="math/tex; mode=display">= (5\% \times 90\%) + (50\% \times 10\%) = 9.5\%</script></li>
 </ul>
 <p>对比出来了：强制全员给药死亡率是 $2\%$，强制全员不给药死亡率是 $9.5\%$。 药是救人的！原来 $40\%$ vs $5\%$ 的假象彻底被戳破了。</p>
 <hr>
@@ -1247,7 +1246,7 @@ P(Y \mid do(X = x)) = \sum_{z} P(Y \mid X = x, Z = z) P(Z = z)</script><p>直观
 <p>构造除以 $P(T_i \mid X_i)$ 的核心依据是统计学中的重要性采样（Importance Sampling）与潜在结果框架（Potential Outcome Framework）。</p>
 <p>我们希望优化的理想目标（无偏的全局期望风险）是：对所有样本（无论实际有没有接受干预），都要衡量其潜在损失：</p>
 <script type="math/tex; mode=display">R_{\text{ideal}} = \mathbb{E}_{X} \left[ \mathcal{L}(Y(1), \hat{Y}) \right]</script><p>其中 $Y(1)$ 表示如果样本接受干预时的潜在真实结果。</p>
-<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">这句话是因果推断核心理论——鲁宾潜在结果框架（Rubin Causal Model / Potential Outcome Framework）中的基础定义。</span><br><span class="line">用通俗的大白话来拆解：</span><br><span class="line">1. 拆解符号与字面含义1（括号里的干预标记）： 代表“接受了干预”（例如：服用了某种药物、或者向用户推荐展示了某个商品）。</span><br><span class="line">与此对应，0通常代表“未接受干预”（如没吃药、没展示）。</span><br><span class="line">Y（结果，Outcome）： 代表患者或用户的反馈（例如：病情是否痊愈、用户是否点击购买）。Y(1)：表示“假设该样本接受了干预他会展现出的真实结果”。</span><br><span class="line">2. 为什么叫“潜在”真实结果？在因果推断里，对任何一个特定的患者 i（特征为 x_i），在做决定的前一瞬间，理论上同时存在两条平行宇宙的可能路径：Y_i(1)： 如果给他吃药，他的病情会变成怎样？Y_i(0)： 如果不给他吃药，他的病情会变成怎样？这两个值在理论上客观存在，因此被称为潜在结果（Potential Outcomes）。3. 这句话的精髓：区分“假设”与“现实发生”在现实数据集中：如果医生真的给患者 i开了药（实际干预 T_i = 1），那么我们在电子病历中实际记录到的真实结果 $Y_i，就是 Y_i(1)；但如果医生没有给患者 i开药（实际干预 T_i = 0），我们在病历里记录到的是 Y_i(0)。此时，Y_i(1) 并没有消失，它只是变成了“反事实（Counterfactual）”——即“虽然他没吃药，但如果当时他吃了，他的真实疗效会是多少”。因此，在公式里定义R_&#123;\text&#123;ideal&#125;&#125; = \mathbb&#123;E&#125;_&#123;X&#125; \left[ \mathcal&#123;L&#125;(Y(1), \hat&#123;Y&#125;) \right]含义就是：不管这个患者现实中到底有没有吃这种药，我们都希望模型能够准确预测出“只要有人吃了这种药，其疗效会是多少”。它是脱离了实际观测选择限制的、纯粹针对干预效果的全局真实评估目标。</span><br></pre></td></tr></table></figure></div>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">这句话是因果推断核心理论——鲁宾潜在结果框架（Rubin Causal Model / Potential Outcome Framework）中的基础定义。</span><br><span class="line">用通俗的大白话来拆解：</span><br><span class="line">1. 拆解符号与字面含义1（括号里的干预标记）： 代表“接受了干预”（例如：服用了某种药物、或者向用户推荐展示了某个商品）。</span><br><span class="line">与此对应，0通常代表“未接受干预”（如没吃药、没展示）。</span><br><span class="line">Y（结果，Outcome）： 代表患者或用户的反馈（例如：病情是否痊愈、用户是否点击购买）。Y(1)：表示“假设该样本接受了干预他会展现出的真实结果”。</span><br><span class="line">2. 为什么叫“潜在”真实结果？在因果推断里，对任何一个特定的患者 i（特征为 x_i），在做决定的前一瞬间，理论上同时存在两条平行宇宙的可能路径：Y_i(1)： 如果给他吃药，他的病情会变成怎样？Y_i(0)： 如果不给他吃药，他的病情会变成怎样？这两个值在理论上客观存在，因此被称为潜在结果（Potential Outcomes）。3. 这句话的精髓：区分“假设”与“现实发生”在现实数据集中：如果医生真的给患者 i开了药（实际干预 T_i = 1），那么我们在电子病历中实际记录到的真实结果 $Y_i，就是 Y_i(1)；但如果医生没有给患者 i开药（实际干预 T_i = 0），我们在病历里记录到的是 Y_i(0)。此时，Y_i(1) 并没有消失，它只是变成了“反事实（Counterfactual）”——即“虽然他没吃药，但如果当时他吃了，他的真实疗效会是多少”。因此，在公式里定义R_&#123;\text&#123;ideal&#125; &#125; = \mathbb&#123;E&#125;_&#123;X&#125; \left[ \mathcal&#123;L&#125;(Y(1), \hat&#123;Y&#125;) \right]含义就是：不管这个患者现实中到底有没有吃这种药，我们都希望模型能够准确预测出“只要有人吃了这种药，其疗效会是多少”。它是脱离了实际观测选择限制的、纯粹针对干预效果的全局真实评估目标。</span><br></pre></td></tr></table></figure></div>
 <p>但在现实中，我们只能观测到 $T=1$ 的样本，也就是带有一个指示变量 $\mathbb{I}(T=1)$：</p>
 <script type="math/tex; mode=display">\mathcal{L}_{\text{obs}} = \mathbb{I}(T=1) \cdot \mathcal{L}(Y(1), \hat{Y})</script><p>如果我们直接对观测样本求期望，根据全期望公式：</p>
 <script type="math/tex; mode=display">\begin{aligned} \mathbb{E}_{X, T}\left[ \mathcal{L}_{\text{obs}} \right] &= \mathbb{E}_{X} \left[ \mathbb{E}_{T \mid X} \left[ \mathbb{I}(T=1) \cdot \mathcal{L}(Y(1), \hat{Y}) \right] \right] \\ &= \mathbb{E}_{X} \left[ P(T=1 \mid X) \cdot \mathcal{L}(Y(1), \hat{Y}) \right] \\ &\neq R_{\text{ideal}} \end{aligned}</script><p>可以看到，多出了一个系数 $P(T=1 \mid X)$！这就是偏差的来源——高概率发生的事件被天然放大了，低概率发生的事件被天然抑制了。</p>
@@ -1311,7 +1310,7 @@ Pa_i^G</script><p>表示为节点i在图G中的父节点</p>
 <h2 id="4-2健康状态学习"><a href="#4-2健康状态学习" class="headerlink" title="4.2健康状态学习"></a>4.2健康状态学习</h2><p>模型通过：同类关系更新在不同健康状态下实体的含义，异类关系通过整合诊断/手术/处方的因果关系来表示患者个性化的临床信息，来学习病人的健康状态</p>
 <h3 id="同类关系："><a href="#同类关系：" class="headerlink" title="同类关系："></a>同类关系：</h3><p>通过探索基于因果的病理性关系，捕捉实体间的动态区别，提升捕捉个性化病人特征的能力。</p>
 <p>通过 Dynamic Self-Adaptive Attention (DSA)机制去学习疾病对各个健康状态的影响。通过因果定位去决定疾病在目前诊断中的作用，设置不同参数，提升病人个性化的表示。</p>
-<p>第一步：在因果图谱<script type="math/tex">G_{v_t}</script>中提取与本次诊断相关的所有的实体，并将其划分为三个同形的关系图谱：$G_{v_t}^d, G_{v_t}^p, \text{ and } G_{v_{t-1}}^m$分别表示病症，手术，诊断三个因果图谱。将$G_{v_t}^d$分为四个分类$D_i^1, D_i^2, D_i^3, D_i^4$,。$D_i^1$表示原发性疾病，表示它不有任何疾病引起，但他会导致其他疾病发生，$D_i^2$表示效应疾病，他由别的病症引起，但不会引发并发症;$D_i^3$表示由其他疾病引起，也导致其他并发症的病症，$ D_i^4$表示自发性病症，也不会引起其他并发症的疾病。</p>
+<p>第一步：在因果图谱$G_{v_t}$中提取与本次诊断相关的所有的实体，并将其划分为三个同形的关系图谱：$G_{v_t}^d, G_{v_t}^p, \text{ and } G_{v_{t-1} }^m$分别表示病症，手术，诊断三个因果图谱。将$G_{v_t}^d$分为四个分类$D_i^1, D_i^2, D_i^3, D_i^4$,。$D_i^1$表示原发性疾病，表示它不有任何疾病引起，但他会导致其他疾病发生，$D_i^2$表示效应疾病，他由别的病症引起，但不会引发并发症;$D_i^3$表示由其他疾病引起，也导致其他并发症的病症，$ D_i^4$表示自发性病症，也不会引起其他并发症的疾病。</p>
 <p><img  
                      lazyload
                      src="/images/loading.svg"
@@ -1356,13 +1355,13 @@ w_i^l = \frac{\exp(\mathbf{W} \cdot \mathbf{h}_{d_i}^{D_1^l} + b)}{\sum_{k=1}^4 
                      data-src="https://cdn.jsdelivr.net/gh/zzy515257/bolgimage/img/image-20261106102116324.png"
                       alt="image-20261106102116324"
                 ></p>
-<p>利用因果效应矩阵$\mathbf{M}^{dm} \text{ and } \mathbf{M}^{pm}$（基于后门准则调整的广义线性模型估计疾病/操作与药物之间的因果效应矩阵(\mathbf M^{dm}_{ik})：疾病 (d_i) 与药物 (m_k) 的因果效应值。(\mathbf M^{pm}_{jk})：操作 (p_j) 与药物 (m_k) 的因果效应值。）来构建单次访视的疾病-药物和程序-药物完全二部图$G_{v_t}^{dm} \text{ and } G_{v_t}^{pm}$</p>
+<p>利用因果效应矩阵$\mathbf{M}^{dm} \text{ and } \mathbf{M}^{pm}$（基于后门准则调整的广义线性模型估计疾病/操作与药物之间的因果效应矩阵$\mathbf M^{dm}_{ik}$：疾病 $d_i$ 与药物 $m_k$ 的因果效应值。$\mathbf M^{pm}_{jk}$：操作 $p_j$ 与药物 $m_k$ 的因果效应值。）来构建单次访视的疾病-药物和程序-药物完全二部图$G_{v_t}^{dm} \text{ and } G_{v_t}^{pm}$</p>
 <p>$G_{v_t}^{dm}$,每个节点都包含最贱的一次诊断和t-1次的处方，通过Relational Graph Convolutional Networks (RGCN)，将具有相同因果作用的边分为一类，最后建立疾病和药物一对一的关系，di在第l层点对点关系的表示根据一下公式更新</p>
 <script type="math/tex; mode=display">
 \mathbf{h}_{d_i}^{l+1} = \sigma(\mathbf{W}_0^l \cdot \mathbf{h}_{d_i}^l + \sum_{r \in R} \mathbf{W}_r^l \cdot (\frac{1}{c_{d_i, r}} \sum_{j \in N_r(d_i)} \mathbf{h}_j^l)), \tag{7}</script><script type="math/tex; mode=display">
-\mathbf{W}_r^l = I + \Theta_r^l, \tag{8}</script><p>$\mathbf{W}_r^l$表示关系r在第l层的权重矩阵，$\mathbf{W}_0^l$是节点自己的权重矩阵，${N_r(d_i)}$表示di周围与di关系为r的节点的集合，${c_{d_i, r}}$是标准化因数，I是单位矩阵，$\Theta_r^l$是关系r在l层的权重更新矩阵</p>
+\mathbf{W}_r^l = I + \Theta_r^l, \tag{8}</script><p>$\mathbf{W}_r^l$表示关系r在第l层的权重矩阵，$\mathbf{W}_0^l$是节点自己的权重矩阵，${N_r(d_i)}$表示di周围与di关系为r的节点的集合，${c_{d_i, r} }$是标准化因数，I是单位矩阵，$\Theta_r^l$是关系r在l层的权重更新矩阵</p>
 <p>$G_{v_t}^{pm}$与上面流程相同，以获取实体嵌入层表示$\mathbf{h}_d^e, \mathbf{h}_p^e, \text{ and } \mathbf{h}_m^e$</p>
-<h2 id="4-3实体信息整合"><a href="#4-3实体信息整合" class="headerlink" title="4.3实体信息整合"></a>4.3实体信息整合</h2><p>初始化和加权之后，将嵌入层通过残缺连接堆叠，通过元素相加融合更新嵌入层，信息融合为$\mathbf{h}_{\mathcal{D}_t}, \mathbf{h}_{\mathcal{P}_t}, \text{ and } \mathbf{h}_{\mathcal{M}_{t-1}}$这三部分与最近的诊断$\mathbf{h}_{v_t}$连接</p>
+<h2 id="4-3实体信息整合"><a href="#4-3实体信息整合" class="headerlink" title="4.3实体信息整合"></a>4.3实体信息整合</h2><p>初始化和加权之后，将嵌入层通过残缺连接堆叠，通过元素相加融合更新嵌入层，信息融合为$\mathbf{h}_{\mathcal{D}_t}, \mathbf{h}_{\mathcal{P}_t}, \text{ and } \mathbf{h}_{\mathcal{M}_{t-1} }$这三部分与最近的诊断$\mathbf{h}_{v_t}$连接</p>
 <script type="math/tex; mode=display">
 \mathbf{h}_{\mathcal{D}_t} = \mathrm{Agg}(\mathbf{h}_d^r, \mathbf{h}_d^e), \quad \mathbf{h}_{\mathcal{P}_t} = \mathrm{Agg}(\mathbf{h}_p^r, \mathbf{h}_p^e),</script><script type="math/tex; mode=display">
 \mathbf{h}_{\mathcal{M}_{t-1}} = \mathrm{Agg}(\mathbf{h}_m^r, \mathbf{h}_m^e),</script><script type="math/tex; mode=display">
@@ -1378,22 +1377,22 @@ score = \sigma(\mathrm{MLP}(\mathbf{h}_{\mathcal{H}}))</script><script type="mat
 <h1 id="五-模型训练内容"><a href="#五-模型训练内容" class="headerlink" title="五.模型训练内容"></a>五.模型训练内容</h1><p>训练主要更新 6 类参数：实体嵌入、同类图分类权重、RGCN 参数、两路融合权重、GRU 参数和输出层参数。图结构与因果效应矩阵不参与反向传播。</p>
 <p><strong>1．三个实体嵌入表：学习“每个实体用什么向量表示</strong></p>
 <p>分别是：</p>
-<p>[ E_d\in\mathbb R^{|\mathcal D|\times d},\qquad E_p\in\mathbb R^{|\mathcal P|\times d},\qquad E_m\in\mathbb R^{|\mathcal M|\times d} ]</p>
-<p><strong>2．同类图的四类掩码：学习“因、果等不同角色应怎样调整嵌入</strong>“</p>
+<script type="math/tex; mode=display">
+E_d\in\mathbb R^{|\mathcal D|\times d},\qquad E_p\in\mathbb R^{|\mathcal P|\times d},\qquad E_m\in\mathbb R^{|\mathcal M|\times d}</script><p><strong>2．同类图的四类掩码：学习“因、果等不同角色应怎样调整嵌入</strong>“</p>
 <p>更新方式：</p>
-<p>[ h_i^{\mathrm{homo}} = h_i\odot w_{\mathrm{class}(i)} ]</p>
-<p>例如：</p>
-<p>[ h_i=[1,2],\qquad w_{\text{因}}=[0.8,1.5] ]</p>
-<p>则：</p>
-<p>[ h_i^{\mathrm{homo}}=[0.8,3] ]</p>
-<p><strong>3．两层 RGCN：学习“不同关系的邻居信息怎样变换和聚合”</strong></p>
+<script type="math/tex; mode=display">
+h_i^{\mathrm{homo}} = h_i\odot w_{\mathrm{class}(i)}</script><p>例如：</p>
+<script type="math/tex; mode=display">
+h_i=[1,2],\qquad w_{\text{因}}=[0.8,1.5]</script><p>则：</p>
+<script type="math/tex; mode=display">
+h_i^{\mathrm{homo}}=[0.8,3]</script><p><strong>3．两层 RGCN：学习“不同关系的邻居信息怎样变换和聚合”</strong></p>
 <p>每层主要学习：</p>
 <ul>
-<li>各关系的变换矩阵 (W_r)。</li>
-<li>节点自身的变换矩阵 (W_0)。</li>
-<li>偏置 (b)。</li>
+<li>各关系的变换矩阵 $W_r$。</li>
+<li>节点自身的变换矩阵 $W_0$。</li>
+<li>偏置 $b$。</li>
 </ul>
-<p><strong>4．融合权重 (\rho)：学习“两条分支各占多少作用”</strong></p>
+<p><strong>4．融合权重 $\rho$：学习“两条分支各占多少作用”</strong></p>
 <p>总共 <strong>6 个标量参数</strong>：</p>
 <div class="table-container">
 <table>
@@ -1407,25 +1406,25 @@ score = \sigma(\mathrm{MLP}(\mathbf{h}_{\mathcal{H}}))</script><script type="mat
 <tbody>
 <tr>
 <td>疾病</td>
-<td>(\rho_{d,0})</td>
-<td>(\rho_{d,1})</td>
+<td>$\rho_{d,0}$</td>
+<td>$\rho_{d,1}$</td>
 </tr>
 <tr>
 <td>手术</td>
-<td>(\rho_{p,0})</td>
-<td>(\rho_{p,1})</td>
+<td>$\rho_{p,0}$</td>
+<td>$\rho_{p,1}$</td>
 </tr>
 <tr>
 <td>药物</td>
-<td>(\rho_{m,0})</td>
-<td>(\rho_{m,1})</td>
+<td>$\rho_{m,0}$</td>
+<td>$\rho_{m,1}$</td>
 </tr>
 </tbody>
 </table>
 </div>
 <p>例如：</p>
-<p>[ h_d^{\mathrm{final}} = \rho_{d,0}h_d^{\mathrm{homo}} + \rho_{d,1}h_d^{\mathrm{hetero}} ]</p>
-<p>训练决定两条分支对预测的贡献。这里没有 Softmax，因此这些权重不要求非负，也不要求和为 1。</p>
+<script type="math/tex; mode=display">
+h_d^{\mathrm{final}} = \rho_{d,0}h_d^{\mathrm{homo}} + \rho_{d,1}h_d^{\mathrm{hetero}}</script><p>训练决定两条分支对预测的贡献。这里没有 Softmax，因此这些权重不要求非负，也不要求和为 1。</p>
 <p><strong>5．三路 GRU：学习“历史就诊信息保留多少、怎样更新”</strong></p>
 <p>疾病、手术、药物各有一套 GRU：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">self.seq_encoders = torch.nn.ModuleList([</span><br><span class="line">    torch.nn.GRU(emb_dim, emb_dim, batch_first=True),</span><br><span class="line">    torch.nn.GRU(emb_dim, emb_dim, batch_first=True),</span><br><span class="line">    torch.nn.GRU(emb_dim, emb_dim, batch_first=True)</span><br><span class="line">])</span><br></pre></td></tr></table></figure></div>
@@ -1458,7 +1457,7 @@ score = \sigma(\mathrm{MLP}(\mathbf{h}_{\mathcal{H}}))</script><script type="mat
         
             <li>
                 <strong>Updated at
-                    :</strong> 2026-11-06 15:02:35
+                    :</strong> 2026-11-10 11:44:04
             </li>
         
         <li>
@@ -1509,9 +1508,9 @@ score = \sigma(\mathrm{MLP}(\mathbf{h}_{\mathcal{H}}))</script><script type="mat
 			
 			
 			<div class="article-next border-border-color shadow-redefine-flat shadow-shadow-color-2 rounded-medium px-4 py-2 hover:shadow-redefine-flat-hover hover:shadow-shadow-color-2">
-				<a class="next" rel="next" href="/2026/11/05/SafeDrug%20Dual%20Molecular%20Graph%20Encoders%20for%20Safe%20Drug%20Recommendations/">
+				<a class="next" rel="next" href="/2026/11/05/demo2%E7%AC%94%E8%AE%B0/">
 					<span class="title flex justify-center items-center">
-						<span class="post-nav-title-item truncate max-w-48">SafeDrug Dual Molecular Graph Encoders for Safe Drug Recommendations</span>
+						<span class="post-nav-title-item truncate max-w-48">demo2笔记</span>
 						<span class="post-nav-item">Next posts</span>
 					</span>
 					<span class="right arrow-icon flex justify-center items-center">

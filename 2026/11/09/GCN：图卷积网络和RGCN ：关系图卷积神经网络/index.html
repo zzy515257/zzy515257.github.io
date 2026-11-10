@@ -94,7 +94,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/images/redefine-og.webp">
 <meta property="article:published_time" content="2026-11-09T08:22:00.000Z">
-<meta property="article:modified_time" content="2026-11-09T08:23:03.677Z">
+<meta property="article:modified_time" content="2026-11-10T03:32:51.459Z">
 <meta property="article:author" content="Zoe Raina">
 <meta property="article:tag" content="Model Learn">
 <meta name="twitter:card" content="summary">
@@ -1028,8 +1028,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2026-11-09 16:23:03</span>
-            <span class="mobile">2026-11-09 16:23:03</span>
+            <span class="desktop">2026-11-10 11:32:51</span>
+            <span class="mobile">2026-11-10 11:32:51</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -1086,9 +1086,9 @@
 			<h1 id="GCN：图卷积网络和RGCN-：关系图卷积神经网络"><a href="#GCN：图卷积网络和RGCN-：关系图卷积神经网络" class="headerlink" title="GCN：图卷积网络和RGCN ：关系图卷积神经网络"></a>GCN：图卷积网络和RGCN ：关系图卷积神经网络</h1><p>GCN 和 RGCN 都是在图上“让相邻节点交换信息”，把每个节点原来的向量，更新成包含周围关系信息的新向量。</p>
 <p>RGCN 的作用是：让疾病/操作的表示吸收相关药物的信息，也让药物的表示吸收相关疾病/操作的信息，为后续药物推荐提供更有用的特征。</p>
 <h1 id="1-GCN图卷积神经网络"><a href="#1-GCN图卷积神经网络" class="headerlink" title="1.GCN图卷积神经网络"></a>1.GCN图卷积神经网络</h1><p>GCN是一种能够直接作用于图并且利用其结构信息的卷积神经网络</p>
-<h2 id="一、为什么已经有疾病向量了，还需要-GCN？"><a href="#一、为什么已经有疾病向量了，还需要-GCN？" class="headerlink" title="一、为什么已经有疾病向量了，还需要 GCN？"></a><strong>一、为什么已经有疾病向量了，还需要 GCN？</strong></h2><p>假设查嵌入表后，疾病 (d_1) 有一个初始向量：</p>
-<p>[ \mathbf h_{d_1}^{0}=\mathbf E_d(d_1). ]</p>
-<p>这个向量代表疾病 (d_1) 本身，查同一张表时，同一个编号取得的初始向量相同。</p>
+<h2 id="一、为什么已经有疾病向量了，还需要-GCN？"><a href="#一、为什么已经有疾病向量了，还需要-GCN？" class="headerlink" title="一、为什么已经有疾病向量了，还需要 GCN？"></a><strong>一、为什么已经有疾病向量了，还需要 GCN？</strong></h2><p>假设查嵌入表后，疾病 $d_1$ 有一个初始向量：</p>
+<script type="math/tex; mode=display">
+\mathbf h_{d_1}^{0}=\mathbf E_d(d_1).</script><p>这个向量代表疾病 $d_1$ 本身，查同一张表时，同一个编号取得的初始向量相同。</p>
 <p>但是，我们还希望模型知道：</p>
 <ul>
 <li>这个疾病和哪些药物有关；</li>
@@ -1097,15 +1097,15 @@
 </ul>
 <p>因此，需要把节点的信息和图上的关系结合起来。</p>
 <p>例如：</p>
-<p>[ \boxed{ \text{疾病的新向量} = f( \text{疾病自身向量}, \text{相关药物向量}, \text{连接关系} ) } ]</p>
-<p>GCN/RGCN 就是在实现这个函数 (f)。</p>
+<script type="math/tex; mode=display">
+\boxed{ \text{疾病的新向量} = f( \text{疾病自身向量}, \text{相关药物向量}, \text{连接关系} ) }</script><p>GCN/RGCN 就是在实现这个函数 $f$。</p>
 <p>这里的“新向量”仍然是一串数字，但其中已经混入了相关实体的信息。</p>
 <h2 id="二-GCN-是怎样计算的？"><a href="#二-GCN-是怎样计算的？" class="headerlink" title="二, GCN 是怎样计算的？"></a><strong>二, GCN 是怎样计算的？</strong></h2><p>先记住三个动作：</p>
-<p>[ \boxed{ \text{收集邻居} \rightarrow \text{聚合邻居向量} \rightarrow \text{变换并激活} } ]</p>
-<p>一个节点更新自己时，会读取邻居节点上一层的表示。</p>
+<script type="math/tex; mode=display">
+\boxed{ \text{收集邻居} \rightarrow \text{聚合邻居向量} \rightarrow \text{变换并激活} }</script><p>一个节点更新自己时，会读取邻居节点上一层的表示。</p>
 <p>以常见的标准 GCN 为例：</p>
-<p>[ \mathbf h_i^{l+1} = \sigma\left( \sum_{j\in\mathcal N(i)\cup{i}} \frac{1}{\sqrt{\tilde d_i\tilde d_j}} \mathbf W^l\mathbf h_j^l \right). ]</p>
-<div class="table-container">
+<script type="math/tex; mode=display">
+\mathbf h_i^{l+1} = \sigma\left( \sum_{j\in\mathcal N(i)\cup\{i\} } \frac{1}{\sqrt{\tilde d_i\tilde d_j} } \mathbf W^l\mathbf h_j^l \right).</script><div class="table-container">
 <table>
 <thead>
 <tr>
@@ -1115,69 +1115,69 @@
 </thead>
 <tbody>
 <tr>
-<td>(\mathbf h_j^l)</td>
-<td>节点 (j) 在第 (l) 层的向量</td>
+<td>$\mathbf h_j^l$</td>
+<td>节点 $j$ 在第 $l$ 层的向量</td>
 </tr>
 <tr>
-<td>(\mathcal N(i))</td>
-<td>节点 (i) 的邻居</td>
+<td>$\mathcal N(i)$</td>
+<td>节点 $i$ 的邻居</td>
 </tr>
 <tr>
-<td>(\cup{i})</td>
+<td>$\cup{i}$</td>
 <td>把节点自己也加入，相当于加自环</td>
 </tr>
 <tr>
-<td>(\tilde d_i)</td>
-<td>加自环后节点 (i) 的度数</td>
+<td>$\tilde d_i$</td>
+<td>加自环后节点 $i$ 的度数</td>
 </tr>
 <tr>
-<td>(\mathbf W^l)</td>
+<td>$\mathbf W^l$</td>
 <td>这一层可训练的变换矩阵</td>
 </tr>
 <tr>
-<td>(\sigma)</td>
+<td>$\sigma$</td>
 <td>激活函数，例如 ReLU</td>
 </tr>
 <tr>
-<td>(\mathbf h_i^{l+1})</td>
+<td>$\mathbf h_i^{l+1}$</td>
 <td>更新后的节点向量</td>
 </tr>
 </tbody>
 </table>
 </div>
 <p>分母：</p>
-<p>[ \sqrt{\tilde d_i\tilde d_j} ]</p>
-<p>用于归一化，避免连接特别多的节点仅仅因为邻居数量多，就累积出很大的数值。把自身节点 (i) 的度与邻居节点 (j) 的度相乘，再开平方：</p>
-<p>[ \sqrt{\tilde d_i\tilde d_j}. ]</p>
-<p>这里：</p>
+<script type="math/tex; mode=display">
+\sqrt{\tilde d_i\tilde d_j}</script><p>用于归一化，避免连接特别多的节点仅仅因为邻居数量多，就累积出很大的数值。把自身节点 $i$ 的度与邻居节点 $j$ 的度相乘，再开平方：</p>
+<script type="math/tex; mode=display">
+\sqrt{\tilde d_i\tilde d_j}.</script><p>这里：</p>
 <ul>
-<li>(\tilde d_i)：节点 (i) 加上自环之后的度。</li>
-<li>(\tilde d_j)：某一个邻居节点 (j) 加上自环之后的度。</li>
+<li>$\tilde d_i$：节点 $i$ 加上自环之后的度。</li>
+<li>$\tilde d_j$：某一个邻居节点 $j$ 加上自环之后的度。</li>
 </ul>
-<p>例如，(i) 原来有 2 个邻居，(j) 原来有 3 个邻居，加自环后：</p>
-<p>[ \tilde d_i=3,\qquad \tilde d_j=4. ]</p>
-<p>那么从 (j) 向 (i) 聚合信息时，归一化系数就是：</p>
-<p>[ \frac1{\sqrt{\tilde d_i\tilde d_j}} = \frac1{\sqrt{3\times4}} \approx0.289. ]</p>
-<p>因此，该邻居提供的消息会乘上 (0.289)。</p>
-<p>这里每次只考虑 (i) 和某一个邻居 (j) 的度，不是把周围所有邻居的度都乘起来。对不同的邻居 (j)，分别计算这个系数，然后再把消息相加。</p>
+<p>例如，$i$ 原来有 2 个邻居，$j$ 原来有 3 个邻居，加自环后：</p>
+<script type="math/tex; mode=display">
+\tilde d_i=3,\qquad \tilde d_j=4.</script><p>那么从 $j$ 向 $i$ 聚合信息时，归一化系数就是：</p>
+<script type="math/tex; mode=display">
+\frac1{\sqrt{\tilde d_i\tilde d_j} } = \frac1{\sqrt{3\times4} } \approx0.289.</script><p>因此，该邻居提供的消息会乘上 $0.289$。</p>
+<p>这里每次只考虑 $i$ 和某一个邻居 $j$ 的度，不是把周围所有邻居的度都乘起来。对不同的邻居 $j$，分别计算这个系数，然后再把消息相加。</p>
 <p>所以，GCN 的核心是：按照图上的连接，对自己和邻居的向量做归一化聚合，再通过可训练参数进行变换。</p>
 <hr>
 <h2 id="三、用一个小例子，实际算一遍-GCN"><a href="#三、用一个小例子，实际算一遍-GCN" class="headerlink" title="三、用一个小例子，实际算一遍 GCN"></a><strong>三、用一个小例子，实际算一遍 GCN</strong></h2><p>假设当前有两个疾病、两种药物，疾病和药物全部相连：</p>
-<p>[ \begin{aligned} d_1&amp;\leftrightarrow m_1,m_2,\\ d_2&amp;\leftrightarrow m_1,m_2. \end{aligned} ]</p>
-<p>为了突出“关系类型”的作用，暂时让两个疾病的初始向量相同：</p>
-<p>[ \mathbf h_{d_1}^{0} = \mathbf h_{d_2}^{0} = (1,1). ]</p>
-<p>药物向量为：</p>
-<p>[ \mathbf h_{m_1}^{0}=(1,0), \qquad \mathbf h_{m_2}^{0}=(0,1). ]</p>
-<p>这些数字只用于演示，不代表具体医学属性。</p>
+<script type="math/tex; mode=display">
+\begin{aligned} d_1&\leftrightarrow m_1,m_2,\\ d_2&\leftrightarrow m_1,m_2. \end{aligned}</script><p>为了突出“关系类型”的作用，暂时让两个疾病的初始向量相同：</p>
+<script type="math/tex; mode=display">
+\mathbf h_{d_1}^{0} = \mathbf h_{d_2}^{0} = (1,1).</script><p>药物向量为：</p>
+<script type="math/tex; mode=display">
+\mathbf h_{m_1}^{0}=(1,0), \qquad \mathbf h_{m_2}^{0}=(0,1).</script><p>这些数字只用于演示，不代表具体医学属性。</p>
 <p>加上自环后，每个节点的度数都是 3，因此每项归一化系数为：</p>
-<p>[ \frac{1}{\sqrt{3\times3}}=\frac13. ]</p>
-<p>设：</p>
-<p>[ \mathbf W^0=\mathbf I, \qquad \sigma=\operatorname{ReLU}. ]</p>
-<p>疾病 (d_1) 更新为：</p>
-<p>[ \begin{aligned} \mathbf h_{d_1}^{1} &amp;= \operatorname{ReLU} \left[ \frac13 \left( \mathbf h_{d_1}^{0} + \mathbf h_{m_1}^{0} + \mathbf h_{m_2}^{0} \right) \right]\\ &amp;= \operatorname{ReLU} \left[ \frac13 \left( (1,1)+(1,0)+(0,1) \right) \right]\\ &amp;= \left(\frac23,\frac23\right). \end{aligned} ]</p>
-<p>同理：</p>
-<p>[ \mathbf h_{d_2}^{1} = \left(\frac23,\frac23\right). ]</p>
-<p>两个疾病获得了完全相同的表示。</p>
+<script type="math/tex; mode=display">
+\frac{1}{\sqrt{3\times3} }=\frac13.</script><p>设：</p>
+<script type="math/tex; mode=display">
+\mathbf W^0=\mathbf I, \qquad \sigma=\operatorname{ReLU}.</script><p>疾病 $d_1$ 更新为：</p>
+<script type="math/tex; mode=display">
+\begin{aligned} \mathbf h_{d_1}^{1} &= \operatorname{ReLU} \left[ \frac13 \left( \mathbf h_{d_1}^{0} + \mathbf h_{m_1}^{0} + \mathbf h_{m_2}^{0} \right) \right]\\ &= \operatorname{ReLU} \left[ \frac13 \left( (1,1)+(1,0)+(0,1) \right) \right]\\ &= \left(\frac23,\frac23\right). \end{aligned}</script><p>同理：</p>
+<script type="math/tex; mode=display">
+\mathbf h_{d_2}^{1} = \left(\frac23,\frac23\right).</script><p>两个疾病获得了完全相同的表示。</p>
 <p>这不是计算错误：它们初始向量相同、邻居相同，普通 GCN 又使用同样的消息变换，因此无法区分。</p>
 <p>接下来，我们补充一个重要信息：</p>
 <div class="table-container">
@@ -1190,19 +1190,19 @@
 </thead>
 <tbody>
 <tr>
-<td>(d_1-m_1)</td>
+<td>$d_1-m_1$</td>
 <td>强关系</td>
 </tr>
 <tr>
-<td>(d_1-m_2)</td>
+<td>$d_1-m_2$</td>
 <td>弱关系</td>
 </tr>
 <tr>
-<td>(d_2-m_1)</td>
+<td>$d_2-m_1$</td>
 <td>弱关系</td>
 </tr>
 <tr>
-<td>(d_2-m_2)</td>
+<td>$d_2-m_2$</td>
 <td>强关系</td>
 </tr>
 </tbody>
@@ -1217,120 +1217,124 @@
 <p>不同关系类型，使用不同的变换矩阵来处理邻居信息。</p>
 </blockquote>
 <p>普通 GCN 的邻居消息可以写成：</p>
-<p>[ \text{消息}=\mathbf W\mathbf h_j. ]</p>
-<p>RGCN 则写成：</p>
-<p>[ \text{消息}=\mathbf W_r\mathbf h_j. ]</p>
-<p>下标 (r) 表示关系类型。</p>
+<script type="math/tex; mode=display">
+\text{消息}=\mathbf W\mathbf h_j.</script><p>RGCN 则写成：</p>
+<script type="math/tex; mode=display">
+\text{消息}=\mathbf W_r\mathbf h_j.</script><p>下标 $r$ 表示关系类型。</p>
 <p>例如：</p>
-<p>[ \mathbf W_{\text{强}}, \qquad \mathbf W_{\text{弱}}. ]</p>
-<p>因此，同一个药物向量，通过不同类型的边传递时，可以产生不同的消息。</p>
+<script type="math/tex; mode=display">
+\mathbf W_{\text{强} }, \qquad \mathbf W_{\text{弱} }.</script><p>因此，同一个药物向量，通过不同类型的边传递时，可以产生不同的消息。</p>
 <p>RGCN 中的“关系类型”如何定义，由具体任务决定。在这篇论文里，作者把因果效应相近的疾病/操作—药物连接划为同一类型，最终配置使用 5 类。</p>
-<h2 id="二-逐项拆解截图中的公式"><a href="#二-逐项拆解截图中的公式" class="headerlink" title="二.逐项拆解截图中的公式"></a>二.<strong>逐项拆解截图中的公式</strong></h2><p>[ \mathbf h_{d_i}^{l+1} = \sigma\left( \underbrace{\mathbf W_0^l\mathbf h_{d_i}^{l}}_{\text{自身信息}} + \underbrace{ \sum_{r\in\mathcal R} \mathbf W_r^l \left( \frac1{c_{d_i,r}} \sum_{j\in\mathcal N_r(d_i)} \mathbf h_j^l \right) }_{\text{按关系类型聚合的邻居信息}} \right). ]</p>
-<p>可以按以下顺序执行。</p>
+<h2 id="二-逐项拆解截图中的公式"><a href="#二-逐项拆解截图中的公式" class="headerlink" title="二.逐项拆解截图中的公式"></a>二.<strong>逐项拆解截图中的公式</strong></h2><script type="math/tex; mode=display">
+\mathbf h_{d_i}^{l+1} = \sigma\left( \underbrace{\mathbf W_0^l\mathbf h_{d_i}^{l} }_{\text{自身信息} } + \underbrace{ \sum_{r\in\mathcal R} \mathbf W_r^l \left( \frac1{c_{d_i,r} } \sum_{j\in\mathcal N_r(d_i)} \mathbf h_j^l \right) }_{\text{按关系类型聚合的邻居信息} } \right).</script><p>可以按以下顺序执行。</p>
 <p><strong>① 找出某一关系类型的邻居</strong></p>
-<p>[ \mathcal N_r(d_i) ]</p>
-<p>表示：通过类型 (r) 的边，与疾病 (d_i) 连接的节点。</p>
+<script type="math/tex; mode=display">
+\mathcal N_r(d_i)</script><p>表示：通过类型 $r$ 的边，与疾病 $d_i$ 连接的节点。</p>
 <p>例如：</p>
-<p>[ \mathcal N_{\text{强}}(d_1)={m_1}, ][ \mathcal N_{\text{弱}}(d_1)={m_2}. ]</p>
-<p><strong>② 对这一类邻居的向量求和并归一化</strong></p>
-<p>[ \mathbf a_{i,r} = \frac1{c_{d_i,r}} \sum_{j\in\mathcal N_r(d_i)} \mathbf h_j^l. ]</p>
-<p>一种常见选择是：</p>
-<p>[ c_{d_i,r}=|\mathcal N_r(d_i)|, ]</p>
-<p>这样就相当于取该类邻居的平均向量。</p>
-<p>论文将 (c_{d_i,r}) 定义为归一化因子，没有在这段正文里明确指定其具体取值。</p>
+<script type="math/tex; mode=display">
+\mathcal N_{\text{强} }(d_1)=\{m_1\},</script><script type="math/tex; mode=display">
+\mathcal N_{\text{弱} }(d_1)=\{m_2\}.</script><p><strong>② 对这一类邻居的向量求和并归一化</strong></p>
+<script type="math/tex; mode=display">
+\mathbf a_{i,r} = \frac1{c_{d_i,r} } \sum_{j\in\mathcal N_r(d_i)} \mathbf h_j^l.</script><p>一种常见选择是：</p>
+<script type="math/tex; mode=display">
+c_{d_i,r}=|\mathcal N_r(d_i)|,</script><p>这样就相当于取该类邻居的平均向量。</p>
+<p>论文将 $c_{d_i,r}$ 定义为归一化因子，没有在这段正文里明确指定其具体取值。</p>
 <p><strong>③ 使用该关系专用的矩阵处理消息</strong></p>
-<p>[ \mathbf m_{i,r} = \mathbf W_r^l\mathbf a_{i,r}. ]</p>
-<p>这一步让模型学会：</p>
+<script type="math/tex; mode=display">
+\mathbf m_{i,r} = \mathbf W_r^l\mathbf a_{i,r}.</script><p>这一步让模型学会：</p>
 <blockquote>
 <p>面对这种关系时，应该提取邻居向量中的哪些信息，怎样组合这些信息。</p>
 </blockquote>
-<p>(\mathbf W_r^l) 是一个矩阵，可以改变特征之间的组合方式，作用不限于简单放大或缩小。</p>
+<p>$\mathbf W_r^l$ 是一个矩阵，可以改变特征之间的组合方式，作用不限于简单放大或缩小。</p>
 <p><strong>④ 把不同关系的消息相加</strong></p>
-<p>[ \mathbf m_i = \sum_{r\in\mathcal R}\mathbf m_{i,r}. ]</p>
-<p><strong>⑤ 加上自身信息，再经过激活函数</strong></p>
-<p>[ \mathbf h_{d_i}^{l+1} = \sigma\left( \mathbf W_0^l\mathbf h_{d_i}^l+\mathbf m_i \right). ]</p>
-<p>这就完成了一层 RGCN。</p>
+<script type="math/tex; mode=display">
+\mathbf m_i = \sum_{r\in\mathcal R}\mathbf m_{i,r}.</script><p><strong>⑤ 加上自身信息，再经过激活函数</strong></p>
+<script type="math/tex; mode=display">
+\mathbf h_{d_i}^{l+1} = \sigma\left( \mathbf W_0^l\mathbf h_{d_i}^l+\mathbf m_i \right).</script><p>这就完成了一层 RGCN。</p>
 <p>如果向量维度保持为 64，那么通常：</p>
-<p>[ \mathbf h_i^l\in\mathbb R^{64}, \qquad \mathbf W_0^l,\mathbf W_r^l\in\mathbb R^{64\times64}. ]</p>
-<h2 id="三-沿用前面的例子，手算-RGCN"><a href="#三-沿用前面的例子，手算-RGCN" class="headerlink" title="三.沿用前面的例子，手算 RGCN"></a><strong>三.沿用前面的例子，手算 RGCN</strong></h2><p>仍然使用：</p>
-<p>[ \mathbf h_{d_1}^{0} = \mathbf h_{d_2}^{0} = (1,1), ][ \mathbf h_{m_1}^{0}=(1,0), \qquad \mathbf h_{m_2}^{0}=(0,1). ]</p>
-<p>为了方便计算，假设这一层参数为：</p>
-<p>[ \mathbf W_0=\mathbf I, ][ \mathbf W_{\text{强}}=\mathbf I, \qquad \mathbf W_{\text{弱}}=0.2\mathbf I. ]</p>
-<p>每种关系下只有一个邻居，取归一化因子为 1。</p>
-<p><strong>计算疾病 (d_1)：</strong></p>
-<p>它和 (m_1) 是强关系，和 (m_2) 是弱关系：</p>
-<p>[ \begin{aligned} \mathbf h_{d_1}^{1} &amp;= \operatorname{ReLU} \left[ \mathbf I(1,1) + \mathbf I(1,0) + 0.2\mathbf I(0,1) \right]\\ &amp;= \operatorname{ReLU} \left[ (1,1)+(1,0)+(0,0.2) \right]\\ &amp;=(2,1.2). \end{aligned} ]</p>
-<p><strong>计算疾病 (d_2)：</strong></p>
-<p>它和 (m_1) 是弱关系，和 (m_2) 是强关系：</p>
-<p>[ \begin{aligned} \mathbf h_{d_2}^{1} &amp;= \operatorname{ReLU} \left[ \mathbf I(1,1) + 0.2\mathbf I(1,0) + \mathbf I(0,1) \right]\\ &amp;= \operatorname{ReLU} \left[ (1,1)+(0.2,0)+(0,1) \right]\\ &amp;=(1.2,2). \end{aligned} ]</p>
-<p>比较结果：</p>
+<script type="math/tex; mode=display">
+\mathbf h_i^l\in\mathbb R^{64}, \qquad \mathbf W_0^l,\mathbf W_r^l\in\mathbb R^{64\times64}.</script><h2 id="三-沿用前面的例子，手算-RGCN"><a href="#三-沿用前面的例子，手算-RGCN" class="headerlink" title="三.沿用前面的例子，手算 RGCN"></a><strong>三.沿用前面的例子，手算 RGCN</strong></h2><p>仍然使用：</p>
+<script type="math/tex; mode=display">
+\mathbf h_{d_1}^{0} = \mathbf h_{d_2}^{0} = (1,1),</script><script type="math/tex; mode=display">
+\mathbf h_{m_1}^{0}=(1,0), \qquad \mathbf h_{m_2}^{0}=(0,1).</script><p>为了方便计算，假设这一层参数为：</p>
+<script type="math/tex; mode=display">
+\mathbf W_0=\mathbf I,</script><script type="math/tex; mode=display">
+\mathbf W_{\text{强} }=\mathbf I, \qquad \mathbf W_{\text{弱} }=0.2\mathbf I.</script><p>每种关系下只有一个邻居，取归一化因子为 1。</p>
+<p><strong>计算疾病 $d_1$：</strong></p>
+<p>它和 $m_1$ 是强关系，和 $m_2$ 是弱关系：</p>
+<script type="math/tex; mode=display">
+\begin{aligned} \mathbf h_{d_1}^{1} &= \operatorname{ReLU} \left[ \mathbf I(1,1) + \mathbf I(1,0) + 0.2\mathbf I(0,1) \right]\\ &= \operatorname{ReLU} \left[ (1,1)+(1,0)+(0,0.2) \right]\\ &=(2,1.2). \end{aligned}</script><p><strong>计算疾病 $d_2$：</strong></p>
+<p>它和 $m_1$ 是弱关系，和 $m_2$ 是强关系：</p>
+<script type="math/tex; mode=display">
+\begin{aligned} \mathbf h_{d_2}^{1} &= \operatorname{ReLU} \left[ \mathbf I(1,1) + 0.2\mathbf I(1,0) + \mathbf I(0,1) \right]\\ &= \operatorname{ReLU} \left[ (1,1)+(0.2,0)+(0,1) \right]\\ &=(1.2,2). \end{aligned}</script><p>比较结果：</p>
 <div class="table-container">
 <table>
 <thead>
 <tr>
 <th>模型</th>
-<th>(d_1) 更新后</th>
-<th>(d_2) 更新后</th>
+<th>$d_1$ 更新后</th>
+<th>$d_2$ 更新后</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>普通 GCN</td>
-<td>((2/3,2/3))</td>
-<td>((2/3,2/3))</td>
+<td>$(2/3,2/3)$</td>
+<td>$(2/3,2/3)$</td>
 </tr>
 <tr>
 <td>RGCN</td>
-<td>((2,1.2))</td>
-<td>((1.2,2))</td>
+<td>$(2,1.2)$</td>
+<td>$(1.2,2)$</td>
 </tr>
 </tbody>
 </table>
 </div>
 <p><strong>RGCN 利用了关系类型，区分了“连接相同，但关系含义不同”的两个疾病。</strong></p>
-<p>这里的 (\mathbf I) 和 (0.2\mathbf I) 是教学参数。真实模型通过训练学习矩阵；“强关系”的矩阵不一定在每个维度上都比“弱关系”的矩阵更大。</p>
+<p>这里的 $\mathbf I$ 和 $0.2\mathbf I$ 是教学参数。真实模型通过训练学习矩阵；“强关系”的矩阵不一定在每个维度上都比“弱关系”的矩阵更大。</p>
 <hr>
-<h1 id="3-该模型在Casualmed论文应用"><a href="#3-该模型在Casualmed论文应用" class="headerlink" title="3.该模型在Casualmed论文应用"></a>3.该模型在Casualmed论文应用</h1><h2 id="一-公式（8）：为什么写成-mathbf-W-r-l-mathbf-I-Theta-r-l-？"><a href="#一-公式（8）：为什么写成-mathbf-W-r-l-mathbf-I-Theta-r-l-？" class="headerlink" title="一.公式（8）：为什么写成 (\mathbf W_r^l=\mathbf I+\Theta_r^l)？"></a>一.<strong>公式（8）：为什么写成 (\mathbf W_r^l=\mathbf I+\Theta_r^l)？</strong></h2><p>论文写：</p>
-<p>[ \mathbf W_r^l=\mathbf I+\boldsymbol\Theta_r^l. ]</p>
-<p>因此，对一个邻居向量 (\mathbf h)：</p>
-<p>[ \mathbf W_r^l\mathbf h = \mathbf h+\boldsymbol\Theta_r^l\mathbf h. ]</p>
-<p>可以理解为：</p>
-<p>[ \boxed{ \text{关系变换后的消息} = \text{原消息} + \text{该关系对应的可学习修正} } ]</p>
-<p>其中：</p>
+<h1 id="3-该模型在Casualmed论文应用"><a href="#3-该模型在Casualmed论文应用" class="headerlink" title="3.该模型在Casualmed论文应用"></a>3.该模型在Casualmed论文应用</h1><h2 id="一-公式（8）：为什么写成-mathbf-W-r-l-mathbf-I-Theta-r-l-？"><a href="#一-公式（8）：为什么写成-mathbf-W-r-l-mathbf-I-Theta-r-l-？" class="headerlink" title="一.公式（8）：为什么写成 $\mathbf W_r^l=\mathbf I+\Theta_r^l$？"></a>一.<strong>公式（8）：为什么写成 $\mathbf W_r^l=\mathbf I+\Theta_r^l$？</strong></h2><p>论文写：</p>
+<script type="math/tex; mode=display">
+\mathbf W_r^l=\mathbf I+\boldsymbol\Theta_r^l.</script><p>因此，对一个邻居向量 $\mathbf h$：</p>
+<script type="math/tex; mode=display">
+\mathbf W_r^l\mathbf h = \mathbf h+\boldsymbol\Theta_r^l\mathbf h.</script><p>可以理解为：</p>
+<script type="math/tex; mode=display">
+\boxed{ \text{关系变换后的消息} = \text{原消息} + \text{该关系对应的可学习修正} }</script><p>其中：</p>
 <ul>
-<li>(\mathbf I)：保留原向量；</li>
-<li>(\Theta_r^l)：学习需要怎样调整它。</li>
+<li>$\mathbf I$：保留原向量；</li>
+<li>$\Theta_r^l$：学习需要怎样调整它。</li>
 </ul>
 <p>例如：</p>
-<p>[ \Theta_r^l=0 \quad\Rightarrow\quad \mathbf W_r^l\mathbf h=\mathbf h. ]</p>
-<p>前面弱关系取 (0.2I)，也符合这个公式，因为：</p>
-<p>[ \Theta_{\text{弱}}=-0.8I, ][ I+\Theta_{\text{弱}}=0.2I. ]</p>
-<p>注意，式（8）是在关系变换内部加入恒等项。式（7）中的自身信息项：</p>
-<p>[ \mathbf W_0^l\mathbf h_i^l ]</p>
-<p>是另一个部分，二者不要混淆。</p>
+<script type="math/tex; mode=display">
+\Theta_r^l=0 \quad\Rightarrow\quad \mathbf W_r^l\mathbf h=\mathbf h.</script><p>前面弱关系取 $0.2I$，也符合这个公式，因为：</p>
+<script type="math/tex; mode=display">
+\Theta_{\text{弱} }=-0.8I,</script><script type="math/tex; mode=display">
+I+\Theta_{\text{弱} }=0.2I.</script><p>注意，式（8）是在关系变换内部加入恒等项。式（7）中的自身信息项：</p>
+<script type="math/tex; mode=display">
+\mathbf W_0^l\mathbf h_i^l</script><p>是另一个部分，二者不要混淆。</p>
 <h2 id="二-为什么论文需要-RGCN？普通-GCN-有什么不足？"><a href="#二-为什么论文需要-RGCN？普通-GCN-有什么不足？" class="headerlink" title="二.为什么论文需要 RGCN？普通 GCN 有什么不足？"></a><strong>二.为什么论文需要 RGCN？普通 GCN 有什么不足？</strong></h2><p>关键在于：论文构建的是<strong>完全二部图</strong>。</p>
 <p>对于疾病—药物图：</p>
-<p>[ G_{v_t}^{dm}, ]</p>
-<p>节点来自：</p>
-<p>[ \mathcal D_t\cup\mathcal M_{t-1}. ]</p>
-<p>当前每个疾病都连接上次用药中的每个药物。</p>
+<script type="math/tex; mode=display">
+G_{v_t}^{dm},</script><p>节点来自：</p>
+<script type="math/tex; mode=display">
+\mathcal D_t\cup\mathcal M_{t-1}.</script><p>当前每个疾病都连接上次用药中的每个药物。</p>
 <p>这意味着：</p>
 <blockquote>
 <p>不同疾病看到的药物邻居集合可能完全相同，差别主要体现在每条连接的因果效应上。</p>
 </blockquote>
 <p>如果忽略效应差异，只做普通邻居聚合，那么每个疾病从药物侧收到的消息很容易相似。</p>
 <p>RGCN 则先把效应划分为关系类型：</p>
-<p>[ r(d_i,m_k) = \operatorname{Group}\left(\mathbf M^{dm}_{ik}\right), ]</p>
-<p>然后通过：</p>
-<p>[ \mathbf W_{r(d_i,m_k)} ]</p>
-<p>决定这条边上的信息怎样传递。</p>
-<p>于是，同样面对 (m_1,m_2)，不同疾病可以获得不同的消息。</p>
+<script type="math/tex; mode=display">
+r(d_i,m_k) = \operatorname{Group}\left(\mathbf M^{dm}_{ik}\right),</script><p>然后通过：</p>
+<script type="math/tex; mode=display">
+\mathbf W_{r(d_i,m_k)}</script><p>决定这条边上的信息怎样传递。</p>
+<p>于是，同样面对 $m_1,m_2$，不同疾病可以获得不同的消息。</p>
 <p>这就是 RGCN 与论文构图方式相适应的原因：它能利用跨实体关系的差异。</p>
 <h2 id="三-为什么使用两层？"><a href="#三-为什么使用两层？" class="headerlink" title="三.为什么使用两层？"></a><strong>三.为什么使用两层？</strong></h2><p>一层能够让节点吸收一跳邻居的信息：</p>
-<p>[ \text{疾病}\leftarrow\text{药物}. ]</p>
-<p>如果图的消息传递设置允许双向更新，两层后，信息还可以经过：</p>
-<p>[ \text{疾病 }d_1 \rightarrow \text{药物 }m_1 \rightarrow \text{疾病 }d_2. ]</p>
-<p>所以第二层能够让节点间接获得两跳范围内的信息。</p>
+<script type="math/tex; mode=display">
+\text{疾病}\leftarrow\text{药物}.</script><p>如果图的消息传递设置允许双向更新，两层后，信息还可以经过：</p>
+<script type="math/tex; mode=display">
+\text{疾病 }d_1 \rightarrow \text{药物 }m_1 \rightarrow \text{疾病 }d_2.</script><p>所以第二层能够让节点间接获得两跳范围内的信息。</p>
 <p>每一层都使用上一层的节点向量计算新向量，通常同时更新所有节点。</p>
 <p>论文最终使用两层 RGCN。层数增加会扩大信息传播范围，但也可能让不同节点的表示变得过于相似，因此并非越多越好。</p>
 
@@ -1347,7 +1351,7 @@
         
             <li>
                 <strong>Updated at
-                    :</strong> 2026-11-09 16:23:03
+                    :</strong> 2026-11-10 11:32:51
             </li>
         
         <li>
@@ -1472,7 +1476,7 @@
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">GCN：图卷积网络和RGCN ：关系图卷积神经网络</div>
-		<ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#GCN%EF%BC%9A%E5%9B%BE%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C%E5%92%8CRGCN-%EF%BC%9A%E5%85%B3%E7%B3%BB%E5%9B%BE%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-text">GCN：图卷积网络和RGCN ：关系图卷积神经网络</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-GCN%E5%9B%BE%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-text">1.GCN图卷积神经网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E5%B7%B2%E7%BB%8F%E6%9C%89%E7%96%BE%E7%97%85%E5%90%91%E9%87%8F%E4%BA%86%EF%BC%8C%E8%BF%98%E9%9C%80%E8%A6%81-GCN%EF%BC%9F"><span class="nav-text">一、为什么已经有疾病向量了，还需要 GCN？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-GCN-%E6%98%AF%E6%80%8E%E6%A0%B7%E8%AE%A1%E7%AE%97%E7%9A%84%EF%BC%9F"><span class="nav-text">二, GCN 是怎样计算的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%94%A8%E4%B8%80%E4%B8%AA%E5%B0%8F%E4%BE%8B%E5%AD%90%EF%BC%8C%E5%AE%9E%E9%99%85%E7%AE%97%E4%B8%80%E9%81%8D-GCN"><span class="nav-text">三、用一个小例子，实际算一遍 GCN</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-RGCN%E5%81%9A%E4%BA%86%E9%82%A3%E4%BA%9B%E6%94%B9%E8%BF%9B"><span class="nav-text">2.RGCN做了那些改进</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81RGCN-%E6%AF%94-GCN-%E5%A4%9A%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-text">一、RGCN 比 GCN 多做了什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-%E9%80%90%E9%A1%B9%E6%8B%86%E8%A7%A3%E6%88%AA%E5%9B%BE%E4%B8%AD%E7%9A%84%E5%85%AC%E5%BC%8F"><span class="nav-text">二.逐项拆解截图中的公式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89-%E6%B2%BF%E7%94%A8%E5%89%8D%E9%9D%A2%E7%9A%84%E4%BE%8B%E5%AD%90%EF%BC%8C%E6%89%8B%E7%AE%97-RGCN"><span class="nav-text">三.沿用前面的例子，手算 RGCN</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E8%AF%A5%E6%A8%A1%E5%9E%8B%E5%9C%A8Casualmed%E8%AE%BA%E6%96%87%E5%BA%94%E7%94%A8"><span class="nav-text">3.该模型在Casualmed论文应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80-%E5%85%AC%E5%BC%8F%EF%BC%888%EF%BC%89%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E5%86%99%E6%88%90-mathbf-W-r-l-mathbf-I-Theta-r-l-%EF%BC%9F"><span class="nav-text">一.公式（8）：为什么写成 (\mathbf W_r^l&#x3D;\mathbf I+\Theta_r^l)？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AE%BA%E6%96%87%E9%9C%80%E8%A6%81-RGCN%EF%BC%9F%E6%99%AE%E9%80%9A-GCN-%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E8%B6%B3%EF%BC%9F"><span class="nav-text">二.为什么论文需要 RGCN？普通 GCN 有什么不足？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E4%B8%A4%E5%B1%82%EF%BC%9F"><span class="nav-text">三.为什么使用两层？</span></a></li></ol></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#GCN%EF%BC%9A%E5%9B%BE%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C%E5%92%8CRGCN-%EF%BC%9A%E5%85%B3%E7%B3%BB%E5%9B%BE%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-text">GCN：图卷积网络和RGCN ：关系图卷积神经网络</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-GCN%E5%9B%BE%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-text">1.GCN图卷积神经网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E5%B7%B2%E7%BB%8F%E6%9C%89%E7%96%BE%E7%97%85%E5%90%91%E9%87%8F%E4%BA%86%EF%BC%8C%E8%BF%98%E9%9C%80%E8%A6%81-GCN%EF%BC%9F"><span class="nav-text">一、为什么已经有疾病向量了，还需要 GCN？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-GCN-%E6%98%AF%E6%80%8E%E6%A0%B7%E8%AE%A1%E7%AE%97%E7%9A%84%EF%BC%9F"><span class="nav-text">二, GCN 是怎样计算的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%94%A8%E4%B8%80%E4%B8%AA%E5%B0%8F%E4%BE%8B%E5%AD%90%EF%BC%8C%E5%AE%9E%E9%99%85%E7%AE%97%E4%B8%80%E9%81%8D-GCN"><span class="nav-text">三、用一个小例子，实际算一遍 GCN</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-RGCN%E5%81%9A%E4%BA%86%E9%82%A3%E4%BA%9B%E6%94%B9%E8%BF%9B"><span class="nav-text">2.RGCN做了那些改进</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81RGCN-%E6%AF%94-GCN-%E5%A4%9A%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-text">一、RGCN 比 GCN 多做了什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-%E9%80%90%E9%A1%B9%E6%8B%86%E8%A7%A3%E6%88%AA%E5%9B%BE%E4%B8%AD%E7%9A%84%E5%85%AC%E5%BC%8F"><span class="nav-text">二.逐项拆解截图中的公式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89-%E6%B2%BF%E7%94%A8%E5%89%8D%E9%9D%A2%E7%9A%84%E4%BE%8B%E5%AD%90%EF%BC%8C%E6%89%8B%E7%AE%97-RGCN"><span class="nav-text">三.沿用前面的例子，手算 RGCN</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E8%AF%A5%E6%A8%A1%E5%9E%8B%E5%9C%A8Casualmed%E8%AE%BA%E6%96%87%E5%BA%94%E7%94%A8"><span class="nav-text">3.该模型在Casualmed论文应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80-%E5%85%AC%E5%BC%8F%EF%BC%888%EF%BC%89%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E5%86%99%E6%88%90-mathbf-W-r-l-mathbf-I-Theta-r-l-%EF%BC%9F"><span class="nav-text">一.公式（8）：为什么写成 $\mathbf W_r^l&#x3D;\mathbf I+\Theta_r^l$？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AE%BA%E6%96%87%E9%9C%80%E8%A6%81-RGCN%EF%BC%9F%E6%99%AE%E9%80%9A-GCN-%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E8%B6%B3%EF%BC%9F"><span class="nav-text">二.为什么论文需要 RGCN？普通 GCN 有什么不足？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E4%B8%A4%E5%B1%82%EF%BC%9F"><span class="nav-text">三.为什么使用两层？</span></a></li></ol></li></ol>
 
 	</div>
 </div>

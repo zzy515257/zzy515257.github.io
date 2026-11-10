@@ -94,7 +94,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/images/redefine-og.webp">
 <meta property="article:published_time" content="2026-11-06T14:10:56.000Z">
-<meta property="article:modified_time" content="2026-11-09T02:09:34.901Z">
+<meta property="article:modified_time" content="2026-11-10T03:32:51.462Z">
 <meta property="article:author" content="Zoe Raina">
 <meta property="article:tag" content="Model Learn">
 <meta name="twitter:card" content="summary">
@@ -1028,8 +1028,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2026-11-09 10:09:34</span>
-            <span class="mobile">2026-11-09 10:09:34</span>
+            <span class="desktop">2026-11-10 11:32:51</span>
+            <span class="mobile">2026-11-10 11:32:51</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -1097,8 +1097,8 @@
 <p>例如：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">图 1：A → B → C</span><br><span class="line"></span><br><span class="line">图 2：A ← B → C</span><br><span class="line"></span><br><span class="line">图 3：A ← B ← C</span><br></pre></td></tr></table></figure></div>
 <p>这三个图都表达：</p>
-<p>[ A\perp C\mid B ]</p>
-<p>意思是：知道 (B) 后，(A) 和 (C) 条件独立。</p>
+<script type="math/tex; mode=display">
+A\perp C\mid B</script><p>意思是：知道 $B$ 后，$A$ 和 $C$ 条件独立。</p>
 <p>在标准的、不额外限制函数形式的 DAG 模型中，即使观测样本非常多，也不能仅凭这些条件独立关系确定究竟是哪一个图。</p>
 <p>它们属于同一个<strong>观测马尔可夫等价类</strong>。</p>
 <p>这篇论文接着问：</p>
@@ -1116,14 +1116,14 @@
 <p>对于图：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A → B → C</span><br></pre></td></tr></table></figure></div>
 <p>联合概率密度可以分解为：</p>
-<p>[ f(a,b,c)=f(a)f(b\mid a)f(c\mid b) ]</p>
-<p>一般形式是：</p>
-<p>[ \boxed{ f(x_1,\ldots,x_p) = \prod_{j=1}^{p} f(x_j\mid x_{\mathrm{pa}_D(j)}) } ]</p>
-<p>这里：</p>
+<script type="math/tex; mode=display">
+f(a,b,c)=f(a)f(b\mid a)f(c\mid b)</script><p>一般形式是：</p>
+<script type="math/tex; mode=display">
+\boxed{ f(x_1,\ldots,x_p) = \prod_{j=1}^{p} f(x_j\mid x_{\mathrm{pa}_D(j)}) }</script><p>这里：</p>
 <ul>
-<li>(D)：一个具体的 DAG。</li>
-<li>(\mathrm{pa}_D(j))：节点 (j) 在图中的父节点。</li>
-<li>(f(x_j\mid x_{\mathrm{pa}_D(j)}))：节点 (j) 的生成机制。</li>
+<li>$D$：一个具体的 DAG。</li>
+<li>$\mathrm{pa}_D(j)$：节点 $j$ 在图中的父节点。</li>
+<li>$f(x_j\mid x_{\mathrm{pa}_D(j)})$：节点 $j$ 的生成机制。</li>
 </ul>
 <p>为什么要分解？</p>
 <p>因为整张图可以理解成一组局部生成机制：</p>
@@ -1136,48 +1136,48 @@
 <p>原系统：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A → B → C</span><br></pre></td></tr></table></figure></div>
 <p>例如用结构方程表示：</p>
-<p>[ \begin{aligned} A&amp;=\varepsilon_A\\ B&amp;=\beta_{BA}A+\varepsilon_B\\ C&amp;=\beta_{CB}B+\varepsilon_C \end{aligned} ]</p>
-<p>现在干预 (B)，把它的值交给外部随机变量 (U_B) 决定：</p>
-<p>[ B:=U_B ]</p>
-<p>方程变成：</p>
-<p>[ \begin{aligned} A&amp;=\varepsilon_A\\ B&amp;=U_B\\ C&amp;=\beta_{CB}B+\varepsilon_C \end{aligned} ]</p>
-<p><strong>(B) 不再由 (A) 生成，但 (B) 仍然可以影响 (C)。</strong></p>
+<script type="math/tex; mode=display">
+\begin{aligned} A&=\varepsilon_A\\ B&=\beta_{BA}A+\varepsilon_B\\ C&=\beta_{CB}B+\varepsilon_C \end{aligned}</script><p>现在干预 $B$，把它的值交给外部随机变量 $U_B$ 决定：</p>
+<script type="math/tex; mode=display">
+B:=U_B</script><p>方程变成：</p>
+<script type="math/tex; mode=display">
+\begin{aligned} A&=\varepsilon_A\\ B&=U_B\\ C&=\beta_{CB}B+\varepsilon_C \end{aligned}</script><p><strong>$B$ 不再由 $A$ 生成，但 $B$ 仍然可以影响 $C$。</strong></p>
 <p>因此干预后的图是：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A       B → C</span><br></pre></td></tr></table></figure></div>
 <p>删掉的是：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">指向 B 的入边</span><br></pre></td></tr></table></figure></div>
-<p>而不是删掉 (B) 的所有连接。</p>
+<p>而不是删掉 $B$ 的所有连接。</p>
 <p>论文把干预后的图记为：</p>
-<p>[ D^{(I)} ]</p>
-<p>其中 (I) 是被干预的节点集合。构造规则：</p>
-<p>[ \boxed{ D^{(I)} = D\text{ 删除所有指向 }I\text{ 中节点的边} } ]</p>
-<p>例如干预目标是 (I={B,C})，就同时删除所有进入 (B) 和进入 (C) 的边。</p>
+<script type="math/tex; mode=display">
+D^{(I)}</script><p>其中 $I$ 是被干预的节点集合。构造规则：</p>
+<script type="math/tex; mode=display">
+\boxed{ D^{(I)} = D\text{ 删除所有指向 }I\text{ 中节点的边} }</script><p>例如干预目标是 $I={B,C}$，就同时删除所有进入 $B$ 和进入 $C$ 的边。</p>
 <p>为什么这样定义？</p>
 <p>因为这里的干预，是<strong>替换目标节点原来的生成机制</strong>。其他未被干预节点的机制保持不变。</p>
 <p>论文公式（1）因此写成：</p>
-<p>[ \boxed{ f^{(I)}(x) = \prod_{j\notin I} f(x_j\mid x_{\mathrm{pa}_D(j)}) \prod_{j\in I} \tilde f_j(x_j) } ]</p>
-<p>前一部分是保留的自然机制，后一部分是外部指定的干预分布。</p>
+<script type="math/tex; mode=display">
+\boxed{ f^{(I)}(x) = \prod_{j\notin I} f(x_j\mid x_{\mathrm{pa}_D(j)}) \prod_{j\in I} \tilde f_j(x_j) }</script><p>前一部分是保留的自然机制，后一部分是外部指定的干预分布。</p>
 <p>特别注意两个区别：</p>
 <ul>
-<li><strong>条件化 (B=b)</strong>：从原系统中挑出 (B=b) 的样本。</li>
-<li><strong>干预 (do(B=b))</strong>：主动替换 (B) 的生成机制。</li>
+<li><strong>条件化 $B=b$</strong>：从原系统中挑出 $B=b$ 的样本。</li>
+<li><strong>干预 $do(B=b)$</strong>：主动替换 $B$ 的生成机制。</li>
 </ul>
 <p>它们一般不相同。</p>
 <p>另外，本文重点讨论的是这种切断入边的干预。只改变机制、仍保留父节点作用的“软干预”，不是其主要定理直接覆盖的模型。</p>
 <hr>
-<p><strong>四、第三步：为什么数据除了矩阵 (X)，还需要标签 (T)？</strong></p>
+<p><strong>四、第三步：为什么数据除了矩阵 $X$，还需要标签 $T$？</strong></p>
 <p>对应公式（2）—（3），PDF 第 5 页。</p>
 <p>普通观测学习的数据只有：</p>
-<p>[ X= \begin{pmatrix} x_A^{(1)}&amp;x_B^{(1)}&amp;x_C^{(1)}\\ \vdots&amp;\vdots&amp;\vdots \end{pmatrix} ]</p>
-<p>GIES 还需要知道<strong>每条样本是在什么干预下产生的</strong>：</p>
+<script type="math/tex; mode=display">
+X= \begin{pmatrix} x_A^{(1)}&x_B^{(1)}&x_C^{(1)}\\ \vdots&\vdots&\vdots \end{pmatrix}</script><p>GIES 还需要知道<strong>每条样本是在什么干预下产生的</strong>：</p>
 <div class="table-container">
 <table>
 <thead>
 <tr>
 <th>样本</th>
-<th>(A)</th>
-<th>(B)</th>
-<th>(C)</th>
+<th>$A$</th>
+<th>$B$</th>
+<th>$C$</th>
 <th>干预标签</th>
 </tr>
 </thead>
@@ -1187,31 +1187,31 @@
 <td>…</td>
 <td>…</td>
 <td>…</td>
-<td>(\varnothing)：没有干预</td>
+<td>$\varnothing$：没有干预</td>
 </tr>
 <tr>
 <td>2</td>
 <td>…</td>
 <td>…</td>
 <td>…</td>
-<td>({A})：干预了 (A)</td>
+<td>${A}$：干预了 $A$</td>
 </tr>
 <tr>
 <td>3</td>
 <td>…</td>
 <td>…</td>
 <td>…</td>
-<td>({B})：干预了 (B)</td>
+<td>${B}$：干预了 $B$</td>
 </tr>
 </tbody>
 </table>
 </div>
 <p>于是输入是：</p>
-<p>[ \boxed{(T,X)} ]</p>
-<p>其中 (T^{(r)}) 表示第 (r) 条样本的干预目标。</p>
+<script type="math/tex; mode=display">
+\boxed{(T,X)}</script><p>其中 $T^{(r)}$ 表示第 $r$ 条样本的干预目标。</p>
 <p>所有不同干预目标构成：</p>
-<p>[ \mathcal I={\varnothing,{A},{B},\ldots} ]</p>
-<p><strong>(I) 是一个目标集合，(\mathcal I) 是一组目标集合。</strong></p>
+<script type="math/tex; mode=display">
+\mathcal I=\{\varnothing,\{A\},\{B\},\ldots\}</script><p><strong>$I$ 是一个目标集合，$\mathcal I$ 是一组目标集合。</strong></p>
 <p>为什么必须记录标签？</p>
 <p>因为同一个变量在不同实验中可能由不同机制生成：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">观测时：B 由 A 和噪声生成。</span><br><span class="line"></span><br><span class="line">干预 B 时：B 由实验者指定。</span><br></pre></td></tr></table></figure></div>
@@ -1221,16 +1221,16 @@
 <p><strong>五、第四步：为什么要求“保守的干预目标族”？</strong></p>
 <p>对应定义 6，PDF 第 5 页。</p>
 <p>条件是：</p>
-<p>[ \boxed{ \forall j,\quad \exists I\in\mathcal I,\quad j\notin I } ]</p>
-<p>翻译过来：</p>
+<script type="math/tex; mode=display">
+\boxed{ \forall j,\quad \exists I\in\mathcal I,\quad j\notin I }</script><p>翻译过来：</p>
 <blockquote>
 <p>每个变量，都至少在一种实验条件下没有被干预。</p>
 </blockquote>
 <p>为什么？</p>
-<p>假设你每次都强行设置 (B)。</p>
-<p>那么所有数据中的 (B) 都来自外部指定，你永远看不到它原来的生成机制：</p>
-<p>[ B=f_B(\mathrm{pa}(B),\varepsilon_B) ]</p>
-<p>自然就难以判断原来哪些变量指向 (B)。</p>
+<p>假设你每次都强行设置 $B$。</p>
+<p>那么所有数据中的 $B$ 都来自外部指定，你永远看不到它原来的生成机制：</p>
+<script type="math/tex; mode=display">
+B=f_B(\mathrm{pa}(B),\varepsilon_B)</script><p>自然就难以判断原来哪些变量指向 $B$。</p>
 <p>这个条件要保证：<strong>每个节点的自然机制，至少有机会被观察到。</strong></p>
 <p>例如：</p>
 <div class="table-container">
@@ -1244,19 +1244,19 @@
 </thead>
 <tbody>
 <tr>
-<td>({\varnothing, {A}\, })</td>
+<td>${\varnothing, {A}\, }$</td>
 <td>是</td>
 <td>观测实验中所有变量都未被干预</td>
 </tr>
 <tr>
-<td>({\, {A}, {B} \,})</td>
+<td>${\, {A}, {B} \,}$</td>
 <td>是</td>
 <td>每个变量都有未被干预的时候</td>
 </tr>
 <tr>
-<td>({\, {A} \,})</td>
+<td>${\, {A} \,}$</td>
 <td>否</td>
-<td>(A) 始终被干预</td>
+<td>$A$ 始终被干预</td>
 </tr>
 </tbody>
 </table>
@@ -1266,47 +1266,47 @@
 <p><strong>六、第五步：干预为什么能区分原来的等价图？</strong></p>
 <p>现在回到：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">图 1：A → B → C</span><br><span class="line">图 2：A ← B → C</span><br><span class="line">图 3：A ← B ← C</span><br></pre></td></tr></table></figure></div>
-<p>对 (B) 进行干预，删除进入 (B) 的边：</p>
+<p>对 $B$ 进行干预，删除进入 $B$ 的边：</p>
 <div class="table-container">
 <table>
 <thead>
 <tr>
 <th>原图</th>
-<th>干预 (B) 后</th>
+<th>干预 $B$ 后</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>(A\to B\to C)</td>
-<td>(A\quad B\to C)</td>
+<td>$A\to B\to C$</td>
+<td>$A\quad B\to C$</td>
 </tr>
 <tr>
-<td>(A\leftarrow B\to C)</td>
-<td>(A\leftarrow B\to C)</td>
+<td>$A\leftarrow B\to C$</td>
+<td>$A\leftarrow B\to C$</td>
 </tr>
 <tr>
-<td>(A\leftarrow B\leftarrow C)</td>
-<td>(A\leftarrow B\quad C)</td>
+<td>$A\leftarrow B\leftarrow C$</td>
+<td>$A\leftarrow B\quad C$</td>
 </tr>
 </tbody>
 </table>
 </div>
 <p>这时三个图的骨架不同了：</p>
 <ul>
-<li>图 1 只有 (B-C)。</li>
-<li>图 2 有 (A-B) 和 (B-C)。</li>
-<li>图 3 只有 (A-B)。</li>
+<li>图 1 只有 $B-C$。</li>
+<li>图 2 有 $A-B$ 和 $B-C$。</li>
+<li>图 3 只有 $A-B$。</li>
 </ul>
 <p>因此，它们不再属于同一个干预等价类。</p>
 <p><strong>定理 10</strong> 把这个直觉变成严格结论。对于保守的目标族，两个 DAG 干预等价，当且仅当：</p>
 <ol>
 <li>原图具有相同骨架。</li>
 <li>原图具有相同的 v 结构。</li>
-<li>对每一个 (I\in\mathcal I)，干预图 (D^{(I)}) 具有相同骨架。</li>
+<li>对每一个 $I\in\mathcal I$，干预图 $D^{(I)}$ 具有相同骨架。</li>
 </ol>
 <p>其中：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A → B ← C</span><br></pre></td></tr></table></figure></div>
-<p>只有在 (A,C) 不相邻时，才叫这里的 <strong>v 结构</strong>或无屏蔽碰撞结构。</p>
+<p>只有在 $A,C$ 不相邻时，才叫这里的 <strong>v 结构</strong>或无屏蔽碰撞结构。</p>
 <p>这个定理为什么重要？</p>
 <p>因为“两个图能否产生相同的一整组干预分布”本来是一个概率模型问题。</p>
 <p>定理把它转成了：</p>
@@ -1316,10 +1316,10 @@
 <blockquote>
 <p>如果某个干预目标只包含一条边的一个端点，那么这条边的方向在相应干预等价类中必须固定。</p>
 </blockquote>
-<p>例如 (A-B)，如果有单独干预 (A) 的实验：</p>
+<p>例如 $A-B$，如果有单独干预 $A$ 的实验：</p>
 <ul>
-<li>(A\to B)：边保留。</li>
-<li>(A\leftarrow B)：边被删除。</li>
+<li>$A\to B$：边保留。</li>
+<li>$A\leftarrow B$：边被删除。</li>
 </ul>
 <p>两种方向对应不同的干预图。</p>
 <p>但“必须固定”是理论上的可识别性，有限样本下仍然需要从数据估计，仍然可能估错。</p>
@@ -1333,12 +1333,12 @@
 <p>表示。</p>
 <p>其中：</p>
 <ul>
-<li>(A\to B)：整个等价类中的所有 DAG 都具有这个方向。</li>
-<li>(A-B)：等价类中存在不同方向的 DAG。</li>
+<li>$A\to B$：整个等价类中的所有 DAG 都具有这个方向。</li>
+<li>$A-B$：等价类中存在不同方向的 DAG。</li>
 </ul>
 <p>论文称它为：</p>
-<p>[ \boxed{\mathcal E_{\mathcal I}(D)} ]</p>
-<p>即 <strong>干预本质图</strong>，interventional essential graph。</p>
+<script type="math/tex; mode=display">
+\boxed{\mathcal E_{\mathcal I}(D)}</script><p>即 <strong>干预本质图</strong>，interventional essential graph。</p>
 <p>观测情形下，它就是通常所说的 CPDAG。</p>
 <p>这里最容易误解的是：</p>
 <blockquote>
@@ -1354,10 +1354,10 @@
 <p>因为同一类中的多个 DAG 表示相同的统计模型。如果只固定其中一个 DAG 搜索，它可以一步到达的邻居，可能少于整个等价类可以一步到达的邻居。</p>
 <p>具体看：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">当前代表：A → B → C</span><br></pre></td></tr></table></figure></div>
-<p>直接加 (C\to A) 会形成环，不合法。</p>
+<p>直接加 $C\to A$ 会形成环，不合法。</p>
 <p>但同一等价类中的另一个代表：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A ← B → C</span><br></pre></td></tr></table></figure></div>
-<p>加入 (C\to A) 却不会形成环。</p>
+<p>加入 $C\to A$ 却不会形成环。</p>
 <p>因此，<strong>只盯着一个代表图，会漏掉合法的下一步。</strong></p>
 <p>GIES 的关键是：考虑整个等价类所能到达的相邻类，又避免真的枚举这个类中的所有 DAG。</p>
 <hr>
@@ -1366,7 +1366,7 @@
 <p>先看<strong>链分量</strong>。</p>
 <p>例如：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A — B → C — D</span><br></pre></td></tr></table></figure></div>
-<p>去掉有向边 (B\to C) 后，剩下两个无向连通块：</p>
+<p>去掉有向边 $B\to C$ 后，剩下两个无向连通块：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;A,B&#125;    &#123;C,D&#125;</span><br></pre></td></tr></table></figure></div>
 <p>它们就是链分量。</p>
 <p>块内的方向尚未完全确定，块间已有方向约束。论文证明：本质图是链图，其无向链分量都是<strong>弦图</strong>。</p>
@@ -1395,26 +1395,26 @@
 <td>反向会改变干预图骨架</td>
 </tr>
 <tr>
-<td>(c\to a\to b)，且 (c,b) 不相邻</td>
-<td>把 (a\to b) 反向，会新增 (c\to a\leftarrow b)</td>
+<td>$c\to a\to b$，且 $c,b$ 不相邻</td>
+<td>把 $a\to b$ 反向，会新增 $c\to a\leftarrow b$</td>
 </tr>
 <tr>
-<td>(a\to b\leftarrow c)，且 (a,c) 不相邻</td>
+<td>$a\to b\leftarrow c$，且 $a,c$ 不相邻</td>
 <td>反向会破坏已有 v 结构</td>
 </tr>
 <tr>
-<td>(a\to c\to b)，同时 (a\to b)</td>
+<td>$a\to c\to b$，同时 $a\to b$</td>
 <td>反向会形成有向环</td>
 </tr>
 <tr>
-<td>两个不相邻节点 (c_1,c_2) 指向 (b)，且都与 (a) 无向相连，并有 (a\to b)</td>
-<td>合法定向中至少有一条 (a\to c_i\to b)，反向会成环</td>
+<td>两个不相邻节点 $c_1,c_2$ 指向 $b$，且都与 $a$ 无向相连，并有 $a\to b$</td>
+<td>合法定向中至少有一条 $a\to c_i\to b$，反向会成环</td>
 </tr>
 </tbody>
 </table>
 </div>
 <p>这些保护条件的共同目的，是保留当前等价类中<strong>有结构依据的方向</strong>。</p>
-<p>定理 18 进一步规定：一个合法的干预本质图必须满足链图、弦图链分量、没有未完成的诱导结构 (a\to b-c)、干预可区分的边不能仍无向，以及每个箭头都受到强保护等条件。</p>
+<p>定理 18 进一步规定：一个合法的干预本质图必须满足链图、弦图链分量、没有未完成的诱导结构 $a\to b-c$、干预可区分的边不能仍无向，以及每个箭头都受到强保护等条件。</p>
 <p>这些条件是算法维护的“图状态必须合法”的依据。</p>
 <hr>
 <p><strong>九、第八步：Algorithm 1 为什么反复把箭头改成无向边？</strong></p>
@@ -1429,16 +1429,16 @@
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">临时代表中的方向</span><br><span class="line">    ↓</span><br><span class="line">去掉没有依据的定向</span><br><span class="line">    ↓</span><br><span class="line">得到新等价类的本质图</span><br></pre></td></tr></table></figure></div>
 <p>例如，在没有干预时：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A → B → C</span><br></pre></td></tr></table></figure></div>
-<p>第一条 (A\to B) 没有强保护，可以变成：</p>
+<p>第一条 $A\to B$ 没有强保护，可以变成：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A — B → C</span><br></pre></td></tr></table></figure></div>
-<p>此时 (B\to C) 失去了原先来自 (A\to B\to C) 的保护，也会变成：</p>
+<p>此时 $B\to C$ 失去了原先来自 $A\to B\to C$ 的保护，也会变成：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A — B — C</span><br></pre></td></tr></table></figure></div>
 <p>为什么要反复检查？</p>
 <p>因为<strong>去掉一个箭头的方向，可能让另一个箭头失去保护</strong>。</p>
-<p>如果存在干预 (A)，情况不同：</p>
+<p>如果存在干预 $A$，情况不同：</p>
 <ul>
-<li>(A\to B) 因干预而受保护。</li>
-<li>(B\to C) 因 (A\to B\to C) 的结构而受保护。</li>
+<li>$A\to B$ 因干预而受保护。</li>
+<li>$B\to C$ 因 $A\to B\to C$ 的结构而受保护。</li>
 </ul>
 <p>最终可能保留整个：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A → B → C</span><br></pre></td></tr></table></figure></div>
@@ -1448,23 +1448,23 @@
 <p><strong>十、第九步：局部 BIC 怎样把不同干预的数据合起来？</strong></p>
 <p>这是前面讨论评分函数时，需要补上的关键部分。</p>
 <p>论文第 5.1 节采用线性高斯模型：</p>
-<p>[ X_j = \sum_{k\in \mathrm{pa}_D(j)} \beta_{jk}X_k+\varepsilon_j ]</p>
-<p>其中：</p>
-<p>[ \varepsilon_j\sim N(0,\sigma_j^2) ]</p>
-<p>各节点误差独立。论文的模型按零截距书写。</p>
-<p>对于节点 (j)，定义：</p>
-<p>[ \mathcal R_j = {r:j\notin T^{(r)}} ]</p>
-<p>这是<strong>节点 (j) 没有被干预的样本行</strong>。</p>
+<script type="math/tex; mode=display">
+X_j = \sum_{k\in \mathrm{pa}_D(j)} \beta_{jk}X_k+\varepsilon_j</script><p>其中：</p>
+<script type="math/tex; mode=display">
+\varepsilon_j\sim N(0,\sigma_j^2)</script><p>各节点误差独立。论文的模型按零截距书写。</p>
+<p>对于节点 $j$，定义：</p>
+<script type="math/tex; mode=display">
+\mathcal R_j = \{r:j\notin T^{(r)}\}</script><p>这是<strong>节点 $j$ 没有被干预的样本行</strong>。</p>
 <p>记：</p>
-<p>[ n_j=|\mathcal R_j| ]</p>
-<p>拟合节点 (j) 时，只用这些行：</p>
-<p>[ \hat\beta_j = \arg\min_{\beta_j} \sum_{r\in\mathcal R_j} \left( x_j^{(r)} - \sum_{k\in P}\beta_{jk}x_k^{(r)} \right)^2 ]</p>
-<p>然后计算：</p>
-<p>[ \mathrm{RSS}_j(P) = \sum_{r\in\mathcal R_j} \left( x_j^{(r)}-\hat\beta_j^\top x_P^{(r)} \right)^2 ]</p>
-<p>以及方差的极大似然估计：</p>
-<p>[ \hat\sigma_j^2=\frac{\mathrm{RSS}_j(P)}{n_j} ]</p>
-<p>为什么排除“节点自己被干预”的行？</p>
-<p>因为那些行中的 (X_j) 由实验者设置，不是由它的自然父节点生成。拿它们拟合原机制，会混淆两种生成过程。</p>
+<script type="math/tex; mode=display">
+n_j=|\mathcal R_j|</script><p>拟合节点 $j$ 时，只用这些行：</p>
+<script type="math/tex; mode=display">
+\hat\beta_j = \arg\min_{\beta_j} \sum_{r\in\mathcal R_j} \left( x_j^{(r)} - \sum_{k\in P}\beta_{jk}x_k^{(r)} \right)^2</script><p>然后计算：</p>
+<script type="math/tex; mode=display">
+\mathrm{RSS}_j(P) = \sum_{r\in\mathcal R_j} \left( x_j^{(r)}-\hat\beta_j^\top x_P^{(r)} \right)^2</script><p>以及方差的极大似然估计：</p>
+<script type="math/tex; mode=display">
+\hat\sigma_j^2=\frac{\mathrm{RSS}_j(P)}{n_j}</script><p>为什么排除“节点自己被干预”的行？</p>
+<p>因为那些行中的 $X_j$ 由实验者设置，不是由它的自然父节点生成。拿它们拟合原机制，会混淆两种生成过程。</p>
 <p>但注意：</p>
 <blockquote>
 <p><strong>干预了父节点，并不意味着这一行不能用。判断标准是当前作为因变量的节点有没有被干预。</strong></p>
@@ -1475,9 +1475,9 @@
 <thead>
 <tr>
 <th>样本来源</th>
-<th>拟合 (A) 的机制</th>
-<th>拟合 (B) 的机制</th>
-<th>拟合 (C) 的机制</th>
+<th>拟合 $A$ 的机制</th>
+<th>拟合 $B$ 的机制</th>
+<th>拟合 $C$ 的机制</th>
 </tr>
 </thead>
 <tbody>
@@ -1488,13 +1488,13 @@
 <td>使用</td>
 </tr>
 <tr>
-<td>干预 (A)</td>
+<td>干预 $A$</td>
 <td>排除</td>
 <td>使用</td>
 <td>使用</td>
 </tr>
 <tr>
-<td>干预 (B)</td>
+<td>干预 $B$</td>
 <td>使用</td>
 <td>排除</td>
 <td>使用</td>
@@ -1502,20 +1502,20 @@
 </tbody>
 </table>
 </div>
-<p>原因是，干预 (A) 时，(B) 对 (A) 的响应机制仍然有效。</p>
+<p>原因是，干预 $A$ 时，$B$ 对 $A$ 的响应机制仍然有效。</p>
 <p>论文公式（6）就是把所有样本的对数似然，按节点重新整理，变成这些局部回归问题。</p>
 <p>去掉与候选图无关的常数后，局部 BIC 可以写成：</p>
-<p>[ \boxed{ s(j,P) = -\frac{n_j}{2} \left[ 1+\ln\left(\frac{\mathrm{RSS}_j(P)}{n_j}\right) \right] - \frac{\ln N}{2}(1+|P|) } ]</p>
-<p>这里一定要区分：</p>
+<script type="math/tex; mode=display">
+\boxed{ s(j,P) = -\frac{n_j}{2} \left[ 1+\ln\left(\frac{\mathrm{RSS}_j(P)}{n_j}\right) \right] - \frac{\ln N}{2}(1+|P|) }</script><p>这里一定要区分：</p>
 <ul>
-<li>(N)：整个数据集的总样本数。</li>
-<li>(n_j)：节点 (j) 未被干预的有效样本数。</li>
-<li>(1+|P|)：一个噪声方差参数，加上每个父节点对应的回归系数。</li>
+<li>$N$：整个数据集的总样本数。</li>
+<li>$n_j$：节点 $j$ 未被干预的有效样本数。</li>
+<li>$1+|P|$：一个噪声方差参数，加上每个父节点对应的回归系数。</li>
 </ul>
-<p><strong>本文的 BIC 惩罚使用 (\ln N)，局部似然使用 (n_j)。</strong></p>
+<p><strong>本文的 BIC 惩罚使用 $\ln N$，局部似然使用 $n_j$。</strong></p>
 <p>总分就是：</p>
-<p>[ \boxed{ S(D;T,X)=\sum_{j=1}^{p}s(j,\mathrm{pa}_D(j)) } ]</p>
-<p>干预目标上的外部分布项不随候选 DAG 改变，因此不影响这些结构比较。</p>
+<script type="math/tex; mode=display">
+\boxed{ S(D;T,X)=\sum_{j=1}^{p}s(j,\mathrm{pa}_D(j)) }</script><p>干预目标上的外部分布项不随候选 DAG 改变，因此不影响这些结构比较。</p>
 <hr>
 <p><strong>十一、第十步：Algorithm 2 的完整循环是什么？</strong></p>
 <p>论文 PDF 第 14 页给出总体算法。</p>
@@ -1556,12 +1556,12 @@
 </blockquote>
 <p>不保证已经找到全局最优图。</p>
 <hr>
-<p><strong>十二、第十一步：为什么候选操作是 ((u,v,C))，不能只指定一条边？</strong></p>
+<p><strong>十二、第十一步：为什么候选操作是 $(u,v,C)$，不能只指定一条边？</strong></p>
 <p>这是整篇算法部分最关键、也最难的一点。</p>
-<p>如果当前是一个完全定向的 DAG，那么加 (u\to v) 基本明确。</p>
+<p>如果当前是一个完全定向的 DAG，那么加 $u\to v$ 基本明确。</p>
 <p>但当前是本质图，其中可能有：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">u       v — w</span><br></pre></td></tr></table></figure></div>
-<p>想加入 (u\to v)，存在两种不同结果。</p>
+<p>想加入 $u\to v$，存在两种不同结果。</p>
 <p>第一种，先选代表：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">u       v → w</span><br></pre></td></tr></table></figure></div>
 <p>再加边：</p>
@@ -1571,15 +1571,15 @@
 <p>再加边：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">u → v ← w</span><br></pre></td></tr></table></figure></div>
 <p>两个结果不等价：第二个有 v 结构，第一个没有。</p>
-<p>所以，仅说“加 (u\to v)”不够，还得指定：</p>
+<p>所以，仅说“加 $u\to v$”不够，还得指定：</p>
 <blockquote>
-<p>(v) 原来的无向邻居中，哪些节点在临时代表里指向 (v)？</p>
+<p>$v$ 原来的无向邻居中，哪些节点在临时代表里指向 $v$？</p>
 </blockquote>
 <p>这组节点就是：</p>
-<p>[ \boxed{ C={a\in\mathrm{ne}_G(v):a\to v\text{ 在所选代表中}} } ]</p>
-<p>于是：</p>
-<p>[ \mathrm{pa}_D(v)=\mathrm{pa}_G(v)\cup C ]</p>
-<p>这里区分：</p>
+<script type="math/tex; mode=display">
+\boxed{ C=\{a\in\mathrm{ne}_G(v):a\to v\text{ 在所选代表中}\} }</script><p>于是：</p>
+<script type="math/tex; mode=display">
+\mathrm{pa}_D(v)=\mathrm{pa}_G(v)\cup C</script><p>这里区分：</p>
 <div class="table-container">
 <table>
 <thead>
@@ -1590,31 +1590,31 @@
 </thead>
 <tbody>
 <tr>
-<td>(\mathrm{pa}_G(v))</td>
-<td>本质图中已确定指向 (v) 的节点</td>
+<td>$\mathrm{pa}_G(v)$</td>
+<td>本质图中已确定指向 $v$ 的节点</td>
 </tr>
 <tr>
-<td>(\mathrm{ne}_G(v))</td>
-<td>通过无向边连接 (v) 的节点</td>
+<td>$\mathrm{ne}_G(v)$</td>
+<td>通过无向边连接 $v$ 的节点</td>
 </tr>
 <tr>
-<td>(\mathrm{ad}_G(v))</td>
-<td>与 (v) 相邻的所有节点，不论边型</td>
+<td>$\mathrm{ad}_G(v)$</td>
+<td>与 $v$ 相邻的所有节点，不论边型</td>
 </tr>
 <tr>
-<td>(C)</td>
-<td>从无向邻居中选择、在代表里指向 (v) 的节点</td>
+<td>$C$</td>
+<td>从无向邻居中选择、在代表里指向 $v$ 的节点</td>
 </tr>
 </tbody>
 </table>
 </div>
-<p><strong>(C) 是图结构中的集合，不是样本集合，也不是额外的干预目标。</strong></p>
+<p><strong>$C$ 是图结构中的集合，不是样本集合，也不是额外的干预目标。</strong></p>
 <hr>
 <p><strong>十三、第十二步：前向加边 Algorithm 3，每一步为什么这样做？</strong></p>
-<p>目标：寻找最好的合法 ((u,v,C))，对应在某个代表中加入 (u\to v)。</p>
+<p>目标：寻找最好的合法 $(u,v,C)$，对应在某个代表中加入 $u\to v$。</p>
 <p>先令：</p>
-<p>[ \Delta S_{\max}=0 ]</p>
-<p>这样，只有正增分操作才可能被接受。</p>
+<script type="math/tex; mode=display">
+\Delta S_{\max}=0</script><p>这样，只有正增分操作才可能被接受。</p>
 <p>然后依次做：</p>
 <div class="table-container">
 <table>
@@ -1628,22 +1628,22 @@
 <tbody>
 <tr>
 <td>1</td>
-<td>遍历目标节点 (v)</td>
+<td>遍历目标节点 $v$</td>
 <td>所有节点都可能获得新父节点</td>
 </tr>
 <tr>
 <td>2</td>
-<td>遍历与 (v) 不相邻的节点 (u)</td>
+<td>遍历与 $v$ 不相邻的节点 $u$</td>
 <td>只考虑新连接</td>
 </tr>
 <tr>
 <td>3</td>
-<td>计算 (N_{uv}=\mathrm{ne}_G(v)\cap\mathrm{ad}_G(u))</td>
+<td>计算 $N_{uv}=\mathrm{ne}_G(v)\cap\mathrm{ad}_G(u)$</td>
 <td>找到会约束方向的共同局部结构</td>
 </tr>
 <tr>
 <td>4</td>
-<td>枚举满足条件的集合 (C)</td>
+<td>枚举满足条件的集合 $C$</td>
 <td>覆盖不同代表可能通向的下一等价类</td>
 </tr>
 <tr>
@@ -1670,46 +1670,46 @@
 </table>
 </div>
 <p>命题 25 规定三个合法性条件。</p>
-<p><strong>条件一：(C) 必须是团。</strong></p>
-<p>也就是 (C) 内任意两个节点都相邻。</p>
+<p><strong>条件一：$C$ 必须是团。</strong></p>
+<p>也就是 $C$ 内任意两个节点都相邻。</p>
 <p>为什么？</p>
-<p>假设 (a,c\in C)，却不相邻。把它们都指向 (v)：</p>
+<p>假设 $a,c\in C$，却不相邻。把它们都指向 $v$：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a → v ← c</span><br></pre></td></tr></table></figure></div>
 <p>会在选择代表时就产生新的 v 结构，导致这个“代表”已经不属于原等价类。</p>
 <p>因此：</p>
-<p>[ C\text{ 是团} ]</p>
-<p>是在保证<strong>临时选择代表时不擅自改变原模型</strong>。</p>
+<script type="math/tex; mode=display">
+C\text{ 是团}</script><p>是在保证<strong>临时选择代表时不擅自改变原模型</strong>。</p>
 <p><strong>条件二：</strong></p>
-<p>[ N_{uv}\subseteq C ]</p>
-<p>考虑已有无向路径：</p>
+<script type="math/tex; mode=display">
+N_{uv}\subseteq C</script><p>考虑已有无向路径：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">u — a — v</span><br></pre></td></tr></table></figure></div>
-<p>其中 (a) 同时与 (u,v) 相邻。</p>
-<p>如果不让 (a) 指向 (v)，就要选择 (v\to a)。</p>
-<p>接着加入 (u\to v)：</p>
+<p>其中 $a$ 同时与 $u,v$ 相邻。</p>
+<p>如果不让 $a$ 指向 $v$，就要选择 $v\to a$。</p>
+<p>接着加入 $u\to v$：</p>
 <ul>
-<li>若原来选 (a\to u)，会形成 (u\to v\to a\to u)。</li>
-<li>若原来选 (u\to a)，原代表就可能出现不允许新增的 (u\to a\leftarrow v)。</li>
+<li>若原来选 $a\to u$，会形成 $u\to v\to a\to u$。</li>
+<li>若原来选 $u\to a$，原代表就可能出现不允许新增的 $u\to a\leftarrow v$。</li>
 </ul>
 <p>这个条件排除了这类冲突。</p>
-<p><strong>条件三：从 (v) 到 (u) 的每条允许前进的路径，都必须经过 (C)。</strong></p>
+<p><strong>条件三：从 $v$ 到 $u$ 的每条允许前进的路径，都必须经过 $C$。</strong></p>
 <p>这里论文的“路径”允许沿无向边行走，但不能逆着已有箭头走，可理解为半有向路径。</p>
 <p>为什么检查？</p>
 <p>因为加入：</p>
-<p>[ u\to v ]</p>
-<p>最担心的是已有：</p>
-<p>[ v\rightsquigarrow u ]</p>
-<p>形成返回路径：</p>
+<script type="math/tex; mode=display">
+u\to v</script><p>最担心的是已有：</p>
+<script type="math/tex; mode=display">
+v\rightsquigarrow u</script><p>形成返回路径：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">u → v ⇝ u</span><br></pre></td></tr></table></figure></div>
 <p>使其成环。</p>
-<p>把路径与 (C) 的关系检查好，再按指定方式定向，就能确保存在合法代表。</p>
+<p>把路径与 $C$ 的关系检查好，再按指定方式定向，就能确保存在合法代表。</p>
 <p>条件通过后，评分只需要：</p>
-<p>[ \boxed{ \Delta S = s(v,\mathrm{pa}_G(v)\cup C\cup{u}) - s(v,\mathrm{pa}_G(v)\cup C) } ]</p>
-<p>为什么只算 (v)？</p>
-<p>因为在对应的两个 DAG 代表中，只增加了 (u\to v)，只有 (v) 的父节点变化。</p>
+<script type="math/tex; mode=display">
+\boxed{ \Delta S = s(v,\mathrm{pa}_G(v)\cup C\cup\{u\}) - s(v,\mathrm{pa}_G(v)\cup C) }</script><p>为什么只算 $v$？</p>
+<p>因为在对应的两个 DAG 代表中，只增加了 $u\to v$，只有 $v$ 的父节点变化。</p>
 <p>注意：<strong>最终本质图中可能有多条边的方向改变，但这不意味着所有节点都需要重新评分。</strong> 评分比较基于那两个只差一条边的代表。</p>
 <hr>
 <p><strong>十四、第十三步：LexBFS 到底负责什么？</strong></p>
-<p>前向算法选好了 (C)，还需要真的构造一个代表，使：</p>
+<p>前向算法选好了 $C$，还需要真的构造一个代表，使：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C 中的节点 → v</span><br></pre></td></tr></table></figure></div>
 <p>同时满足：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">不成环；</span><br><span class="line">不新增原类没有的 v 结构。</span><br></pre></td></tr></table></figure></div>
@@ -1725,7 +1725,7 @@
 <p>它不仅看“距离”，还保留之前访问关系形成的优先级。</p>
 <p>例如：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A — B — C</span><br></pre></td></tr></table></figure></div>
-<p>从 (B) 开始，可以得到顺序：</p>
+<p>从 $B$ 开始，可以得到顺序：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">B, A, C</span><br></pre></td></tr></table></figure></div>
 <p>把边从顺序靠前的节点指向靠后的节点：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A ← B → C</span><br></pre></td></tr></table></figure></div>
@@ -1742,29 +1742,29 @@
 <hr>
 <p><strong>十五、第十四步：后向删边 Algorithm 4 为什么更简单？</strong></p>
 <p>目标是在代表中删除：</p>
-<p>[ u\to v ]</p>
-<p><strong>从 DAG 中删边不会新增有向环。</strong></p>
+<script type="math/tex; mode=display">
+u\to v</script><p><strong>从 DAG 中删边不会新增有向环。</strong></p>
 <p>所以不需要像加边一样检查返回路径。</p>
-<p>但当前还是等价类，仍然要考虑不同代表对应的删边结果，因此继续用 ((u,v,C)) 描述。</p>
+<p>但当前还是等价类，仍然要考虑不同代表对应的删边结果，因此继续用 $(u,v,C)$ 描述。</p>
 <p>流程是：</p>
 <ol>
-<li>遍历节点 (v)。</li>
-<li>遍历可以在代表中指向它的节点 (u)：已有父节点或无向邻居。</li>
+<li>遍历节点 $v$。</li>
+<li>遍历可以在代表中指向它的节点 $u$：已有父节点或无向邻居。</li>
 <li>计算：</li>
 </ol>
-<p>[ N_{uv}=\mathrm{ne}_G(v)\cap\mathrm{ad}_G(u) ]</p>
-<ol>
+<script type="math/tex; mode=display">
+N_{uv}=\mathrm{ne}_G(v)\cap\mathrm{ad}_G(u)</script><ol>
 <li>枚举团：</li>
 </ol>
-<p>[ C\subseteq N_{uv} ]</p>
-<ol>
+<script type="math/tex; mode=display">
+C\subseteq N_{uv}</script><ol>
 <li>比较局部分数。</li>
 <li>执行最大正增分的删除。</li>
 <li>恢复本质图。</li>
 </ol>
 <p>对应增分：</p>
-<p>[ \boxed{ \Delta S = s!\left(v,(\mathrm{pa}_G(v)\cup C)\setminus{u}\right) - s!\left(v,\mathrm{pa}_G(v)\cup C\cup{u}\right) } ]</p>
-<p>直观理解就是：</p>
+<script type="math/tex; mode=display">
+\boxed{ \Delta S = s\!\left(v,(\mathrm{pa}_G(v)\cup C)\setminus\{u\}\right) - s\!\left(v,\mathrm{pa}_G(v)\cup C\cup\{u\}\right) }</script><p>直观理解就是：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">删去 u 后的 v 的局部分数</span><br><span class="line">减去</span><br><span class="line">保留 u 时的 v 的局部分数</span><br></pre></td></tr></table></figure></div>
 <p>删边为什么可能提高 BIC？</p>
 <p>因为减少了一个回归系数。即使拟合变差一些，复杂度惩罚也减少了。</p>
@@ -1781,11 +1781,11 @@
 <tbody>
 <tr>
 <td>前向</td>
-<td>(N_{uv}\subseteq C)</td>
+<td>$N_{uv}\subseteq C$</td>
 </tr>
 <tr>
 <td>后向</td>
-<td>(C\subseteq N_{uv})</td>
+<td>$C\subseteq N_{uv}$</td>
 </tr>
 </tbody>
 </table>
@@ -1810,11 +1810,11 @@
 <p><strong>情况 A：这条边在本质图中是无向边。</strong></p>
 <p>也就是：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">u — v</span><br></pre></td></tr></table></figure></div>
-<p>某个代表把它定为 (v\to u)。</p>
+<p>某个代表把它定为 $v\to u$。</p>
 <p>反转后，可能只是换了同一类中的另一个代表，分数完全相同，没有真正搜索到新模型。</p>
 <p>例如：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A → B → C</span><br></pre></td></tr></table></figure></div>
-<p>反转 (A\to B) 得到：</p>
+<p>反转 $A\to B$ 得到：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A ← B → C</span><br></pre></td></tr></table></figure></div>
 <p>仍属于同一观测等价类。</p>
 <p>所以算法要求：</p>
@@ -1822,14 +1822,15 @@
 <p>转向以后必须真正离开当前等价类。</p>
 </blockquote>
 <p>论文命题 31 用三个条件保证合法转向：</p>
-<p>[ C\subseteq \mathrm{ne}_G(v)\setminus{u} ][ N_{uv}=\mathrm{ne}_G(v)\cap\mathrm{ad}_G(u) ]</p>
-<p>然后要求：</p>
+<script type="math/tex; mode=display">
+C\subseteq \mathrm{ne}_G(v)\setminus\{u\}</script><script type="math/tex; mode=display">
+N_{uv}=\mathrm{ne}_G(v)\cap\mathrm{ad}_G(u)</script><p>然后要求：</p>
 <ol>
-<li>(C) 是团。</li>
-<li>(C\setminus N_{uv}\neq\varnothing)。</li>
-<li>(C\cap N_{uv}) 在相应邻域图中分隔 (C\setminus N_{uv}) 与 (N_{uv}\setminus C)。</li>
+<li>$C$ 是团。</li>
+<li>$C\setminus N_{uv}\neq\varnothing$。</li>
+<li>$C\cap N_{uv}$ 在相应邻域图中分隔 $C\setminus N_{uv}$ 与 $N_{uv}\setminus C$。</li>
 </ol>
-<p>第二条尤其直观：要有一个指向 (v)、却不与 (u) 相邻的节点 (c)。</p>
+<p>第二条尤其直观：要有一个指向 $v$、却不与 $u$ 相邻的节点 $c$。</p>
 <p>原来：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c → v → u</span><br></pre></td></tr></table></figure></div>
 <p>反转后：</p>
@@ -1848,18 +1849,19 @@
 </ul>
 <p>命题 34 的条件与前向类似：</p>
 <ol>
-<li>(C) 是团。</li>
-<li>(N_{uv}\subseteq C)。</li>
-<li>除原来的直接边 (v\to u) 外，其他从 (v) 到 (u) 的允许路径，都要与 (C\cup\mathrm{ne}_G(u)) 相交。</li>
+<li>$C$ 是团。</li>
+<li>$N_{uv}\subseteq C$。</li>
+<li>除原来的直接边 $v\to u$ 外，其他从 $v$ 到 $u$ 的允许路径，都要与 $C\cup\mathrm{ne}_G(u)$ 相交。</li>
 </ol>
-<p>第三条防止反转为 (u\to v) 后，与其他返回路径形成环。</p>
+<p>第三条防止反转为 $u\to v$ 后，与其他返回路径形成环。</p>
 <p><strong>为什么转向要计算两个节点？</strong></p>
-<p>在一个具体代表中，设转向前的父集分别为 (P_v,P_u)，其中 (v\in P_u)。</p>
+<p>在一个具体代表中，设转向前的父集分别为 $P_v,P_u$，其中 $v\in P_u$。</p>
 <p>转向后的变化是：</p>
-<p>[ P_v\longrightarrow P_v\cup{u} ][ P_u\longrightarrow P_u\setminus{v} ]</p>
-<p>因此：</p>
-<p>[ \boxed{ \begin{aligned} \Delta S={}&amp;s(v,P_v\cup{u})+s(u,P_u\setminus{v})\\ &amp;-s(v,P_v)-s(u,P_u) \end{aligned} } ]</p>
-<p>前向、后向只影响一个节点的父集；转向影响两个。</p>
+<script type="math/tex; mode=display">
+P_v\longrightarrow P_v\cup\{u\}</script><script type="math/tex; mode=display">
+P_u\longrightarrow P_u\setminus\{v\}</script><p>因此：</p>
+<script type="math/tex; mode=display">
+\boxed{ \begin{aligned} \Delta S={}&s(v,P_v\cup\{u\})+s(u,P_u\setminus\{v\})\\ &-s(v,P_v)-s(u,P_u) \end{aligned} }</script><p>前向、后向只影响一个节点的父集；转向影响两个。</p>
 <p>最后仍然是：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">比较所有合法候选；</span><br><span class="line">接受增分最大的一个；</span><br><span class="line">恢复本质图；</span><br><span class="line">继续搜索。</span><br></pre></td></tr></table></figure></div>
 <p>“受保护的方向”也可以作为转向候选。<strong>受保护是相对于当前等价类而言，不是说搜索永远不能改这个方向。</strong></p>
@@ -1867,8 +1869,8 @@
 <p><strong>十七、把上述步骤合起来：从空图实际构建一次</strong></p>
 <p>下面是我为解释而生成并计算的例子，<strong>不是论文中的实验结果</strong>。</p>
 <p>真实模型设为：</p>
-<p>[ \begin{aligned} A&amp;=\varepsilon_A\\ B&amp;=A+\varepsilon_B\\ C&amp;=B+\varepsilon_C \end{aligned} ]</p>
-<p>误差独立，服从标准正态分布。</p>
+<script type="math/tex; mode=display">
+\begin{aligned} A&=\varepsilon_A\\ B&=A+\varepsilon_B\\ C&=B+\varepsilon_C \end{aligned}</script><p>误差独立，服从标准正态分布。</p>
 <p>生成三组数据：</p>
 <div class="table-container">
 <table>
@@ -1886,23 +1888,23 @@
 <td>三个自然方程都运行</td>
 </tr>
 <tr>
-<td>干预 (A)</td>
+<td>干预 $A$</td>
 <td>100</td>
-<td>用 (A:=U_A) 替换第一个方程</td>
+<td>用 $A:=U_A$ 替换第一个方程</td>
 </tr>
 <tr>
-<td>干预 (B)</td>
+<td>干预 $B$</td>
 <td>100</td>
-<td>用 (B:=U_B) 替换第二个方程</td>
+<td>用 $B:=U_B$ 替换第二个方程</td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>这里干预变量取 (N(2,0.2^2))，总样本数：</p>
-<p>[ N=300 ]</p>
-<p>有效样本数：</p>
-<p>[ n_A=200,\qquad n_B=200,\qquad n_C=300 ]</p>
-<p>按论文的零截距高斯 BIC 计算。</p>
+<p>这里干预变量取 $N(2,0.2^2)$，总样本数：</p>
+<script type="math/tex; mode=display">
+N=300</script><p>有效样本数：</p>
+<script type="math/tex; mode=display">
+n_A=200,\qquad n_B=200,\qquad n_C=300</script><p>按论文的零截距高斯 BIC 计算。</p>
 <p><strong>第 0 步：空图。</strong></p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A       B       C</span><br></pre></td></tr></table></figure></div>
 <p>局部分数为：</p>
@@ -1917,26 +1919,26 @@
 </thead>
 <tbody>
 <tr>
-<td>(A)</td>
+<td>$A$</td>
 <td>空</td>
-<td>(-101.247)</td>
+<td>$-101.247$</td>
 </tr>
 <tr>
-<td>(B)</td>
+<td>$B$</td>
 <td>空</td>
-<td>(-217.872)</td>
+<td>$-217.872$</td>
 </tr>
 <tr>
-<td>(C)</td>
+<td>$C$</td>
 <td>空</td>
-<td>(-373.778)</td>
+<td>$-373.778$</td>
 </tr>
 </tbody>
 </table>
 </div>
 <p>总分：</p>
-<p>[ S_0=-692.896 ]</p>
-<p><strong>第一轮：评估所有单条加边。</strong></p>
+<script type="math/tex; mode=display">
+S_0=-692.896</script><p><strong>第一轮：评估所有单条加边。</strong></p>
 <div class="table-container">
 <table>
 <thead>
@@ -1947,28 +1949,28 @@
 </thead>
 <tbody>
 <tr>
-<td>(A\to B)</td>
-<td>(+118.133)</td>
+<td>$A\to B$</td>
+<td>$+118.133$</td>
 </tr>
 <tr>
-<td>(B\to A)</td>
-<td>(+1.400)</td>
+<td>$B\to A$</td>
+<td>$+1.400$</td>
 </tr>
 <tr>
-<td>(A\to C)</td>
-<td>(+45.378)</td>
+<td>$A\to C$</td>
+<td>$+45.378$</td>
 </tr>
 <tr>
-<td>(C\to A)</td>
-<td>(+0.755)</td>
+<td>$C\to A$</td>
+<td>$+0.755$</td>
 </tr>
 <tr>
-<td>(B\to C)</td>
-<td><strong>(+230.799)</strong></td>
+<td>$B\to C$</td>
+<td><strong>$+230.799$</strong></td>
 </tr>
 <tr>
-<td>(C\to B)</td>
-<td>(+156.935)</td>
+<td>$C\to B$</td>
+<td>$+156.935$</td>
 </tr>
 </tbody>
 </table>
@@ -1976,11 +1978,11 @@
 <p>选择：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A       B → C</span><br></pre></td></tr></table></figure></div>
 <p>此时：</p>
-<p>[ S_1=-462.098 ]</p>
-<p>为什么两个方向分数不同？</p>
-<p>因为它们已经不属于同一个干预等价类。拟合 (B) 和拟合 (C) 使用的有效样本也不同。</p>
+<script type="math/tex; mode=display">
+S_1=-462.098</script><p>为什么两个方向分数不同？</p>
+<p>因为它们已经不属于同一个干预等价类。拟合 $B$ 和拟合 $C$ 使用的有效样本也不同。</p>
 <p><strong>第二轮：重新评估合法加边。</strong></p>
-<p>在当前 (B\to C) 基础上：</p>
+<p>在当前 $B\to C$ 基础上：</p>
 <div class="table-container">
 <table>
 <thead>
@@ -1991,20 +1993,20 @@
 </thead>
 <tbody>
 <tr>
-<td>(A\to B)</td>
-<td><strong>(+118.133)</strong></td>
+<td>$A\to B$</td>
+<td><strong>$+118.133$</strong></td>
 </tr>
 <tr>
-<td>(B\to A)</td>
-<td>(+1.400)</td>
+<td>$B\to A$</td>
+<td>$+1.400$</td>
 </tr>
 <tr>
-<td>(A\to C)</td>
-<td>(+45.378)</td>
+<td>$A\to C$</td>
+<td>$+45.378$</td>
 </tr>
 <tr>
-<td>(C\to A)</td>
-<td>(+0.755)</td>
+<td>$C\to A$</td>
+<td>$+0.755$</td>
 </tr>
 </tbody>
 </table>
@@ -2012,13 +2014,13 @@
 <p>选择：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A → B → C</span><br></pre></td></tr></table></figure></div>
 <p>总分：</p>
-<p>[ S_2=-343.965 ]</p>
-<p><strong>第三轮：尝试增加第三条边。</strong></p>
-<p>候选 (A\to C) 使 (C) 的父集从 ({B}) 变成 ({A,B})。</p>
+<script type="math/tex; mode=display">
+S_2=-343.965</script><p><strong>第三轮：尝试增加第三条边。</strong></p>
+<p>候选 $A\to C$ 使 $C$ 的父集从 ${B}$ 变成 ${A,B}$。</p>
 <p>计算得到：</p>
-<p>[ \Delta S=-2.471 ]</p>
-<p>因此拒绝。</p>
-<p>解释是：(B) 已经解释了 (A) 对 (C) 的传递关系，再加入 (A) 只带来很小的残差下降，不足以抵消新增参数的惩罚。</p>
+<script type="math/tex; mode=display">
+\Delta S=-2.471</script><p>因此拒绝。</p>
+<p>解释是：$B$ 已经解释了 $A$ 对 $C$ 的传递关系，再加入 $A$ 只带来很小的残差下降，不足以抵消新增参数的惩罚。</p>
 <p>另一个方向：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C → A</span><br></pre></td></tr></table></figure></div>
 <p>会形成：</p>
@@ -2036,12 +2038,12 @@
 </thead>
 <tbody>
 <tr>
-<td>删除 (A\to B)</td>
-<td>(-118.133)</td>
+<td>删除 $A\to B$</td>
+<td>$-118.133$</td>
 </tr>
 <tr>
-<td>删除 (B\to C)</td>
-<td>(-230.799)</td>
+<td>删除 $B\to C$</td>
+<td>$-230.799$</td>
 </tr>
 </tbody>
 </table>
@@ -2058,12 +2060,12 @@
 </thead>
 <tbody>
 <tr>
-<td>(A\to B) 改成 (A\leftarrow B)</td>
-<td>(-116.733)</td>
+<td>$A\to B$ 改成 $A\leftarrow B$</td>
+<td>$-116.733$</td>
 </tr>
 <tr>
-<td>(B\to C) 改成 (B\leftarrow C)</td>
-<td>(-152.869)</td>
+<td>$B\to C$ 改成 $B\leftarrow C$</td>
+<td>$-152.869$</td>
 </tr>
 </tbody>
 </table>
@@ -2073,7 +2075,7 @@
 <p>最终：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">A → B → C</span><br></pre></td></tr></table></figure></div>
 <p>在这个干预目标族下，两条边的端点都能被干预区分，最终可以是完全定向的本质图。</p>
-<p>这个例子还说明：<strong>算法并不规定一定先建立真实图最上游的边。</strong> 它先选择当前分数收益最大的边，这次先选了 (B\to C)。</p>
+<p>这个例子还说明：<strong>算法并不规定一定先建立真实图最上游的边。</strong> 它先选择当前分数收益最大的边，这次先选了 $B\to C$。</p>
 <hr>
 <p><strong>十八、论文中的证明分别在保证什么？</strong></p>
 <p>如果回头读附录，可以按下面的对应关系理解，避免迷失在符号中：</p>
@@ -2136,19 +2138,19 @@
 <p><strong>十九、为什么它比枚举 DAG 快？有没有复杂度保证？</strong></p>
 <p>GIES 没有枚举所有 DAG，也没有枚举当前等价类的全部代表。</p>
 <p>它主要枚举：</p>
-<p>[ (u,v,C) ]</p>
-<p>并利用局部分数计算收益。</p>
+<script type="math/tex; mode=display">
+(u,v,C)</script><p>并利用局部分数计算收益。</p>
 <p>还可以缓存：</p>
-<p>[ s(v,P) ]</p>
-<p>以及仍然合法、且局部分数差未变化的候选结果，避免重复回归。</p>
-<p>但 (C) 是邻域中的团；邻域很大、图很密时，候选团的数量可能呈指数增长。</p>
+<script type="math/tex; mode=display">
+s(v,P)</script><p>以及仍然合法、且局部分数差未变化的候选结果，避免重复回归。</p>
+<p>但 $C$ 是邻域中的团；邻域很大、图很密时，候选团的数量可能呈指数增长。</p>
 <p>因此：</p>
 <ul>
 <li>从本质图构造一个代表，可以很高效。</li>
 <li>一次搜索步骤在合适的度数限制下可以做到多项式复杂度。</li>
 <li><strong>一般情形下，GIES 仍然具有指数级最坏情况。</strong></li>
 </ul>
-<p>论文实验中观察到的运行时间大约随 (p^{2.8}) 增长，是实验现象，不是一般复杂度定理。</p>
+<p>论文实验中观察到的运行时间大约随 $p^{2.8}$ 增长，是实验现象，不是一般复杂度定理。</p>
 <hr>
 <p><strong>二十、实验每一步在验证什么？</strong></p>
 <p>论文第 5 节有两部分。</p>
@@ -2157,8 +2159,8 @@
 <p>主要设计包括：</p>
 <ul>
 <li>4,000 个随机因果模型。</li>
-<li>节点数 (10、20、30、40)。</li>
-<li>干预目标大小 (1、2、4)。</li>
+<li>节点数 $10、20、30、40$。</li>
+<li>干预目标大小 $1、2、4$。</li>
 <li>不同干预目标数量。</li>
 <li>样本数从 50 到 10,000。</li>
 </ul>
@@ -2267,11 +2269,11 @@
 <p>算法不会因为某列叫“药物”，就自动把它当作随机干预。</p>
 <p>回到我们前面检查的 CausalMed 源码：</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cdt_algo = GES()</span><br><span class="line">causal_graph = cdt_algo.predict(visit_data)</span><br></pre></td></tr></table></figure></div>
-<p>它传入的是观测性的 0/1 矩阵，没有传入本文所需的每条样本干预标签 (T)，默认采用观测高斯评分。因此，<strong>那条调用并没有使用本文完整的“多干预数据 GIES”设定</strong>。</p>
+<p>它传入的是观测性的 0/1 矩阵，没有传入本文所需的每条样本干预标签 $T$，默认采用观测高斯评分。因此，<strong>那条调用并没有使用本文完整的“多干预数据 GIES”设定</strong>。</p>
 <p>同时，本文的因果识别结论建立在相应 DAG、干预和统计模型假设下；它没有提供一个能自动消除任意未观测混杂的通用算法。</p>
 <p>你前面关心的局部评分公式，在这篇论文里具体承担的是这个作用：</p>
-<p>[ \underbrace{\text{合法的等价类结构修改}}_{\text{图论条件决定}} \quad+\quad \underbrace{\text{局部 BIC 的增分比较}}_{\text{数据决定}} \quad\longrightarrow\quad \text{执行本轮最好的改动} ]</p>
-<p><strong>图论部分保证“这一步确实能走”，评分部分决定“这一步值不值得走”。</strong></p>
+<script type="math/tex; mode=display">
+\underbrace{\text{合法的等价类结构修改} }_{\text{图论条件决定} } \quad+\quad \underbrace{\text{局部 BIC 的增分比较} }_{\text{数据决定} } \quad\longrightarrow\quad \text{执行本轮最好的改动}</script><p><strong>图论部分保证“这一步确实能走”，评分部分决定“这一步值不值得走”。</strong></p>
 
 		</div>
 
@@ -2286,7 +2288,7 @@
         
             <li>
                 <strong>Updated at
-                    :</strong> 2026-11-09 10:09:34
+                    :</strong> 2026-11-10 11:32:51
             </li>
         
         <li>
