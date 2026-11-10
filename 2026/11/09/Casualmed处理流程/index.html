@@ -94,7 +94,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/images/redefine-og.webp">
 <meta property="article:published_time" content="2026-11-09T08:21:31.000Z">
-<meta property="article:modified_time" content="2026-11-10T03:32:51.461Z">
+<meta property="article:modified_time" content="2026-11-10T05:33:49.671Z">
 <meta property="article:author" content="Zoe Raina">
 <meta property="article:tag" content="论文研读">
 <meta name="twitter:card" content="summary">
@@ -1028,8 +1028,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2026-11-10 11:32:51</span>
-            <span class="mobile">2026-11-10 11:32:51</span>
+            <span class="desktop">2026-11-10 13:33:49</span>
+            <span class="mobile">2026-11-10 13:33:49</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -2853,6 +2853,171 @@ G_{v_2}^{d}: \qquad d_3\rightarrow d_2, \qquad d_4\text{ 孤立}.</script><p>对
 </table>
 </div>
 <p>你标出的那段主要讨论的是前面的因果结构图及其同类型子图。它们可以有链、有分叉、有孤立节点；而 RGCN 使用的疾病—药物图，是论文另外利用因果效应矩阵构建的完全二部图。</p>
+<h2 id="7-以往的病例样本用来训练什么"><a href="#7-以往的病例样本用来训练什么" class="headerlink" title="7.以往的病例样本用来训练什么"></a>7.以往的病例样本用来训练什么</h2><p>以往的 EHR/病理数据主要用于训练和学习：</p>
+<ol>
+<li><p>三类医疗实体的嵌入表</p>
+<ul>
+<li>疾病嵌入：$E_d$</li>
+<li>手术/操作嵌入：$E_p$</li>
+<li>药物嵌入：$E_m$</li>
+</ul>
+<p>从中得到具体实体的向量 $h_d,h_p,h_m$。</p>
+</li>
+<li><p>医疗实体之间的因果关系</p>
+<p>通过历史就诊数据构建病理因果图，并估计疾病/手术对药物的因果影响矩阵 $M_{dm}$ 和 $M_{pm}$。</p>
+</li>
+<li><p>当前就诊中疾病的四种因果角色</p>
+<p>$D_1,D_2,D_3,D_4$ 不是四个固定疾病，而是四类动态角色：</p>
+<ul>
+<li>$D_1$：因果疾病，可能是主要病因；</li>
+<li>$D_2$：结果疾病，由其他疾病影响；</li>
+<li>$D_3$：中间疾病，既影响其他疾病，也受其他疾病影响；</li>
+<li>$D_4$：独立疾病，与其他疾病没有直接因果联系。</li>
+</ul>
+<p>DSA 会根据当前患者、当前就诊状态和因果图，动态计算四类疾病的权重 $w_{jt}$，再对疾病嵌入进行调整。</p>
+</li>
+</ol>
+<p>所以更准确地说：</p>
+<blockquote>
+<p>历史病理/EHR 数据用于学习 $d,p,m$ 的嵌入表示、医疗实体之间的因果关系，以及 DSA 的参数；而 $D_1,D_2,D_3,D_4$ 的权重是在每次具体就诊中根据当前因果图动态计算出来的，并不是四个固定的全局权重。</p>
+</blockquote>
+<p>同一个疾病在不同患者或不同就诊状态下，可能被分到不同的 $D_1$–$D_4$ 类别。</p>
+<h2 id="8-有向边如何存储的，如何表示强关系和弱关系"><a href="#8-有向边如何存储的，如何表示强关系和弱关系" class="headerlink" title="8.有向边如何存储的，如何表示强关系和弱关系"></a>8.有向边如何存储的，如何表示强关系和弱关系</h2><p>可以。对于“有向边 + 强弱关系”，不能只用一个二值邻接矩阵，因为：</p>
+<script type="math/tex; mode=display">
+A_{ij}=1</script><p>只能表示“存在 $i\rightarrow j$”，不能表示它属于强关系还是弱关系。</p>
+<p>应当为每种关系建立一个邻接矩阵：</p>
+<script type="math/tex; mode=display">
+A_{\text{强} }[i,j]= \begin{cases} 1,& i\rightarrow j\text{ 是强关系}\\ 0,& \text{否则} \end{cases}</script><script type="math/tex; mode=display">
+A_{\text{弱} }[i,j]= \begin{cases} 1,& i\rightarrow j\text{ 是弱关系}\\ 0,& \text{否则} \end{cases}</script><p>例如你之前的图中：</p>
+<ul>
+<li>$d_1\rightarrow d_3$ 是强关系；</li>
+<li>$d_3\rightarrow d_2$ 是弱关系。</li>
+</ul>
+<p>则：</p>
+<script type="math/tex; mode=display">
+A_{\text{强} }= \begin{array}{c|cccc} &d_1&d_2&d_3&d_4\\\hline d_1&0&0&1&0\\ d_2&0&0&0&0\\ d_3&0&0&0&0\\ d_4&0&0&0&0 \end{array}</script><script type="math/tex; mode=display">
+A_{\text{弱} }= \begin{array}{c|cccc} &d_1&d_2&d_3&d_4\\\hline d_1&0&0&0&0\\ d_2&0&0&0&0\\ d_3&0&1&0&0\\ d_4&0&0&0&0 \end{array}</script><p>RGCN 实际上就是为每种关系使用一个不同的参数矩阵：</p>
+<script type="math/tex; mode=display">
+H^{(l+1)} = \sigma\left( H^{(l)}W_0+ A_{\text{强} }H^{(l)}W_{\text{强} }+ A_{\text{弱} }H^{(l)}W_{\text{弱} } \right).</script><p>在 PyTorch Geometric 中，通常不显式保存多个 $A_r$，而是保存：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">edge_index = torch.tensor([</span><br><span class="line">    [0, 2],  # 起点：d1, d3</span><br><span class="line">    [2, 1]   # 终点：d3, d2</span><br><span class="line">])</span><br></pre></td></tr></table></figure></div>
+<p>表示：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">d1 -&gt; d3</span><br><span class="line">d3 -&gt; d2</span><br></pre></td></tr></table></figure></div>
+<p>再用：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">edge_type = torch.tensor([0, 1])</span><br></pre></td></tr></table></figure></div>
+<p>表示：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">d1 -&gt; d3 属于关系 0：强关系</span><br><span class="line">d3 -&gt; d2 属于关系 1：弱关系</span><br></pre></td></tr></table></figure></div>
+<p>也就是说：</p>
+<ul>
+<li><code>edge_index</code> 表示边连接和方向；</li>
+<li><code>edge_type</code> 表示每条边属于哪一种关系；</li>
+<li>RGCN 根据 <code>edge_type</code> 选择不同的 $W_r$。</li>
+</ul>
+<p>不过，你这个项目的代码需要区分两部分</p>
+<p><a href="F:/学习笔记/论文学习/论文合集/2024_CIKM_CausalMed_lixiang/CausalMed-main/CausalMed-main/src/modules/homo_relation_graph.py"><code>homo_relation_graph.py</code></a> 中的疾病—疾病、手术—手术、药物—药物图，目前只是使用 <code>networkx.DiGraph</code> 保存有向边：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">edge_list = list(graph.edges(data=True))</span><br><span class="line">edge_index = torch.tensor([</span><br><span class="line">    [edge[0] for edge in edge_list],</span><br><span class="line">    [edge[1] for edge in edge_list]</span><br><span class="line">])</span><br></pre></td></tr></table></figure></div>
+<p>这里没有 <code>edge_type</code>，所以它没有区分强关系和弱关系。它只利用节点的入度和出度，把节点分为四类，然后给四类节点使用不同的可学习权重。</p>
+<p>真正使用 RGCN 的是 <a href="F:/学习笔记/论文学习/论文合集/2024_CIKM_CausalMed_lixiang/CausalMed-main/CausalMed-main/src/modules/hetero_effect_graph.py"><code>hetero_effect_graph.py</code></a>。它把疾病—药物或手术—药物的因果效应划分为多个等级：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">connected_to_diag_1</span><br><span class="line">connected_to_diag_2</span><br><span class="line">...</span><br><span class="line">connected_to_diag_5</span><br><span class="line"></span><br></pre></td></tr></table></figure></div>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>关系名称</th>
+<th>对应因果效应数值 $e$</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>connected_to_diag_1</code></td>
+<td>$0.2 &lt; e \leq 0.4$</td>
+</tr>
+<tr>
+<td><code>connected_to_diag_2</code></td>
+<td>$0.4 &lt; e \leq 0.6$</td>
+</tr>
+<tr>
+<td><code>connected_to_diag_3</code></td>
+<td>$0.6 &lt; e \leq 0.8$</td>
+</tr>
+<tr>
+<td><code>connected_to_diag_4</code></td>
+<td>$0.8 &lt; e \leq 1.0$</td>
+</tr>
+<tr>
+<td><code>connected_to_diag_5</code></td>
+<td>$1.0 &lt; e \leq 1.2$</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>注意：这不是通常预想的把 $(0,1]$ 均分成五档。当前代码漏掉了 $(0,0.2]$，第五档却是 $(1,1.2]$，分级边界存在疑点。</strong></p>
+<p>沿用你的例子，假设疾病—药物因果效应矩阵为：</p>
+<script type="math/tex; mode=display">
+E= \begin{array}{c|cc} &m_1&m_2\\\hline d_1&0.9&0.3\\ d_2&0.3&0.9 \end{array}.</script><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>消息传播边</th>
+<th>效应数值</th>
+<th>关系类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$m_1\rightarrow d_1$</td>
+<td>0.9</td>
+<td><code>connected_to_diag_4</code></td>
+</tr>
+<tr>
+<td>$m_2\rightarrow d_1$</td>
+<td>0.3</td>
+<td><code>connected_to_diag_1</code></td>
+</tr>
+<tr>
+<td>$m_1\rightarrow d_2$</td>
+<td>0.3</td>
+<td><code>connected_to_diag_1</code></td>
+</tr>
+<tr>
+<td>$m_2\rightarrow d_2$</td>
+<td>0.9</td>
+<td><code>connected_to_diag_4</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>之后，RGCN 为不同关系使用不同的可学习矩阵：</p>
+<script type="math/tex; mode=display">
+\texttt{connected\_to\_diag\_1}\longrightarrow W_1, \qquad \texttt{connected\_to\_diag\_4}\longrightarrow W_4.</script><p>所以，这些名称就是把连续的因果效应数值转成离散的“边类型”，让 RGCN 根据边类型选择对应的变换矩阵。 $W_4$ 并不等于 $0.9I$，也不保证每个元素都比 $W_1$ 大。</p>
+<p>这些等级就相当于不同的关系类型。代码中：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">edge_type_list.append(</span><br><span class="line">    torch.full((len(src),), self.edge_type_mapping[key])</span><br><span class="line">)</span><br></pre></td></tr></table></figure></div>
+<p>就是为每条边记录关系类型，最后传给：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.conv1(x, edge_index, edge_type)</span><br></pre></td></tr></table></figure></div>
+<p>但当前代码有一个重要细节：因果效应的数值只用于划分等级，具体数值没有作为 <code>edge_attr</code> 传入。代码中的注释也说明了这一点：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># 不需要具体的权重，知道属于第几类边就可以了</span><br></pre></td></tr></table></figure></div>
+<p>因此，当前实现表达的是：</p>
+<blockquote>
+<p>这条边属于第几类关系。</p>
+</blockquote>
+<p>而不是：</p>
+<blockquote>
+<p>这条边的因果效应数值直接作为消息传播权重。</p>
+</blockquote>
+<p>另外，当前异构图代码将疾病—药物矩阵中的边反转后保存：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">edge_index = edge_index.flip([0])</span><br></pre></td></tr></table></figure></div>
+<p>所以原本矩阵中的：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Diag_i -&gt; Med_j</span><br></pre></td></tr></table></figure></div>
+<p>会被存成：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Med_j -&gt; Diag_i</span><br></pre></td></tr></table></figure></div>
+<p>对应的关系类型是：</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(&#x27;Med&#x27;, &#x27;connected_to_diag_i&#x27;, &#x27;Diag&#x27;)</span><br></pre></td></tr></table></figure></div>
+<p>因此，你的理解可以总结为：</p>
+<ul>
+<li>对教学例子：使用 $A_{\text{强} }$、$A_{\text{弱} }$ 两个邻接矩阵，或者使用 <code>edge_index + edge_type</code>；</li>
+<li>对当前项目：疾病内部的有向图只有 <code>edge_index</code>，没有强弱关系类型；</li>
+<li>项目中的 RGCN 强弱或等级关系主要用于疾病/手术到药物的因果效应边，通过 <code>connected_to_diag_i</code> 和 <code>connected_to_proc_i</code> 表示；</li>
+<li>关系类型是离散等级，具体因果效应数值没有直接作为 RGCN 的边权。</li>
+</ul>
 
 		</div>
 
@@ -2867,7 +3032,7 @@ G_{v_2}^{d}: \qquad d_3\rightarrow d_2, \qquad d_4\text{ 孤立}.</script><p>对
         
             <li>
                 <strong>Updated at
-                    :</strong> 2026-11-10 11:32:51
+                    :</strong> 2026-11-10 13:33:49
             </li>
         
         <li>
@@ -3004,7 +3169,7 @@ G_{v_2}^{d}: \qquad d_3\rightarrow d_2, \qquad d_4\text{ 孤立}.</script><p>对
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">Casualmed处理流程</div>
-		<ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#casualmed%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B"><span class="nav-text">casualmed处理流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-G-v-t-dm-text-and-G-v-t-pm-%E6%80%8E%E4%B9%88%E6%9D%A5%E7%9A%84"><span class="nav-text">1.G_{v_t}^{dm} \text{ and } G_{v_t}^{pm}怎么来的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E7%BB%93%E5%90%88%E4%BE%8B%E5%AD%90%E6%80%8E%E4%B9%88%E5%A4%84%E7%90%86%E6%95%B0%E6%8D%AE%E7%9A%84%EF%BC%8C%E5%85%B3%E7%B3%BB%E6%8C%96%E6%8E%98%E6%98%AF%E6%80%8E%E4%B9%88%E8%BF%9B%E8%A1%8C%E7%9A%84%EF%BC%8C%E7%9D%80%E9%87%8D%E8%AE%B2%E8%AE%B2GIES%E7%AE%97%E6%B3%95%EF%BC%8CDSA%E7%AE%97%E6%B3%95%EF%BC%8CRGCN%E7%AE%97%E6%B3%95%EF%BC%8CGRU%E7%AE%97%E6%B3%95%E6%98%AF%E6%80%8E%E4%B9%88%E8%AE%A1%E7%AE%97%E7%9A%84%EF%BC%8C%E5%8E%9F%E8%AE%BA%E6%96%87%E4%B8%AD%E5%90%84%E4%B8%AA%E5%8F%98%E9%87%8F%E5%88%86%E5%88%AB%E6%98%AF%E5%93%AA%E4%B8%80%E6%AD%A5%E7%9A%84%E8%BE%93%E5%87%BA"><span class="nav-text">2.结合例子怎么处理数据的，关系挖掘是怎么进行的，着重讲讲GIES算法，DSA算法，RGCN算法，GRU算法是怎么计算的，原论文中各个变量分别是哪一步的输出</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%85%88%E7%9C%8B%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B%EF%BC%9A%E7%97%85%E5%8E%86%E6%9C%80%E7%BB%88%E6%80%8E%E6%A0%B7%E5%8F%98%E6%88%90%E6%8E%A8%E8%8D%90%E8%8D%AF%E7%89%A9"><span class="nav-text">一、先看完整流程：病历最终怎样变成推荐药物</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%87%86%E5%A4%87%E4%B8%80%E4%B8%AA%E8%B4%AF%E7%A9%BF%E5%85%A8%E6%96%87%E7%9A%84%E6%82%A3%E8%80%85%E4%BE%8B%E5%AD%90"><span class="nav-text">二、准备一个贯穿全文的患者例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%8E%9F%E5%A7%8B%E7%97%85%E5%8E%86%E6%80%8E%E6%A0%B7%E5%8F%98%E6%88%90%E6%A8%A1%E5%9E%8B%E8%83%BD%E5%A4%84%E7%90%86%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="nav-text">三、第一步：原始病历怎样变成模型能处理的数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%85%B3%E7%B3%BB%E6%8C%96%E6%8E%98%E7%9A%84%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86%EF%BC%9AGIES-%E5%88%B0%E5%BA%95%E6%80%8E%E4%B9%88%E7%AE%97"><span class="nav-text">四、关系挖掘的第一部分：GIES 到底怎么算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81GIES-%E7%9A%84%E8%BE%93%E5%87%BA%E6%80%8E%E6%A0%B7%E5%8F%98%E6%88%90%E6%AF%8F%E6%AC%A1%E5%B0%B1%E8%AF%8A%E7%9A%84%E5%9B%BE"><span class="nav-text">五、GIES 的输出怎样变成每次就诊的图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%85%B3%E7%B3%BB%E6%8C%96%E6%8E%98%E7%9A%84%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86%EF%BC%9A%E5%9B%A0%E6%9E%9C%E6%95%88%E5%BA%94%E7%9F%A9%E9%98%B5%E6%80%8E%E6%A0%B7%E5%BE%97%E5%88%B0"><span class="nav-text">六、关系挖掘的第二部分：因果效应矩阵怎样得到</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%AE%9E%E4%BD%93%E8%A1%A8%E7%A4%BA%EF%BC%9A%E7%96%BE%E7%97%85%E7%BC%96%E5%8F%B7%E6%80%8E%E6%A0%B7%E5%8F%98%E6%88%90%E5%90%91%E9%87%8F"><span class="nav-text">七、实体表示：疾病编号怎样变成向量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81DSA-%E6%80%8E%E4%B9%88%E8%AE%A1%E7%AE%97%EF%BC%9A%E5%85%88%E6%8C%89%E5%9B%A0%E6%9E%9C%E8%A7%92%E8%89%B2%E5%88%86%E7%B1%BB%EF%BC%8C%E5%86%8D%E6%8C%89%E7%BB%84%E5%8A%A0%E6%9D%83"><span class="nav-text">八、DSA 怎么计算：先按因果角色分类，再按组加权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81RGCN-%E6%80%8E%E4%B9%88%E8%AE%A1%E7%AE%97%EF%BC%9A%E6%8C%89%E4%B8%8D%E5%90%8C%E5%85%B3%E7%B3%BB%E7%B1%BB%E5%9E%8B%E6%94%B6%E9%9B%86%E9%82%BB%E5%B1%85%E4%BF%A1%E6%81%AF"><span class="nav-text">九、RGCN 怎么计算：按不同关系类型收集邻居信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E6%80%8E%E6%A0%B7%E6%8A%8A%E4%B8%A4%E6%9D%A1%E5%88%86%E6%94%AF%E5%90%88%E6%88%90%E4%B8%80%E6%AC%A1%E5%B0%B1%E8%AF%8A%E7%9A%84%E5%90%91%E9%87%8F"><span class="nav-text">十、怎样把两条分支合成一次就诊的向量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81GRU-%E6%80%8E%E4%B9%88%E8%AE%A1%E7%AE%97%EF%BC%9A%E6%8A%8A%E5%A4%9A%E6%AC%A1%E5%B0%B1%E8%AF%8A%E6%95%B4%E5%90%88%E8%B5%B7%E6%9D%A5"><span class="nav-text">十一、GRU 怎么计算：把多次就诊整合起来</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E6%82%A3%E8%80%85%E5%90%91%E9%87%8F%E6%80%8E%E6%A0%B7%E5%BE%97%E5%88%B0%E8%8D%AF%E7%89%A9%E6%8E%A8%E8%8D%90"><span class="nav-text">十二、患者向量怎样得到药物推荐</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E8%AE%AD%E7%BB%83%E6%97%B6%EF%BC%8C%E5%93%AA%E4%BA%9B%E4%B8%9C%E8%A5%BF%E4%BC%9A%E8%A2%AB%E6%9B%B4%E6%96%B0"><span class="nav-text">十三、训练时，哪些东西会被更新</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E5%8E%9F%E8%AE%BA%E6%96%87%E4%B8%BB%E8%A6%81%E5%8F%98%E9%87%8F%E5%88%86%E5%88%AB%E6%98%AF%E5%93%AA%E4%B8%80%E6%AD%A5%E7%9A%84%E8%BE%93%E5%85%A5%E3%80%81%E5%8F%82%E6%95%B0%E5%92%8C%E8%BE%93%E5%87%BA"><span class="nav-text">十四、原论文主要变量分别是哪一步的输入、参数和输出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94%E3%80%81%E8%BF%99%E7%AF%87%E8%AE%BA%E6%96%87%E7%A1%AE%E5%AE%9E%E6%9C%89%E5%93%AA%E4%BA%9B%E5%9C%B0%E6%96%B9%E6%B2%A1%E5%86%99%E6%B8%85"><span class="nav-text">十五、这篇论文确实有哪些地方没写清</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E7%97%85%E4%BE%8B%E5%9B%BE%E7%9A%84%E6%A0%BC%E5%BC%8F%EF%BC%8C%E7%97%85%E4%BE%8B%E5%9B%BE%E6%98%AF%E6%80%8E%E4%B9%88%E6%9E%84%E5%BB%BA%E7%9A%84%EF%BC%9F"><span class="nav-text">3.病例图的格式，病例图是怎么构建的？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%EF%BC%8E-v-1%E3%80%81v-2-%E6%98%AF%E5%B0%B1%E8%AF%8A%E8%AE%B0%E5%BD%95%EF%BC%8C%E4%B8%8D%E6%98%AF%E6%82%A3%E8%80%85%E7%BC%96%E5%8F%B7"><span class="nav-text">1．$v_1、v_2$ 是就诊记录，不是患者编号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%EF%BC%8E%E6%AF%8F%E6%AC%A1%E5%B0%B1%E8%AF%8A%E7%9C%9F%E7%9A%84%E9%83%BD%E6%9C%89%E4%B8%80%E5%BC%A0%E7%97%85%E7%90%86%E5%85%B3%E7%B3%BB%E5%9B%BE%E5%90%97%EF%BC%9F"><span class="nav-text">2．每次就诊真的都有一张病理关系图吗？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%EF%BC%8E%E2%80%9C%E7%97%85%E7%90%86%E5%85%B3%E7%B3%BB%E5%9B%BE%E2%80%9D%E5%88%B0%E5%BA%95%E9%95%BF%E4%BB%80%E4%B9%88%E6%A0%B7%EF%BC%9F"><span class="nav-text">3．“病理关系图”到底长什么样？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%EF%BC%8E%E8%BF%99%E5%BC%A0%E5%9B%BE%E5%9C%A8%E8%AE%A1%E7%AE%97%E6%9C%BA%E9%87%8C%E6%80%8E%E4%B9%88%E8%A1%A8%E7%A4%BA%EF%BC%9F"><span class="nav-text">4．这张图在计算机里怎么表示？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5%EF%BC%8E%E6%8D%A2%E4%B8%80%E6%AC%A1%E5%B0%B1%E8%AF%8A%EF%BC%8C%E5%9B%BE%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AF%E8%83%BD%E6%94%B9%E5%8F%98%EF%BC%9F"><span class="nav-text">5．换一次就诊，图为什么可能改变？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6%EF%BC%8E-G-v-t-%E3%80%81-G-v-t-d-%E5%92%8C-G-v-t-dm-%E8%A6%81%E5%88%86%E5%BC%80%E7%9C%8B"><span class="nav-text">6．$G_{v_t}$、$G_{v_t}^{d}$ 和 $G_{v_t}^{dm}$ 要分开看</span></a></li></ol></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#casualmed%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B"><span class="nav-text">casualmed处理流程</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-G-v-t-dm-text-and-G-v-t-pm-%E6%80%8E%E4%B9%88%E6%9D%A5%E7%9A%84"><span class="nav-text">1.G_{v_t}^{dm} \text{ and } G_{v_t}^{pm}怎么来的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E7%BB%93%E5%90%88%E4%BE%8B%E5%AD%90%E6%80%8E%E4%B9%88%E5%A4%84%E7%90%86%E6%95%B0%E6%8D%AE%E7%9A%84%EF%BC%8C%E5%85%B3%E7%B3%BB%E6%8C%96%E6%8E%98%E6%98%AF%E6%80%8E%E4%B9%88%E8%BF%9B%E8%A1%8C%E7%9A%84%EF%BC%8C%E7%9D%80%E9%87%8D%E8%AE%B2%E8%AE%B2GIES%E7%AE%97%E6%B3%95%EF%BC%8CDSA%E7%AE%97%E6%B3%95%EF%BC%8CRGCN%E7%AE%97%E6%B3%95%EF%BC%8CGRU%E7%AE%97%E6%B3%95%E6%98%AF%E6%80%8E%E4%B9%88%E8%AE%A1%E7%AE%97%E7%9A%84%EF%BC%8C%E5%8E%9F%E8%AE%BA%E6%96%87%E4%B8%AD%E5%90%84%E4%B8%AA%E5%8F%98%E9%87%8F%E5%88%86%E5%88%AB%E6%98%AF%E5%93%AA%E4%B8%80%E6%AD%A5%E7%9A%84%E8%BE%93%E5%87%BA"><span class="nav-text">2.结合例子怎么处理数据的，关系挖掘是怎么进行的，着重讲讲GIES算法，DSA算法，RGCN算法，GRU算法是怎么计算的，原论文中各个变量分别是哪一步的输出</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%85%88%E7%9C%8B%E5%AE%8C%E6%95%B4%E6%B5%81%E7%A8%8B%EF%BC%9A%E7%97%85%E5%8E%86%E6%9C%80%E7%BB%88%E6%80%8E%E6%A0%B7%E5%8F%98%E6%88%90%E6%8E%A8%E8%8D%90%E8%8D%AF%E7%89%A9"><span class="nav-text">一、先看完整流程：病历最终怎样变成推荐药物</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%87%86%E5%A4%87%E4%B8%80%E4%B8%AA%E8%B4%AF%E7%A9%BF%E5%85%A8%E6%96%87%E7%9A%84%E6%82%A3%E8%80%85%E4%BE%8B%E5%AD%90"><span class="nav-text">二、准备一个贯穿全文的患者例子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%8E%9F%E5%A7%8B%E7%97%85%E5%8E%86%E6%80%8E%E6%A0%B7%E5%8F%98%E6%88%90%E6%A8%A1%E5%9E%8B%E8%83%BD%E5%A4%84%E7%90%86%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="nav-text">三、第一步：原始病历怎样变成模型能处理的数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81%E5%85%B3%E7%B3%BB%E6%8C%96%E6%8E%98%E7%9A%84%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86%EF%BC%9AGIES-%E5%88%B0%E5%BA%95%E6%80%8E%E4%B9%88%E7%AE%97"><span class="nav-text">四、关系挖掘的第一部分：GIES 到底怎么算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81GIES-%E7%9A%84%E8%BE%93%E5%87%BA%E6%80%8E%E6%A0%B7%E5%8F%98%E6%88%90%E6%AF%8F%E6%AC%A1%E5%B0%B1%E8%AF%8A%E7%9A%84%E5%9B%BE"><span class="nav-text">五、GIES 的输出怎样变成每次就诊的图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E5%85%B3%E7%B3%BB%E6%8C%96%E6%8E%98%E7%9A%84%E7%AC%AC%E4%BA%8C%E9%83%A8%E5%88%86%EF%BC%9A%E5%9B%A0%E6%9E%9C%E6%95%88%E5%BA%94%E7%9F%A9%E9%98%B5%E6%80%8E%E6%A0%B7%E5%BE%97%E5%88%B0"><span class="nav-text">六、关系挖掘的第二部分：因果效应矩阵怎样得到</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%E3%80%81%E5%AE%9E%E4%BD%93%E8%A1%A8%E7%A4%BA%EF%BC%9A%E7%96%BE%E7%97%85%E7%BC%96%E5%8F%B7%E6%80%8E%E6%A0%B7%E5%8F%98%E6%88%90%E5%90%91%E9%87%8F"><span class="nav-text">七、实体表示：疾病编号怎样变成向量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%E3%80%81DSA-%E6%80%8E%E4%B9%88%E8%AE%A1%E7%AE%97%EF%BC%9A%E5%85%88%E6%8C%89%E5%9B%A0%E6%9E%9C%E8%A7%92%E8%89%B2%E5%88%86%E7%B1%BB%EF%BC%8C%E5%86%8D%E6%8C%89%E7%BB%84%E5%8A%A0%E6%9D%83"><span class="nav-text">八、DSA 怎么计算：先按因果角色分类，再按组加权</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%E3%80%81RGCN-%E6%80%8E%E4%B9%88%E8%AE%A1%E7%AE%97%EF%BC%9A%E6%8C%89%E4%B8%8D%E5%90%8C%E5%85%B3%E7%B3%BB%E7%B1%BB%E5%9E%8B%E6%94%B6%E9%9B%86%E9%82%BB%E5%B1%85%E4%BF%A1%E6%81%AF"><span class="nav-text">九、RGCN 怎么计算：按不同关系类型收集邻居信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E3%80%81%E6%80%8E%E6%A0%B7%E6%8A%8A%E4%B8%A4%E6%9D%A1%E5%88%86%E6%94%AF%E5%90%88%E6%88%90%E4%B8%80%E6%AC%A1%E5%B0%B1%E8%AF%8A%E7%9A%84%E5%90%91%E9%87%8F"><span class="nav-text">十、怎样把两条分支合成一次就诊的向量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%80%E3%80%81GRU-%E6%80%8E%E4%B9%88%E8%AE%A1%E7%AE%97%EF%BC%9A%E6%8A%8A%E5%A4%9A%E6%AC%A1%E5%B0%B1%E8%AF%8A%E6%95%B4%E5%90%88%E8%B5%B7%E6%9D%A5"><span class="nav-text">十一、GRU 怎么计算：把多次就诊整合起来</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%8C%E3%80%81%E6%82%A3%E8%80%85%E5%90%91%E9%87%8F%E6%80%8E%E6%A0%B7%E5%BE%97%E5%88%B0%E8%8D%AF%E7%89%A9%E6%8E%A8%E8%8D%90"><span class="nav-text">十二、患者向量怎样得到药物推荐</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%B8%89%E3%80%81%E8%AE%AD%E7%BB%83%E6%97%B6%EF%BC%8C%E5%93%AA%E4%BA%9B%E4%B8%9C%E8%A5%BF%E4%BC%9A%E8%A2%AB%E6%9B%B4%E6%96%B0"><span class="nav-text">十三、训练时，哪些东西会被更新</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E5%9B%9B%E3%80%81%E5%8E%9F%E8%AE%BA%E6%96%87%E4%B8%BB%E8%A6%81%E5%8F%98%E9%87%8F%E5%88%86%E5%88%AB%E6%98%AF%E5%93%AA%E4%B8%80%E6%AD%A5%E7%9A%84%E8%BE%93%E5%85%A5%E3%80%81%E5%8F%82%E6%95%B0%E5%92%8C%E8%BE%93%E5%87%BA"><span class="nav-text">十四、原论文主要变量分别是哪一步的输入、参数和输出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%81%E4%BA%94%E3%80%81%E8%BF%99%E7%AF%87%E8%AE%BA%E6%96%87%E7%A1%AE%E5%AE%9E%E6%9C%89%E5%93%AA%E4%BA%9B%E5%9C%B0%E6%96%B9%E6%B2%A1%E5%86%99%E6%B8%85"><span class="nav-text">十五、这篇论文确实有哪些地方没写清</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E7%97%85%E4%BE%8B%E5%9B%BE%E7%9A%84%E6%A0%BC%E5%BC%8F%EF%BC%8C%E7%97%85%E4%BE%8B%E5%9B%BE%E6%98%AF%E6%80%8E%E4%B9%88%E6%9E%84%E5%BB%BA%E7%9A%84%EF%BC%9F"><span class="nav-text">3.病例图的格式，病例图是怎么构建的？</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%EF%BC%8E-v-1%E3%80%81v-2-%E6%98%AF%E5%B0%B1%E8%AF%8A%E8%AE%B0%E5%BD%95%EF%BC%8C%E4%B8%8D%E6%98%AF%E6%82%A3%E8%80%85%E7%BC%96%E5%8F%B7"><span class="nav-text">1．$v_1、v_2$ 是就诊记录，不是患者编号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%EF%BC%8E%E6%AF%8F%E6%AC%A1%E5%B0%B1%E8%AF%8A%E7%9C%9F%E7%9A%84%E9%83%BD%E6%9C%89%E4%B8%80%E5%BC%A0%E7%97%85%E7%90%86%E5%85%B3%E7%B3%BB%E5%9B%BE%E5%90%97%EF%BC%9F"><span class="nav-text">2．每次就诊真的都有一张病理关系图吗？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%EF%BC%8E%E2%80%9C%E7%97%85%E7%90%86%E5%85%B3%E7%B3%BB%E5%9B%BE%E2%80%9D%E5%88%B0%E5%BA%95%E9%95%BF%E4%BB%80%E4%B9%88%E6%A0%B7%EF%BC%9F"><span class="nav-text">3．“病理关系图”到底长什么样？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%EF%BC%8E%E8%BF%99%E5%BC%A0%E5%9B%BE%E5%9C%A8%E8%AE%A1%E7%AE%97%E6%9C%BA%E9%87%8C%E6%80%8E%E4%B9%88%E8%A1%A8%E7%A4%BA%EF%BC%9F"><span class="nav-text">4．这张图在计算机里怎么表示？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5%EF%BC%8E%E6%8D%A2%E4%B8%80%E6%AC%A1%E5%B0%B1%E8%AF%8A%EF%BC%8C%E5%9B%BE%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%AF%E8%83%BD%E6%94%B9%E5%8F%98%EF%BC%9F"><span class="nav-text">5．换一次就诊，图为什么可能改变？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6%EF%BC%8E-G-v-t-%E3%80%81-G-v-t-d-%E5%92%8C-G-v-t-dm-%E8%A6%81%E5%88%86%E5%BC%80%E7%9C%8B"><span class="nav-text">6．$G_{v_t}$、$G_{v_t}^{d}$ 和 $G_{v_t}^{dm}$ 要分开看</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-%E4%BB%A5%E5%BE%80%E7%9A%84%E7%97%85%E4%BE%8B%E6%A0%B7%E6%9C%AC%E7%94%A8%E6%9D%A5%E8%AE%AD%E7%BB%83%E4%BB%80%E4%B9%88"><span class="nav-text">7.以往的病例样本用来训练什么</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-%E6%9C%89%E5%90%91%E8%BE%B9%E5%A6%82%E4%BD%95%E5%AD%98%E5%82%A8%E7%9A%84%EF%BC%8C%E5%A6%82%E4%BD%95%E8%A1%A8%E7%A4%BA%E5%BC%BA%E5%85%B3%E7%B3%BB%E5%92%8C%E5%BC%B1%E5%85%B3%E7%B3%BB"><span class="nav-text">8.有向边如何存储的，如何表示强关系和弱关系</span></a></li></ol></li></ol>
 
 	</div>
 </div>
