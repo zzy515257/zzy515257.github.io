@@ -94,7 +94,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/images/redefine-og.webp">
 <meta property="article:published_time" content="2026-11-09T08:22:00.000Z">
-<meta property="article:modified_time" content="2026-11-10T03:32:51.459Z">
+<meta property="article:modified_time" content="2026-11-10T06:15:49.000Z">
 <meta property="article:author" content="Zoe Raina">
 <meta property="article:tag" content="Model Learn">
 <meta name="twitter:card" content="summary">
@@ -1028,8 +1028,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2026-11-10 11:32:51</span>
-            <span class="mobile">2026-11-10 11:32:51</span>
+            <span class="desktop">2026-11-10 14:15:49</span>
+            <span class="mobile">2026-11-10 14:15:49</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -1086,6 +1086,81 @@
 			<h1 id="GCN：图卷积网络和RGCN-：关系图卷积神经网络"><a href="#GCN：图卷积网络和RGCN-：关系图卷积神经网络" class="headerlink" title="GCN：图卷积网络和RGCN ：关系图卷积神经网络"></a>GCN：图卷积网络和RGCN ：关系图卷积神经网络</h1><p>GCN 和 RGCN 都是在图上“让相邻节点交换信息”，把每个节点原来的向量，更新成包含周围关系信息的新向量。</p>
 <p>RGCN 的作用是：让疾病/操作的表示吸收相关药物的信息，也让药物的表示吸收相关疾病/操作的信息，为后续药物推荐提供更有用的特征。</p>
 <h1 id="1-GCN图卷积神经网络"><a href="#1-GCN图卷积神经网络" class="headerlink" title="1.GCN图卷积神经网络"></a>1.GCN图卷积神经网络</h1><p>GCN是一种能够直接作用于图并且利用其结构信息的卷积神经网络</p>
+<h2 id="直观理解与数学原理"><a href="#直观理解与数学原理" class="headerlink" title="直观理解与数学原理"></a>直观理解与数学原理</h2><p>接下来进一步介绍GCN背后的数学原理。首先确定一些符号：对于给定的无向网络 $G = (V, E)$，其中 $V$ 中包含网络中所有的 $N$ 个结点，$v_i \in V$，$E$ 代表结点之间的边 $(v_i, v_j) \in E$，邻接矩阵 $A \in \mathbb{R}^{N \times N}$ 中的元素可以为二进制编码也可以是权重实数；度矩阵 $D_{ii} = \sum_j A_{ij}$；结点的特征向量矩阵为 $X \in \mathbb{R}^{N \times C}$，其中 $N$ 为结点数，$C$ 为特征向量的维数。考虑如下的一个图：</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://cdn.jsdelivr.net/gh/zzy515257/bolgimage/img/e89f3aec9eeb5a026e6b4c6a173719df.png"
+                      alt="在这里插入图片描述"
+                ></p>
+<p>我们要如何才能够得到一个结点的邻居的特征向量的信息呢？一个可能的解决方法就是将A AA与X XX进行相乘。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://cdn.jsdelivr.net/gh/zzy515257/bolgimage/img/77dfc4c4d5620e56d991424436d9e3dd.png"
+                      alt="在这里插入图片描述"
+                ></p>
+<p>首先让我们看邻接矩阵的第一行，可以看到结点A连接着结点E。而结果矩阵中的第一行其实就是结点E的特征向量。类似地，结果矩阵中的第二行就是界定D与结点E的加和。通过这样一种处理，我们可以得到结点所有邻居的特征加和向量。<br>但是这样的处理存在着一些问题：</p>
+<ul>
+<li>我们遗漏了所分析的结点本身的信息，比如，结果矩阵的第一行中应该包含结点A的信息才对。</li>
+<li>我们应该使用平均值函数甚至是更好的加权平均值函数而非直接加和来处理邻居的特征向量。那为什么<strong>不能直接使用加和函数</strong>呢？原因就在于，当使用加和函数的时候，具有较大度值的结点会有很大的表示向量，而较低度的结点会有较小的聚合向量，这可能会导致<strong>梯度爆炸</strong>或<strong>梯度消失</strong>的问题（比如使用sigmoid函数时）。此外，神经网络对于输入数据的标度是非常敏感的，我们需要将这些向量进行标准化以消除潜在的问题。</li>
+</ul>
+<p>针对第一点问题，可以通过在 A 的基础上加上一个单位阵得到新的邻接矩阵 $\tilde{A}$</p>
+<script type="math/tex; mode=display">
+\tilde{A} = A + \lambda I_N</script><p>当 $\lambda$ 的取值为1时，意味着结点本身特征的重要性与其邻居的重要性一样，此时有 $\tilde{A} = A + I_N$。需要注意的是，$\lambda$ 本身是一个可以由训练得到的参数，但是为了方便，本文将其取值为1。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://cdn.jsdelivr.net/gh/zzy515257/bolgimage/img/2ed5bf73be7601a83f1b32f366036f02.png"
+                      alt="在这里插入图片描述"
+                ></p>
+<p>例如，结点A的度为2，那对于其和向量就要乘一个 $1/2$，而结点E的度为5，对其和向量就要乘一个 $1/5$。</p>
+<p>由此，对 $\tilde{D}^{-1}$ 与 X 进行相乘，可以得到包括结点自身以及其邻居的特征向量的均值。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://cdn.jsdelivr.net/gh/zzy515257/bolgimage/img/b627cf66a63f2f2cb7bcf4dce7a03e38.png"
+                      alt="在这里插入图片描述"
+                ></p>
+<p>使用均值看起来已经可以取得不错的效果，那么使用加权平均又如何呢？直觉上的感觉对具有高度和低度的结点采取不同的权重会有更好的效果。</p>
+<p>在直接使用 $\tilde{D}^{-1}(\tilde{A}X)$ 进行计算的时候有一个问题，就是仅对行进行了标准化而并没有对列进行标准化。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://i-blog.csdnimg.cn/blog_migrate/b627cf66a63f2f2cb7bcf4dce7a03e38.png"
+                      alt="在这里插入图片描述"
+                ></p>
+<p>使用均值看起来已经可以取得不错的效果，那么使用加权平均又如何呢？直觉上的感觉对具有高度和低度的结点采取不同的权重会有更好的效果。</p>
+<p>在直接使用 $\tilde{D}^{-1}(\tilde{A}X)$ 进行计算的时候有一个问题，就是仅对行进行了标准化而并没有对列进行标准化。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://cdn.jsdelivr.net/gh/zzy515257/bolgimage/img/8248eefa047dc80311fee091ab3cc88c.png"
+                      alt="在这里插入图片描述"
+                ></p>
+<p>因此尝试使用 $\tilde{D}^{-1}\tilde{A}\tilde{D}^{-1}X$ 进行标准化。</p>
+<p>这种标准化的策略所提供的是一种<strong>加权平均</strong>，所实现的效果是会给予那些具有低度的结点更大的权重从而降低高度结点的影响。这种加权平均的想法在于那些具有较低度的结点会对其邻居有较大的影响，而高度的结点会产生更小的影响因为他们的影响会被分散给很多的邻居结点。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://cdn.jsdelivr.net/gh/zzy515257/bolgimage/img/b8efe6b3fc5bd67cedcc012cf56e403c.png"
+                      alt="在这里插入图片描述"
+                ></p>
+<p>如上图所示，要得到结点B的聚合特征时，会分配较大的权重给B（其自身，度为3），而给E（度为5）更小的权重。</p>
+<p>更进一步，为进一步优化标准化的策略，避免上述方法中的两次标准化，可以采用 $\tilde{D}^{-1/2}\tilde{A}\tilde{D}^{-1/2}X$ 进行标准化。</p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://cdn.jsdelivr.net/gh/zzy515257/bolgimage/img/4fcb08fbd655a6e2e92ab23c41d38b97.png"
+                      alt="在这里插入图片描述"
+                ></p>
+<p><img  
+                     lazyload
+                     src="/images/loading.svg"
+                     data-src="https://cdn.jsdelivr.net/gh/zzy515257/bolgimage/img/ef3e8d72cd8d39ce2e9d02c58448cd8d.png"
+                      alt="在这里插入图片描述"
+                ></p>
+<h2 id="GCN网络层数"><a href="#GCN网络层数" class="headerlink" title="GCN网络层数"></a>GCN网络层数</h2><p>网络的层数代表着结点特征所能到达的最远距离。*<em>比如一层的GCN，每个结点只能得到其一阶邻居身上的信息。对于所有结点来说，信息获取的过程是*</em>独立、同时开展的。当我们在一层GCN上再堆一层时，就可以重复收集邻居信息的过程，并且收集到的邻居信息中已经包含了这些邻居结点在上一个阶段所收集的他们的邻居结点的信息。这就使得GCN的网络层数也就是每个结点的信息所能达到的maximum number of hops。因此，我们所设定的层的数目取决于我们想要使得结点的信息在网络中传递多远的距离。需要注意的是，通常我们不会需要结点的信息传播太远。经过6~7个hops，基本上就可以使结点的信息传播到整个网络，这也使得聚合不那么有意义。</p>
 <h2 id="一、为什么已经有疾病向量了，还需要-GCN？"><a href="#一、为什么已经有疾病向量了，还需要-GCN？" class="headerlink" title="一、为什么已经有疾病向量了，还需要 GCN？"></a><strong>一、为什么已经有疾病向量了，还需要 GCN？</strong></h2><p>假设查嵌入表后，疾病 $d_1$ 有一个初始向量：</p>
 <script type="math/tex; mode=display">
 \mathbf h_{d_1}^{0}=\mathbf E_d(d_1).</script><p>这个向量代表疾病 $d_1$ 本身，查同一张表时，同一个编号取得的初始向量相同。</p>
@@ -1351,7 +1426,7 @@ r(d_i,m_k) = \operatorname{Group}\left(\mathbf M^{dm}_{ik}\right),</script><p>�
         
             <li>
                 <strong>Updated at
-                    :</strong> 2026-11-10 11:32:51
+                    :</strong> 2026-11-10 14:15:49
             </li>
         
         <li>
@@ -1476,7 +1551,7 @@ r(d_i,m_k) = \operatorname{Group}\left(\mathbf M^{dm}_{ik}\right),</script><p>�
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">GCN：图卷积网络和RGCN ：关系图卷积神经网络</div>
-		<ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#GCN%EF%BC%9A%E5%9B%BE%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C%E5%92%8CRGCN-%EF%BC%9A%E5%85%B3%E7%B3%BB%E5%9B%BE%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-text">GCN：图卷积网络和RGCN ：关系图卷积神经网络</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-GCN%E5%9B%BE%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-text">1.GCN图卷积神经网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E5%B7%B2%E7%BB%8F%E6%9C%89%E7%96%BE%E7%97%85%E5%90%91%E9%87%8F%E4%BA%86%EF%BC%8C%E8%BF%98%E9%9C%80%E8%A6%81-GCN%EF%BC%9F"><span class="nav-text">一、为什么已经有疾病向量了，还需要 GCN？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-GCN-%E6%98%AF%E6%80%8E%E6%A0%B7%E8%AE%A1%E7%AE%97%E7%9A%84%EF%BC%9F"><span class="nav-text">二, GCN 是怎样计算的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%94%A8%E4%B8%80%E4%B8%AA%E5%B0%8F%E4%BE%8B%E5%AD%90%EF%BC%8C%E5%AE%9E%E9%99%85%E7%AE%97%E4%B8%80%E9%81%8D-GCN"><span class="nav-text">三、用一个小例子，实际算一遍 GCN</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-RGCN%E5%81%9A%E4%BA%86%E9%82%A3%E4%BA%9B%E6%94%B9%E8%BF%9B"><span class="nav-text">2.RGCN做了那些改进</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81RGCN-%E6%AF%94-GCN-%E5%A4%9A%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-text">一、RGCN 比 GCN 多做了什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-%E9%80%90%E9%A1%B9%E6%8B%86%E8%A7%A3%E6%88%AA%E5%9B%BE%E4%B8%AD%E7%9A%84%E5%85%AC%E5%BC%8F"><span class="nav-text">二.逐项拆解截图中的公式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89-%E6%B2%BF%E7%94%A8%E5%89%8D%E9%9D%A2%E7%9A%84%E4%BE%8B%E5%AD%90%EF%BC%8C%E6%89%8B%E7%AE%97-RGCN"><span class="nav-text">三.沿用前面的例子，手算 RGCN</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E8%AF%A5%E6%A8%A1%E5%9E%8B%E5%9C%A8Casualmed%E8%AE%BA%E6%96%87%E5%BA%94%E7%94%A8"><span class="nav-text">3.该模型在Casualmed论文应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80-%E5%85%AC%E5%BC%8F%EF%BC%888%EF%BC%89%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E5%86%99%E6%88%90-mathbf-W-r-l-mathbf-I-Theta-r-l-%EF%BC%9F"><span class="nav-text">一.公式（8）：为什么写成 $\mathbf W_r^l&#x3D;\mathbf I+\Theta_r^l$？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AE%BA%E6%96%87%E9%9C%80%E8%A6%81-RGCN%EF%BC%9F%E6%99%AE%E9%80%9A-GCN-%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E8%B6%B3%EF%BC%9F"><span class="nav-text">二.为什么论文需要 RGCN？普通 GCN 有什么不足？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E4%B8%A4%E5%B1%82%EF%BC%9F"><span class="nav-text">三.为什么使用两层？</span></a></li></ol></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#GCN%EF%BC%9A%E5%9B%BE%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C%E5%92%8CRGCN-%EF%BC%9A%E5%85%B3%E7%B3%BB%E5%9B%BE%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-text">GCN：图卷积网络和RGCN ：关系图卷积神经网络</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-GCN%E5%9B%BE%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-text">1.GCN图卷积神经网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B4%E8%A7%82%E7%90%86%E8%A7%A3%E4%B8%8E%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86"><span class="nav-text">直观理解与数学原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GCN%E7%BD%91%E7%BB%9C%E5%B1%82%E6%95%B0"><span class="nav-text">GCN网络层数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E5%B7%B2%E7%BB%8F%E6%9C%89%E7%96%BE%E7%97%85%E5%90%91%E9%87%8F%E4%BA%86%EF%BC%8C%E8%BF%98%E9%9C%80%E8%A6%81-GCN%EF%BC%9F"><span class="nav-text">一、为什么已经有疾病向量了，还需要 GCN？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-GCN-%E6%98%AF%E6%80%8E%E6%A0%B7%E8%AE%A1%E7%AE%97%E7%9A%84%EF%BC%9F"><span class="nav-text">二, GCN 是怎样计算的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%94%A8%E4%B8%80%E4%B8%AA%E5%B0%8F%E4%BE%8B%E5%AD%90%EF%BC%8C%E5%AE%9E%E9%99%85%E7%AE%97%E4%B8%80%E9%81%8D-GCN"><span class="nav-text">三、用一个小例子，实际算一遍 GCN</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-RGCN%E5%81%9A%E4%BA%86%E9%82%A3%E4%BA%9B%E6%94%B9%E8%BF%9B"><span class="nav-text">2.RGCN做了那些改进</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81RGCN-%E6%AF%94-GCN-%E5%A4%9A%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-text">一、RGCN 比 GCN 多做了什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-%E9%80%90%E9%A1%B9%E6%8B%86%E8%A7%A3%E6%88%AA%E5%9B%BE%E4%B8%AD%E7%9A%84%E5%85%AC%E5%BC%8F"><span class="nav-text">二.逐项拆解截图中的公式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89-%E6%B2%BF%E7%94%A8%E5%89%8D%E9%9D%A2%E7%9A%84%E4%BE%8B%E5%AD%90%EF%BC%8C%E6%89%8B%E7%AE%97-RGCN"><span class="nav-text">三.沿用前面的例子，手算 RGCN</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E8%AF%A5%E6%A8%A1%E5%9E%8B%E5%9C%A8Casualmed%E8%AE%BA%E6%96%87%E5%BA%94%E7%94%A8"><span class="nav-text">3.该模型在Casualmed论文应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80-%E5%85%AC%E5%BC%8F%EF%BC%888%EF%BC%89%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E5%86%99%E6%88%90-mathbf-W-r-l-mathbf-I-Theta-r-l-%EF%BC%9F"><span class="nav-text">一.公式（8）：为什么写成 $\mathbf W_r^l&#x3D;\mathbf I+\Theta_r^l$？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AE%BA%E6%96%87%E9%9C%80%E8%A6%81-RGCN%EF%BC%9F%E6%99%AE%E9%80%9A-GCN-%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E8%B6%B3%EF%BC%9F"><span class="nav-text">二.为什么论文需要 RGCN？普通 GCN 有什么不足？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E4%B8%A4%E5%B1%82%EF%BC%9F"><span class="nav-text">三.为什么使用两层？</span></a></li></ol></li></ol>
 
 	</div>
 </div>
