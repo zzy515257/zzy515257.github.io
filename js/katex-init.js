@@ -31,28 +31,33 @@
 
     // 2. Render inline and block math from delimiters ($...$, $$...$$, etc.)
     if (typeof renderMathInElement === 'function') {
-      var containers = document.querySelectorAll(
-        '.article-content-container, .post-page-container, .article-content, .markdown-body, main, body'
-      );
-      var target = containers.length > 0 ? containers[0] : document.body;
-
-      try {
-        renderMathInElement(target, {
-          delimiters: [
-            { left: '$$', right: '$$', display: true },
-            { left: '$', right: '$', display: false },
-            { left: '\\(', right: '\\)', display: false },
-            { left: '\\[', right: '\\]', display: true }
-          ],
-          ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-          throwOnError: false,
-          errorColor: '#cc0000',
-          strict: false,
-          trust: true
-        });
-      } catch (err) {
-        console.warn('renderMathInElement error:', err);
+      var targets = document.querySelectorAll('.article-content-container, .toc-content-container');
+      if (targets.length === 0) {
+        var fallback = document.querySelectorAll('.post-page-container, .article-content, .markdown-body, main, body');
+        if (fallback.length > 0) {
+          targets = [fallback[0]];
+        }
       }
+
+      targets.forEach(function (target) {
+        try {
+          renderMathInElement(target, {
+            delimiters: [
+              { left: '$$', right: '$$', display: true },
+              { left: '$', right: '$', display: false },
+              { left: '\\(', right: '\\)', display: false },
+              { left: '\\[', right: '\\]', display: true }
+            ],
+            ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            throwOnError: false,
+            errorColor: '#cc0000',
+            strict: false,
+            trust: true
+          });
+        } catch (err) {
+          console.warn('renderMathInElement error:', err);
+        }
+      });
     }
 
     return true;
