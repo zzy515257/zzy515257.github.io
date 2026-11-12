@@ -1776,7 +1776,7 @@ pre .deletion {
   position: relative;
   height: 100%;
   width: 100%;
-  max-width: 1000px;
+  max-width: 1200px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -1831,6 +1831,11 @@ pre .deletion {
   gap: 24px;
   align-items: center;
 }
+@media (max-width: 1150px) {
+  .navbar-container .right .desktop .navbar-list {
+    gap: 14px;
+  }
+}
 @media (max-width: 768px) {
   .navbar-container .right .desktop .navbar-list {
     display: none;
@@ -1843,6 +1848,7 @@ pre .deletion {
   font-weight: 500;
   cursor: pointer;
   color: var(--default-text-color);
+  white-space: nowrap;
 }
 .navbar-container .right .desktop .navbar-list .navbar-item a {
   display: block;
@@ -2079,7 +2085,7 @@ pre .deletion {
   transition: max-width 0.3s ease-out;
 }
 html.is-animating .transition-navbar {
-  max-width: 1000px !important;
+  max-width: 1200px !important;
   transition: max-width 0.2s ease-out;
 }
 .page-template-container {
