@@ -94,7 +94,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/images/redefine-og.webp">
 <meta property="article:published_time" content="2026-11-09T08:22:00.000Z">
-<meta property="article:modified_time" content="2026-11-10T06:15:49.000Z">
+<meta property="article:modified_time" content="2026-11-14T09:11:48.000Z">
 <meta property="article:author" content="Zoe Raina">
 <meta property="article:tag" content="Model Learn">
 <meta name="twitter:card" content="summary">
@@ -1220,8 +1220,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2026-11-10 14:15:49</span>
-            <span class="mobile">2026-11-10 14:15:49</span>
+            <span class="desktop">2026-11-14 17:11:48</span>
+            <span class="mobile">2026-11-14 17:11:48</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -1295,7 +1295,7 @@
 <p>首先让我们看邻接矩阵的第一行，可以看到结点A连接着结点E。而结果矩阵中的第一行其实就是结点E的特征向量。类似地，结果矩阵中的第二行就是界定D与结点E的加和。通过这样一种处理，我们可以得到结点所有邻居的特征加和向量。<br>但是这样的处理存在着一些问题：</p>
 <ul>
 <li>我们遗漏了所分析的结点本身的信息，比如，结果矩阵的第一行中应该包含结点A的信息才对。</li>
-<li>我们应该使用平均值函数甚至是更好的加权平均值函数而非直接加和来处理邻居的特征向量。那为什么<strong>不能直接使用加和函数</strong>呢？原因就在于，当使用加和函数的时候，具有较大度值的结点会有很大的表示向量，而较低度的结点会有较小的聚合向量，这可能会导致<strong>梯度爆炸</strong>或<strong>梯度消失</strong>的问题（比如使用sigmoid函数时）。此外，神经网络对于输入数据的标度是非常敏感的，我们需要将这些向量进行标准化以消除潜在的问题。</li>
+<li>我们应该使用平均值函数甚至是更好的加权平均值函数而非直接加和来处理邻居的特征向量。那为什么不能直接使用加和函数呢？原因就在于，当使用加和函数的时候，具有较大度值的结点会有很大的表示向量，而较低度的结点会有较小的聚合向量，这可能会导致梯度爆炸或梯度消失的问题（比如使用sigmoid函数时）。此外，神经网络对于输入数据的标度是非常敏感的，我们需要将这些向量进行标准化以消除潜在的问题。</li>
 </ul>
 <p>针对第一点问题，可以通过在 A 的基础上加上一个单位阵得到新的邻接矩阵 $\tilde{A}$</p>
 <script type="math/tex; mode=display">
@@ -1312,14 +1312,6 @@
                      lazyload
                      src="/images/loading.svg"
                      data-src="https://cdn.jsdelivr.net/gh/zzy515257/bolgimage/img/b627cf66a63f2f2cb7bcf4dce7a03e38.png"
-                      alt="在这里插入图片描述"
-                ></p>
-<p>使用均值看起来已经可以取得不错的效果，那么使用加权平均又如何呢？直觉上的感觉对具有高度和低度的结点采取不同的权重会有更好的效果。</p>
-<p>在直接使用 $\tilde{D}^{-1}(\tilde{A}X)$ 进行计算的时候有一个问题，就是仅对行进行了标准化而并没有对列进行标准化。</p>
-<p><img  
-                     lazyload
-                     src="/images/loading.svg"
-                     data-src="https://i-blog.csdnimg.cn/blog_migrate/b627cf66a63f2f2cb7bcf4dce7a03e38.png"
                       alt="在这里插入图片描述"
                 ></p>
 <p>使用均值看起来已经可以取得不错的效果，那么使用加权平均又如何呢？直觉上的感觉对具有高度和低度的结点采取不同的权重会有更好的效果。</p>
@@ -1429,7 +1421,7 @@
 <p>这里每次只考虑 $i$ 和某一个邻居 $j$ 的度，不是把周围所有邻居的度都乘起来。对不同的邻居 $j$，分别计算这个系数，然后再把消息相加。</p>
 <p>所以，GCN 的核心是：按照图上的连接，对自己和邻居的向量做归一化聚合，再通过可训练参数进行变换。</p>
 <hr>
-<h2 id="三、用一个小例子，实际算一遍-GCN"><a href="#三、用一个小例子，实际算一遍-GCN" class="headerlink" title="三、用一个小例子，实际算一遍 GCN"></a><strong>三、用一个小例子，实际算一遍 GCN</strong></h2><p>假设当前有两个疾病、两种药物，疾病和药物全部相连：</p>
+<h2 id="三、结合例子，手算-GCN"><a href="#三、结合例子，手算-GCN" class="headerlink" title="三、结合例子，手算 GCN"></a><strong>三、结合例子，手算 GCN</strong></h2><p>假设当前有两个疾病、两种药物，疾病和药物全部相连：</p>
 <script type="math/tex; mode=display">
 \begin{aligned} d_1&\leftrightarrow m_1,m_2,\\ d_2&\leftrightarrow m_1,m_2. \end{aligned}</script><p>为了突出“关系类型”的作用，暂时让两个疾病的初始向量相同：</p>
 <script type="math/tex; mode=display">
@@ -1604,6 +1596,74 @@ r(d_i,m_k) = \operatorname{Group}\left(\mathbf M^{dm}_{ik}\right),</script><p>�
 \text{疾病 }d_1 \rightarrow \text{药物 }m_1 \rightarrow \text{疾病 }d_2.</script><p>所以第二层能够让节点间接获得两跳范围内的信息。</p>
 <p>每一层都使用上一层的节点向量计算新向量，通常同时更新所有节点。</p>
 <p>论文最终使用两层 RGCN。层数增加会扩大信息传播范围，但也可能让不同节点的表示变得过于相似，因此并非越多越好。</p>
+<h1 id="4-拓展：有向无环图-DAG-的GCN卷积"><a href="#4-拓展：有向无环图-DAG-的GCN卷积" class="headerlink" title="4.拓展：有向无环图(DAG)的GCN卷积"></a>4.拓展：有向无环图(DAG)的GCN卷积</h1><h2 id="一、-DAG-GCN-的两种核心卷积方式"><a href="#一、-DAG-GCN-的两种核心卷积方式" class="headerlink" title="一、 DAG GCN 的两种核心卷积方式"></a>一、 DAG GCN 的两种核心卷积方式</h2><h3 id="1-方式一：基于入度归一化的矩阵同步卷积（最常用）"><a href="#1-方式一：基于入度归一化的矩阵同步卷积（最常用）" class="headerlink" title="1. 方式一：基于入度归一化的矩阵同步卷积（最常用）"></a>1. 方式一：基于入度归一化的矩阵同步卷积（最常用）</h3><p>在 DAG 中，假设有向边 $j \to i$ 表示节点 $j$（父节点/前驱）指向节点 $i$（子节点/后继）。为了让每个节点聚合其所有父节点（入边邻居）传递过来的信息，单层 DAG GCN 的计算公式定义为：</p>
+<script type="math/tex; mode=display">H^{(l+1)} = \sigma\left( \tilde{D}_{in}^{-1} \tilde{A}_{in} H^{(l)} W^{(l)} \right)</script><p>其中各部件含义如下：</p>
+<ol>
+<li><p><strong>入边邻接矩阵 $A_{in} = A^T$</strong>：在标准图论中，若 $j \to i$ 有边，通常记 $A_{ji} = 1$。但在矩阵乘法 $(AX)_i = \sum_j A_{ij}x_j$ 中，第 $i$ 行聚合的是第 $j$ 列的特征。因此需将 $A$ 转置得到入边矩阵 $A_{in} = A^T$（即当 $j \to i$ 时，$(A_{in})_{ij} = 1$），才能让节点 $i$ 准确聚合其父节点 $j$ 的特征。</p>
+</li>
+<li><p><strong>添加自环 $\tilde{A}_{in} = A_{in} + I$</strong>：让每个节点同时保留自身特征，并解决源节点（无父节点）入度为 $0$ 的问题。</p>
+</li>
+<li><p><strong>入度矩阵 $\tilde{D}_{in}$</strong>：对角矩阵，对角线元素 $(\tilde{D}_{in})_{ii} = \sum_j (\tilde{A}_{in})_{ij}$，表示节点 $i$ 的<strong>入度（父节点数）$+ 1$</strong>。</p>
+</li>
+<li><p><strong>单节点等价形式</strong>：</p>
+<script type="math/tex; mode=display">h_i^{(l+1)} = \sigma\left( \frac{1}{\vert{}\mathcal{N}_{in}(i)\vert{} + 1} \sum_{j \in \mathcal{N}_{in}(i) \cup \{i\} } h_j^{(l)} W^{(l)} \right)</script><p>其中 $\mathcal{N}_{in}(i) = {j \mid j \to i}$ 为节点 $i$ 的父节点集合。</p>
+</li>
+</ol>
+<h3 id="2-方式二：多关系双向有向卷积（同时区分前驱、后继与自身）"><a href="#2-方式二：多关系双向有向卷积（同时区分前驱、后继与自身）" class="headerlink" title="2. 方式二：多关系双向有向卷积（同时区分前驱、后继与自身）"></a>2. 方式二：多关系双向有向卷积（同时区分前驱、后继与自身）</h3><p>如果在某些任务中，不仅需要顺着箭头（父 $\to$ 子）传递因果信息，还需要逆着箭头（子 $\to$ 父）传递反馈信息，则会为<strong>入边（前驱）</strong>、出边（后继）<strong>和</strong>自身（自环）分别设置三个独立的权重矩阵 $W_{in}, W_{out}, W_{self}$：</p>
+<script type="math/tex; mode=display">H^{(l+1)} = \sigma\left( D_{in}^{-1} A_{in} H^{(l)} W_{in} + D_{out}^{-1} A_{out} H^{(l)} W_{out} + H^{(l)} W_{self} \right)</script><h3 id="3-结合例子手算GCN"><a href="#3-结合例子手算GCN" class="headerlink" title="3.结合例子手算GCN"></a>3.结合例子手算GCN</h3><p> 3 个节点、相同的初始特征 $X$ 和相同的权重矩阵 $W$，DAG 结构与初始数据：</p>
+<p>设图中包含 3 个节点，有向边为 <strong>$1 \to 2$</strong>、<strong>$1 \to 3$</strong>、<strong>$2 \to 3$</strong>（拓扑序为 $1 \to 2 \to 3$，无任何环路）：</p>
+<ul>
+<li><p>初始特征矩阵 $X$ 与 权重矩阵 $W$（与上一问完全一致）：</p>
+<script type="math/tex; mode=display">X = \begin{bmatrix} 1 & 0 \\ 0 & 2 \\ 2 & 1 \end{bmatrix}, \quad W = \begin{bmatrix} 2 & -2 \\ 1 & 0.5 \end{bmatrix}</script></li>
+</ul>
+<h4 id="第一步：写出标准出边邻接矩阵-A-并转置得到入边矩阵-A-in"><a href="#第一步：写出标准出边邻接矩阵-A-并转置得到入边矩阵-A-in" class="headerlink" title="第一步：写出标准出边邻接矩阵 $A$ 并转置得到入边矩阵 $A_{in}$"></a>第一步：写出标准出边邻接矩阵 $A$ 并转置得到入边矩阵 $A_{in}$</h4><p>按标准定义（若 $i \to j$ 有边，则 $A_{ij} = 1$）：</p>
+<ul>
+<li>节点 1 指向 2 和 3 $\Rightarrow$ 第 1 行为 $[0, 1, 1]$</li>
+<li>节点 2 指向 3 $\Rightarrow$ 第 2 行为 $[0, 0, 1]$</li>
+<li>节点 3 无出边 $\Rightarrow$ 第 3 行为 $[0, 0, 0]$</li>
+</ul>
+<script type="math/tex; mode=display">A = \begin{bmatrix} 0 & 1 & 1 \\ 0 & 0 & 1 \\ 0 & 0 & 0 \end{bmatrix}</script><p><em>(注：对角线及以下全为 0，即严格上三角矩阵，这是所有 DAG 按拓扑序排列后的标志性特征。)</em></p>
+<p>为了让每个节点聚合指向它的父节点特征，取转置得到入边邻接矩阵 $A_{in} = A^T$：</p>
+<script type="math/tex; mode=display">A_{in} = A^T = \begin{bmatrix} 0 & 0 & 0 \\ 1 & 0 & 0 \\ 1 & 1 & 0 \end{bmatrix}</script><ul>
+<li>第 1 行 $[0, 0, 0]$：节点 1 没有父节点；</li>
+<li>第 2 行 $[1, 0, 0]$：节点 2 的父节点是 ${1}$；</li>
+<li>第 3 行 $[1, 1, 0]$：节点 3 的父节点是 ${1, 2}$。</li>
+</ul>
+<h4 id="第二步：添加自环并计算入度矩阵-tilde-D-in"><a href="#第二步：添加自环并计算入度矩阵-tilde-D-in" class="headerlink" title="第二步：添加自环并计算入度矩阵 $\tilde{D}_{in}$"></a>第二步：添加自环并计算入度矩阵 $\tilde{D}_{in}$</h4><blockquote>
+<p><strong>加入自环优点</strong>：观察 $A_{in}$ 的第 1 行全为 $0$。如果不加自环，节点 1 的入度为 $0$，不仅无法求逆矩阵，还会导致节点 1 乘出来变成 $[0, 0]$。</p>
+</blockquote>
+<p>加上单位矩阵 $I$ 得到 $\tilde{A}_{in}$：</p>
+<script type="math/tex; mode=display">\tilde{A}_{in} = A_{in} + I = \begin{bmatrix} 0 & 0 & 0 \\ 1 & 0 & 0 \\ 1 & 1 & 0 \end{bmatrix} + \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix} = \begin{bmatrix} 1 & 0 & 0 \\ 1 & 1 & 0 \\ 1 & 1 & 1 \end{bmatrix}</script><p>统计 $\tilde{A}_{in}$ 每行的元素之和（即包含自身在内的入度 $\tilde{d}_{in, i}$），得到入度矩阵 $\tilde{D}_{in}$ 及其逆矩阵 $\tilde{D}_{in}^{-1}$：</p>
+<ul>
+<li>节点 1：入度 $+ 1 = 1$</li>
+<li>节点 2：入度 $+ 1 = 2$</li>
+<li>节点 3：入度 $+ 1 = 3$</li>
+</ul>
+<script type="math/tex; mode=display">\tilde{D}_{in} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 2 & 0 \\ 0 & 0 & 3 \end{bmatrix}, \quad \tilde{D}_{in}^{-1} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & \frac{1}{2} & 0 \\ 0 & 0 & \frac{1}{3} \end{bmatrix}</script><h4 id="第三步：计算归一化入边聚合矩阵-hat-A-in-并聚合特征"><a href="#第三步：计算归一化入边聚合矩阵-hat-A-in-并聚合特征" class="headerlink" title="第三步：计算归一化入边聚合矩阵 $\hat{A}_{in}$ 并聚合特征"></a>第三步：计算归一化入边聚合矩阵 $\hat{A}_{in}$ 并聚合特征</h4><p>计算 $\hat{A}_{in} = \tilde{D}_{in}^{-1} \tilde{A}_{in}$：</p>
+<script type="math/tex; mode=display">\hat{A}_{in} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & \frac{1}{2} & 0 \\ 0 & 0 & \frac{1}{3} \end{bmatrix} \begin{bmatrix} 1 & 0 & 0 \\ 1 & 1 & 0 \\ 1 & 1 & 1 \end{bmatrix} = \begin{bmatrix} 1 & 0 & 0 \\ 0.5 & 0.5 & 0 \\ \frac{1}{3} & \frac{1}{3} & \frac{1}{3} \end{bmatrix}</script><p>将 $\hat{A}_{in}$ 与特征矩阵 $X$ 相乘，完成单向父节点特征聚合 $\bar{H} = \hat{A}_{in} X$：</p>
+<script type="math/tex; mode=display">\bar{H} = \hat{A}_{in} X = \begin{bmatrix} 1 & 0 & 0 \\ 0.5 & 0.5 & 0 \\ \frac{1}{3} & \frac{1}{3} & \frac{1}{3} \end{bmatrix} \begin{bmatrix} 1 & 0 \\ 0 & 2 \\ 2 & 1 \end{bmatrix} = \begin{bmatrix} 1(1)+0+0 & 1(0)+0+0 \\ 0.5(1)+0.5(0)+0 & 0.5(0)+0.5(2)+0 \\ \frac{1}{3}(1)+\frac{1}{3}(0)+\frac{1}{3}(2) & \frac{1}{3}(0)+\frac{1}{3}(2)+\frac{1}{3}(1) \end{bmatrix} = \begin{bmatrix} 1.0 & 0.0 \\ 0.5 & 1.0 \\ 1.0 & 1.0 \end{bmatrix}</script><p><strong>对比无向图聚合结果</strong>：</p>
+<ul>
+<li>节点 1 聚合后为 $[1.0, 0.0]$：因为它没有父节点，完全保留自身特征，绝不会被子节点 2、3 的信息反向污染。</li>
+<li>节点 2 聚合后为 $[0.5, 1.0]$：只融合了父节点 1 和自身 2 的特征，不会接收到后继节点 3 的信息。</li>
+<li>节点 3 聚合后为 $[1.0, 1.0]$：作为汇点，同时汇聚了父节点 1、父节点 2 以及自身的特征。</li>
+</ul>
+<h4 id="第四步：线性变换（乘以-W-）与非线性激活（-sigma-）"><a href="#第四步：线性变换（乘以-W-）与非线性激活（-sigma-）" class="headerlink" title="第四步：线性变换（乘以 $W$）与非线性激活（$\sigma$）"></a>第四步：线性变换（乘以 $W$）与非线性激活（$\sigma$）</h4><p>将聚合特征 $\bar{H}$ 乘以权重矩阵 $W$：</p>
+<script type="math/tex; mode=display">Z = \bar{H} W = \begin{bmatrix} 1.0 & 0.0 \\ 0.5 & 1.0 \\ 1.0 & 1.0 \end{bmatrix} \begin{bmatrix} 2 & -2 \\ 1 & 0.5 \end{bmatrix} = \begin{bmatrix} 1.0(2)+0.0(1) & 1.0(-2)+0.0(0.5) \\ 0.5(2)+1.0(1) & 0.5(-2)+1.0(0.5) \\ 1.0(2)+1.0(1) & 1.0(-2)+1.0(0.5) \end{bmatrix} = \begin{bmatrix} 2.0 & -2.0 \\ 2.0 & -0.5 \\ 3.0 & -1.5 \end{bmatrix}</script><p>最后通过激活函数（以 $\text{LeakyReLU}$，负斜率 $\alpha = 0.1$ 为例）：</p>
+<script type="math/tex; mode=display">H^{(1)}_{\text{LeakyReLU} } = \begin{bmatrix} 2.0 & -0.20 \\ 2.0 & -0.05 \\ 3.0 & -0.15 \end{bmatrix}</script><h2 id="二、-进阶补充：DAG-专属的“按拓扑序异步卷积”（DAGNN）"><a href="#二、-进阶补充：DAG-专属的“按拓扑序异步卷积”（DAGNN）" class="headerlink" title="二、 进阶补充：DAG 专属的“按拓扑序异步卷积”（DAGNN）"></a>二、 进阶补充：DAG 专属的“按拓扑序异步卷积”（DAGNN）</h2><p>除了上述“所有节点同步做矩阵乘法”的标准方式外，由于 DAG 没有环路，许多专门针对 DAG 设计的图神经网络（如 DAGNN、Tree-LSTM）会利用拓扑序（Topological Order）*<em>进行*</em>异步顺序计算：</p>
+<ol>
+<li><p><strong>同步矩阵卷积（上面验算的方法）</strong>：</p>
+<p>在第 1 层计算时，节点 3 聚合的是节点 1 和节点 2 的旧特征 $x_1^{(0)}, x_2^{(0)}$。如果去掉 $1 \to 3$ 的直接连边（只留链式结构 $1 \to 2 \to 3$），那么经过 1 层 GCN 后，节点 1 的信息只能传到节点 2，传不到节点 3（必须堆叠 2 层 GCN 才能传到）。</p>
+</li>
+<li><p><strong>拓扑序异步卷积（DAG 独有特性）</strong>：</p>
+<p>按照拓扑序 $1 \to 2 \to 3$ 依次计算，且子节点直接使用父节点刚刚更新完的新特征 $h$：</p>
+<ul>
+<li><strong>第 1 步（算源节点 1）</strong>：$h_1 = \sigma(x_1 W) = [2.0, -0.20]$</li>
+<li><strong>第 2 步（算节点 2，直接用新算出的 $h_1$）</strong>：$h_2 = \sigma\left(\frac{h_1 + x_2 W}{2}\right)$</li>
+<li><strong>第 3 步（算节点 3，直接用新算出的 $h_1, h_2$）</strong>：$h_3 = \sigma\left(\frac{h_1 + h_2 + x_3 W}{3}\right)$</li>
+</ul>
+</li>
+</ol>
+<p>这种按拓扑序递推的方式，只需单层网络（1 次前向遍历）就能让根节点的信息沿着最长有向路径一直传递到最底部的汇点，常用于程序语法树（AST）、因果推理图和医疗诊疗路径建模。</p>
 
 		</div>
 
@@ -1618,7 +1678,7 @@ r(d_i,m_k) = \operatorname{Group}\left(\mathbf M^{dm}_{ik}\right),</script><p>�
         
             <li>
                 <strong>Updated at
-                    :</strong> 2026-11-10 14:15:49
+                    :</strong> 2026-11-14 17:11:48
             </li>
         
         <li>
@@ -1755,7 +1815,7 @@ r(d_i,m_k) = \operatorname{Group}\left(\mathbf M^{dm}_{ik}\right),</script><p>�
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">GCN：图卷积网络和RGCN ：关系图卷积神经网络</div>
-		<ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#GCN%EF%BC%9A%E5%9B%BE%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C%E5%92%8CRGCN-%EF%BC%9A%E5%85%B3%E7%B3%BB%E5%9B%BE%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-text">GCN：图卷积网络和RGCN ：关系图卷积神经网络</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-GCN%E5%9B%BE%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-text">1.GCN图卷积神经网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B4%E8%A7%82%E7%90%86%E8%A7%A3%E4%B8%8E%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86"><span class="nav-text">直观理解与数学原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GCN%E7%BD%91%E7%BB%9C%E5%B1%82%E6%95%B0"><span class="nav-text">GCN网络层数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E5%B7%B2%E7%BB%8F%E6%9C%89%E7%96%BE%E7%97%85%E5%90%91%E9%87%8F%E4%BA%86%EF%BC%8C%E8%BF%98%E9%9C%80%E8%A6%81-GCN%EF%BC%9F"><span class="nav-text">一、为什么已经有疾病向量了，还需要 GCN？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-GCN-%E6%98%AF%E6%80%8E%E6%A0%B7%E8%AE%A1%E7%AE%97%E7%9A%84%EF%BC%9F"><span class="nav-text">二, GCN 是怎样计算的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%94%A8%E4%B8%80%E4%B8%AA%E5%B0%8F%E4%BE%8B%E5%AD%90%EF%BC%8C%E5%AE%9E%E9%99%85%E7%AE%97%E4%B8%80%E9%81%8D-GCN"><span class="nav-text">三、用一个小例子，实际算一遍 GCN</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-RGCN%E5%81%9A%E4%BA%86%E9%82%A3%E4%BA%9B%E6%94%B9%E8%BF%9B"><span class="nav-text">2.RGCN做了那些改进</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81RGCN-%E6%AF%94-GCN-%E5%A4%9A%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-text">一、RGCN 比 GCN 多做了什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-%E9%80%90%E9%A1%B9%E6%8B%86%E8%A7%A3%E6%88%AA%E5%9B%BE%E4%B8%AD%E7%9A%84%E5%85%AC%E5%BC%8F"><span class="nav-text">二.逐项拆解截图中的公式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89-%E6%B2%BF%E7%94%A8%E5%89%8D%E9%9D%A2%E7%9A%84%E4%BE%8B%E5%AD%90%EF%BC%8C%E6%89%8B%E7%AE%97-RGCN"><span class="nav-text">三.沿用前面的例子，手算 RGCN</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E8%AF%A5%E6%A8%A1%E5%9E%8B%E5%9C%A8Casualmed%E8%AE%BA%E6%96%87%E5%BA%94%E7%94%A8"><span class="nav-text">3.该模型在Casualmed论文应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80-%E5%85%AC%E5%BC%8F%EF%BC%888%EF%BC%89%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E5%86%99%E6%88%90-mathbf-W-r-l-mathbf-I-Theta-r-l-%EF%BC%9F"><span class="nav-text">一.公式（8）：为什么写成 $\mathbf W_r^l&#x3D;\mathbf I+\Theta_r^l$？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AE%BA%E6%96%87%E9%9C%80%E8%A6%81-RGCN%EF%BC%9F%E6%99%AE%E9%80%9A-GCN-%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E8%B6%B3%EF%BC%9F"><span class="nav-text">二.为什么论文需要 RGCN？普通 GCN 有什么不足？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E4%B8%A4%E5%B1%82%EF%BC%9F"><span class="nav-text">三.为什么使用两层？</span></a></li></ol></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#GCN%EF%BC%9A%E5%9B%BE%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C%E5%92%8CRGCN-%EF%BC%9A%E5%85%B3%E7%B3%BB%E5%9B%BE%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-text">GCN：图卷积网络和RGCN ：关系图卷积神经网络</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#1-GCN%E5%9B%BE%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-text">1.GCN图卷积神经网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B4%E8%A7%82%E7%90%86%E8%A7%A3%E4%B8%8E%E6%95%B0%E5%AD%A6%E5%8E%9F%E7%90%86"><span class="nav-text">直观理解与数学原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GCN%E7%BD%91%E7%BB%9C%E5%B1%82%E6%95%B0"><span class="nav-text">GCN网络层数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E5%B7%B2%E7%BB%8F%E6%9C%89%E7%96%BE%E7%97%85%E5%90%91%E9%87%8F%E4%BA%86%EF%BC%8C%E8%BF%98%E9%9C%80%E8%A6%81-GCN%EF%BC%9F"><span class="nav-text">一、为什么已经有疾病向量了，还需要 GCN？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-GCN-%E6%98%AF%E6%80%8E%E6%A0%B7%E8%AE%A1%E7%AE%97%E7%9A%84%EF%BC%9F"><span class="nav-text">二, GCN 是怎样计算的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E7%BB%93%E5%90%88%E4%BE%8B%E5%AD%90%EF%BC%8C%E6%89%8B%E7%AE%97-GCN"><span class="nav-text">三、结合例子，手算 GCN</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-RGCN%E5%81%9A%E4%BA%86%E9%82%A3%E4%BA%9B%E6%94%B9%E8%BF%9B"><span class="nav-text">2.RGCN做了那些改进</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81RGCN-%E6%AF%94-GCN-%E5%A4%9A%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="nav-text">一、RGCN 比 GCN 多做了什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-%E9%80%90%E9%A1%B9%E6%8B%86%E8%A7%A3%E6%88%AA%E5%9B%BE%E4%B8%AD%E7%9A%84%E5%85%AC%E5%BC%8F"><span class="nav-text">二.逐项拆解截图中的公式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89-%E6%B2%BF%E7%94%A8%E5%89%8D%E9%9D%A2%E7%9A%84%E4%BE%8B%E5%AD%90%EF%BC%8C%E6%89%8B%E7%AE%97-RGCN"><span class="nav-text">三.沿用前面的例子，手算 RGCN</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E8%AF%A5%E6%A8%A1%E5%9E%8B%E5%9C%A8Casualmed%E8%AE%BA%E6%96%87%E5%BA%94%E7%94%A8"><span class="nav-text">3.该模型在Casualmed论文应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80-%E5%85%AC%E5%BC%8F%EF%BC%888%EF%BC%89%EF%BC%9A%E4%B8%BA%E4%BB%80%E4%B9%88%E5%86%99%E6%88%90-mathbf-W-r-l-mathbf-I-Theta-r-l-%EF%BC%9F"><span class="nav-text">一.公式（8）：为什么写成 $\mathbf W_r^l&#x3D;\mathbf I+\Theta_r^l$？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%AE%BA%E6%96%87%E9%9C%80%E8%A6%81-RGCN%EF%BC%9F%E6%99%AE%E9%80%9A-GCN-%E6%9C%89%E4%BB%80%E4%B9%88%E4%B8%8D%E8%B6%B3%EF%BC%9F"><span class="nav-text">二.为什么论文需要 RGCN？普通 GCN 有什么不足？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%E4%B8%A4%E5%B1%82%EF%BC%9F"><span class="nav-text">三.为什么使用两层？</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E6%8B%93%E5%B1%95%EF%BC%9A%E6%9C%89%E5%90%91%E6%97%A0%E7%8E%AF%E5%9B%BE-DAG-%E7%9A%84GCN%E5%8D%B7%E7%A7%AF"><span class="nav-text">4.拓展：有向无环图(DAG)的GCN卷积</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81-DAG-GCN-%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%A0%B8%E5%BF%83%E5%8D%B7%E7%A7%AF%E6%96%B9%E5%BC%8F"><span class="nav-text">一、 DAG GCN 的两种核心卷积方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%96%B9%E5%BC%8F%E4%B8%80%EF%BC%9A%E5%9F%BA%E4%BA%8E%E5%85%A5%E5%BA%A6%E5%BD%92%E4%B8%80%E5%8C%96%E7%9A%84%E7%9F%A9%E9%98%B5%E5%90%8C%E6%AD%A5%E5%8D%B7%E7%A7%AF%EF%BC%88%E6%9C%80%E5%B8%B8%E7%94%A8%EF%BC%89"><span class="nav-text">1. 方式一：基于入度归一化的矩阵同步卷积（最常用）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%96%B9%E5%BC%8F%E4%BA%8C%EF%BC%9A%E5%A4%9A%E5%85%B3%E7%B3%BB%E5%8F%8C%E5%90%91%E6%9C%89%E5%90%91%E5%8D%B7%E7%A7%AF%EF%BC%88%E5%90%8C%E6%97%B6%E5%8C%BA%E5%88%86%E5%89%8D%E9%A9%B1%E3%80%81%E5%90%8E%E7%BB%A7%E4%B8%8E%E8%87%AA%E8%BA%AB%EF%BC%89"><span class="nav-text">2. 方式二：多关系双向有向卷积（同时区分前驱、后继与自身）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E7%BB%93%E5%90%88%E4%BE%8B%E5%AD%90%E6%89%8B%E7%AE%97GCN"><span class="nav-text">3.结合例子手算GCN</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%86%99%E5%87%BA%E6%A0%87%E5%87%86%E5%87%BA%E8%BE%B9%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5-A-%E5%B9%B6%E8%BD%AC%E7%BD%AE%E5%BE%97%E5%88%B0%E5%85%A5%E8%BE%B9%E7%9F%A9%E9%98%B5-A-in"><span class="nav-text">第一步：写出标准出边邻接矩阵 $A$ 并转置得到入边矩阵 $A_{in}$</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E6%B7%BB%E5%8A%A0%E8%87%AA%E7%8E%AF%E5%B9%B6%E8%AE%A1%E7%AE%97%E5%85%A5%E5%BA%A6%E7%9F%A9%E9%98%B5-tilde-D-in"><span class="nav-text">第二步：添加自环并计算入度矩阵 $\tilde{D}_{in}$</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E8%AE%A1%E7%AE%97%E5%BD%92%E4%B8%80%E5%8C%96%E5%85%A5%E8%BE%B9%E8%81%9A%E5%90%88%E7%9F%A9%E9%98%B5-hat-A-in-%E5%B9%B6%E8%81%9A%E5%90%88%E7%89%B9%E5%BE%81"><span class="nav-text">第三步：计算归一化入边聚合矩阵 $\hat{A}_{in}$ 并聚合特征</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5%EF%BC%9A%E7%BA%BF%E6%80%A7%E5%8F%98%E6%8D%A2%EF%BC%88%E4%B9%98%E4%BB%A5-W-%EF%BC%89%E4%B8%8E%E9%9D%9E%E7%BA%BF%E6%80%A7%E6%BF%80%E6%B4%BB%EF%BC%88-sigma-%EF%BC%89"><span class="nav-text">第四步：线性变换（乘以 $W$）与非线性激活（$\sigma$）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81-%E8%BF%9B%E9%98%B6%E8%A1%A5%E5%85%85%EF%BC%9ADAG-%E4%B8%93%E5%B1%9E%E7%9A%84%E2%80%9C%E6%8C%89%E6%8B%93%E6%89%91%E5%BA%8F%E5%BC%82%E6%AD%A5%E5%8D%B7%E7%A7%AF%E2%80%9D%EF%BC%88DAGNN%EF%BC%89"><span class="nav-text">二、 进阶补充：DAG 专属的“按拓扑序异步卷积”（DAGNN）</span></a></li></ol></li></ol>
 
 	</div>
 </div>
