@@ -94,7 +94,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/images/redefine-og.webp">
 <meta property="article:published_time" content="2026-11-17T08:00:29.000Z">
-<meta property="article:modified_time" content="2026-11-17T08:00:29.791Z">
+<meta property="article:modified_time" content="2026-11-17T08:13:37.000Z">
 <meta property="article:author" content="Zoe Raina">
 <meta property="article:tag" content="代码精读">
 <meta name="twitter:card" content="summary">
@@ -1264,8 +1264,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2026-11-17 16:29</span>
-            <span class="mobile">2026-11-17 16:29</span>
+            <span class="desktop">2026-11-17 16:13:37</span>
+            <span class="mobile">2026-11-17 16:13:37</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -1322,7 +1322,30 @@
 			<h1 id="（有向）图对象的存储方式"><a href="#（有向）图对象的存储方式" class="headerlink" title="（有向）图对象的存储方式"></a>（有向）图对象的存储方式</h1><p>以casual_med里的casual_graph为例</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">   ——————&gt;图的定义</span><br><span class="line">   def build_graph(self, data_all):</span><br><span class="line">        current_dir = os.path.dirname(os.path.abspath(__file__))</span><br><span class="line">        # Build full file path</span><br><span class="line">        file_path = os.path.join(current_dir, f&quot;../../data/&#123;self.dataset&#125;/graphs/causal_graph.pkl&quot;)</span><br><span class="line">        try:</span><br><span class="line">            subgraph_list = dill.load(open(file_path, &quot;rb&quot;))</span><br><span class="line">        except FileNotFoundError:</span><br><span class="line">            causal_graphs = []</span><br><span class="line">            print(&quot;Build all cause and effect diagrams.&quot;)</span><br><span class="line">            sessions = self.sessions_process(data_all)</span><br><span class="line">            for adm in tqdm(sessions):</span><br><span class="line">                D = adm[0]</span><br><span class="line">                P = adm[1]</span><br><span class="line">                M = adm[2]</span><br><span class="line">                # Convert data into DataFrame column names</span><br><span class="line">                visit = [f&quot;Diag_&#123;d&#125;&quot; for d in D] + [f&quot;Proc_&#123;p&#125;&quot; for p in P] + [f&quot;Med_&#123;m&#125;&quot; for m in M]</span><br><span class="line">                visit_data = self.data[visit]</span><br><span class="line">                # Calculate the cause-and-effect diagram using the GES algorithm</span><br><span class="line">                cdt_algo = GES()</span><br><span class="line">                causal_graph = cdt_algo.predict(visit_data)</span><br><span class="line">                # Remove Med-Diag, Med-Proc</span><br><span class="line">                new_graph = nx.DiGraph()</span><br><span class="line">                # First, add all nodes to the new graph</span><br><span class="line">                for node in causal_graph.nodes():</span><br><span class="line">                    new_graph.add_node(node)</span><br><span class="line">                # Then, add the required edges to the new graph</span><br><span class="line">                for edge in causal_graph.edges():</span><br><span class="line">                    source, target = edge</span><br><span class="line">                    # Reserve disease-medicine, disease-disease, medicine-medicine</span><br><span class="line">                    if source.startswith(&quot;Diag&quot;) and target.startswith(&quot;Diag&quot;):</span><br><span class="line">                        new_graph.add_edge(source, target)</span><br><span class="line">                    elif source.startswith(&quot;Diag&quot;) and target.startswith(&quot;Med&quot;):</span><br><span class="line">                        new_graph.add_edge(source, target)</span><br><span class="line">                    elif source.startswith(&quot;Diag&quot;) and target.startswith(&quot;Proc&quot;):</span><br><span class="line">                        new_graph.add_edge(source, target)</span><br><span class="line">                    elif source.startswith(&quot;Proc&quot;) and target.startswith(&quot;Proc&quot;):</span><br><span class="line">                        new_graph.add_edge(source, target)</span><br><span class="line">                    elif source.startswith(&quot;Proc&quot;) and target.startswith(&quot;Diag&quot;):</span><br><span class="line">                        new_graph.add_edge(source, target)</span><br><span class="line">                    elif source.startswith(&quot;Proc&quot;) and target.startswith(&quot;Med&quot;):</span><br><span class="line">                        new_graph.add_edge(source, target)</span><br><span class="line">                    elif source.startswith(&quot;Med&quot;) and target.startswith(&quot;Med&quot;):</span><br><span class="line">                        new_graph.add_edge(source, target)</span><br><span class="line"></span><br><span class="line">                causal_graph = new_graph</span><br><span class="line">                </span><br><span class="line">                </span><br><span class="line">   ---&gt;读取</span><br><span class="line">    def get_graph(self, graph_id, graph_type):</span><br><span class="line">        if graph_id &gt;= len(self.causal_graphs):</span><br><span class="line">            # 例如换了数据集、缓存里的因果图条数不够时，退化成空图（相当于该部分只用自身嵌入）</span><br><span class="line">            print(f&quot;[警告] causal_graph.pkl 中只有 &#123;len(self.causal_graphs)&#125; 条因果图，&quot;</span><br><span class="line">                  f&quot;取不到第 &#123;graph_id&#125; 条，已退化为空图。如需完整效果请重新生成因果图。&quot;)</span><br><span class="line">            graph = nx.DiGraph()</span><br><span class="line">        else:</span><br><span class="line">            graph = self.causal_graphs[graph_id]</span><br><span class="line"></span><br><span class="line">        if graph_type == &quot;Diag&quot;:</span><br><span class="line">            return graph[0]</span><br><span class="line">        elif graph_type == &quot;Proc&quot;:</span><br><span class="line">            return graph[1]</span><br><span class="line">        elif graph_type == &quot;Med&quot;:</span><br><span class="line">            return graph[2]</span><br><span class="line">            </span><br><span class="line">            </span><br><span class="line">---&gt;graph.id怎么定义的   </span><br><span class="line">adm_id = 0</span><br><span class="line">for patient in data:</span><br><span class="line">        for adm in patient:</span><br><span class="line">            adm.append(adm_id) # 把全局ID塞进这次就诊记录里</span><br><span class="line">            adm_id += 1</span><br></pre></td></tr></table></figure></div>
 <p><code>build_graph</code> 函数返回的 <code>subgraph_list</code> 变量。它的完整结构是 <code>List[List[nx.DiGraph]]</code></p>
-<h2 id="1-理想情况下图的逻辑存储结构"><a href="#1-理想情况下图的逻辑存储结构" class="headerlink" title="1.理想情况下图的逻辑存储结构"></a>1.理想情况下图的逻辑存储结构</h2><p><strong>第一层：按就诊维度切分的列表 (List)</strong></p>
+<h2 id="1-图的逻辑存储结构"><a href="#1-图的逻辑存储结构" class="headerlink" title="1.图的逻辑存储结构"></a>1.图的逻辑存储结构</h2><p>理想状态下，对于图的理想结构是能做到图的随机存取，既采取三级列表嵌套字典</p>
+<p><strong>第一层：按患者维度切分的列表</strong></p>
+<p> 这个最外层列表的长度，等于数据集中患者的总数。</p>
+<p><strong>第二层：按就诊维度切分的列表 (List)</strong></p>
+<ul>
+<li>列表的长度等于数据集中该患者的总就诊次数。</li>
+</ul>
+<p><strong>第三层：按医疗实体类型切分的列表 (List)</strong></p>
+<ul>
+<li>是一个长度固定为 3 的子列表</li>
+<li>索引 <code>[0]</code>：只包含疾病节点的子图（Diag）。   </li>
+<li>索引 <code>[1]</code>：只包含手术节点的子图（Proc）。   </li>
+<li>索引 <code>[2]</code>：只包含药物节点的子图（Med）。   </li>
+<li>这就是为什么在 <code>get_graph</code> 函数里，代码拿到了这个列表后，还需要再写一个判断：<code>if graph_type == &quot;Diag&quot;: return graph[0]</code>。</li>
+</ul>
+<p><strong>最底层：NetworkX 有向图对象 (nx.DiGraph)</strong></p>
+<ul>
+<li>列表里装的最终元素，是第三方图论库 <code>networkx</code> 创建的有向图对象（<code>nx.DiGraph</code>）。   </li>
+<li>里面存储了节点（如字符串 <code>&quot;Diag_5&quot;</code>, <code>&quot;Diag_12&quot;</code>）以及它们之间的有向边（代表因果关系），并且源码中特别写了去环逻辑（remove loop），保证它是一个有向无环图（DAG）。</li>
+<li>NetworkX 有向图对象 是字典，键是起始节点/终点，值是终点/起始节点。</li>
+</ul>
+<p>但是在机器学习中，因为大多数图只作训练样本，他并不需要随机访问某位患者的病例，所以常用的存储结构是扁平化的[[{}]]结构。</p>
+<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">在训练神经网络时，PyTorch 的 DataLoader 核心逻辑是 __getitem__(self, index)——它会抛出一个递增的随机整数（比如给个 5），要求代码瞬间吐出“第 5 条可以独立运算的样本”。为了配合这个机制，作者在源码最下方的测试入口 __main__ 里，给每一次住院都强行绑定了一个全局自增的 adm_id（也就是后来的 graph_id）：</span><br><span class="line">adm_id = 0</span><br><span class="line">for patient in data:</span><br><span class="line">        for adm in patient:</span><br><span class="line">            adm.append(adm_id) # 把全局ID塞进这次就诊记录里</span><br><span class="line">            adm_id += 1</span><br><span class="line">所以也无法随机读取某位病人的某次诊断</span><br></pre></td></tr></table></figure></div>
+<p><strong>第一层：按就诊维度切分的列表 (List)</strong></p>
 <ul>
 <li><code>self.causal_graphs</code> 这个最外层列表的长度，等于数据集中所有患者的总就诊次数（Sessions 总数）。</li>
 <li>当执行 <code>self.causal_graphs[graph_id]</code> 时，其实是拿到了第 <code>graph_id</code> 次就诊的全部因果图信息。  ‘</li>
@@ -1341,9 +1364,7 @@
 <li>里面存储了节点（如字符串 <code>&quot;Diag_5&quot;</code>, <code>&quot;Diag_12&quot;</code>）以及它们之间的有向边（代表因果关系），并且源码中特别写了去环逻辑（remove loop），保证它是一个有向无环图（DAG）。</li>
 <li>NetworkX 有向图对象 是字典，键是起始节点/终点，值是终点/起始节点。</li>
 </ul>
-<h2 id="2-机器学习常采用的存储结构"><a href="#2-机器学习常采用的存储结构" class="headerlink" title="2.机器学习常采用的存储结构"></a>2.机器学习常采用的存储结构</h2><p>但是在机器学习中，很少会次啊用这种逻辑存储结构，因为大多数图只作训练样本，他并不需要随机访问某位患者的病例，所以常用的存储结构是扁平化的[{}]结构。也就是如下图：</p>
-<div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">在训练神经网络时，PyTorch 的 DataLoader 核心逻辑是 __getitem__(self, index)——它会抛出一个递增的随机整数（比如给个 5），要求代码瞬间吐出“第 5 条可以独立运算的样本”。为了配合这个机制，作者在源码最下方的测试入口 __main__ 里，给每一次住院都强行绑定了一个全局自增的 adm_id（也就是后来的 graph_id）：</span><br><span class="line">adm_id = 0</span><br><span class="line">for patient in data:</span><br><span class="line">        for adm in patient:</span><br><span class="line">            adm.append(adm_id) # 把全局ID塞进这次就诊记录里</span><br><span class="line">            adm_id += 1</span><br><span class="line">所以也无法随机读取某位病人的某次诊断</span><br></pre></td></tr></table></figure></div>
-<p>硬盘上的物理存储：Dill 序列化二进制文件</p>
+<h2 id="2-图的物理结构"><a href="#2-图的物理结构" class="headerlink" title="2.图的物理结构"></a>2.图的物理结构</h2><p>硬盘上的物理存储：Dill 序列化二进制文件</p>
 <ul>
 <li>文件格式：它是以 <code>.pkl</code>（Pickle）后缀结尾的文件。   </li>
 <li>存储路径：保存在项目目录下的 <code>../../data/&#123;dataset&#125;/graphs/causal_graph.pkl</code> 中。   </li>
@@ -1409,7 +1430,7 @@
         
             <li>
                 <strong>Updated at
-                    :</strong> 2026-11-17 16:00:29
+                    :</strong> 2026-11-17 16:13:37
             </li>
         
         <li>
@@ -1534,7 +1555,7 @@
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">（有向）图对象的存储方式</div>
-		<ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%EF%BC%88%E6%9C%89%E5%90%91%EF%BC%89%E5%9B%BE%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%AD%98%E5%82%A8%E6%96%B9%E5%BC%8F"><span class="nav-text">（有向）图对象的存储方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%90%86%E6%83%B3%E6%83%85%E5%86%B5%E4%B8%8B%E5%9B%BE%E7%9A%84%E9%80%BB%E8%BE%91%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="nav-text">1.理想情况下图的逻辑存储结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E5%B8%B8%E9%87%87%E7%94%A8%E7%9A%84%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="nav-text">2.机器学习常采用的存储结构</span></a></li></ol></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%EF%BC%88%E6%9C%89%E5%90%91%EF%BC%89%E5%9B%BE%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%AD%98%E5%82%A8%E6%96%B9%E5%BC%8F"><span class="nav-text">（有向）图对象的存储方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E5%9B%BE%E7%9A%84%E9%80%BB%E8%BE%91%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="nav-text">1.图的逻辑存储结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E5%9B%BE%E7%9A%84%E7%89%A9%E7%90%86%E7%BB%93%E6%9E%84"><span class="nav-text">2.图的物理结构</span></a></li></ol></li></ol>
 
 	</div>
 </div>
