@@ -2982,6 +2982,10 @@
     user-select: text;
     -webkit-user-select: text;
     touch-action: none;
+    transition: none; /* 默认不添加过渡，避免流式输出与状态变更时引起面板抽搐抖动 */
+}
+
+.ai-chat-root.is-snapping {
     transition: left 0.32s cubic-bezier(0.34, 1.45, 0.64, 1),
                 right 0.32s cubic-bezier(0.34, 1.45, 0.64, 1),
                 top 0.32s cubic-bezier(0.34, 1.45, 0.64, 1);
@@ -3120,6 +3124,9 @@
                 transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
                 visibility 0.3s ease;
     z-index: 9999;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: translateZ(0); /* 开启硬件加速合成层，防止子元素流式重绘时整个面板微抖动 */
 }
 
 /* 停靠在右侧时：面板伸向左侧 */
@@ -3368,6 +3375,9 @@
 .ai-chat-messages {
     flex: 1;
     overflow-y: auto;
+    overflow-anchor: none; /* 关键：彻底关闭浏览器滚动锚定机制，杜绝与流式输出对抗导致的抽搐 */
+    scrollbar-gutter: stable; /* 关键：锁定滚动槽，防止滚动条闪现引起内容宽度与折行跳变 */
+    scroll-behavior: auto !important; /* 严禁 smooth 滚动争抢 */
     padding: 16px 14px;
     display: flex;
     flex-direction: column;
@@ -3455,6 +3465,7 @@
     padding: 10px 14px;
     box-sizing: border-box;
     word-break: break-word;
+    contain: layout style; /* 隔离气泡内高频流式排版，防止向外扩散引起对话框抽搐 */
 }
 
 /* 用户气泡 */
@@ -3485,7 +3496,8 @@
     background: rgba(0, 0, 0, 0.28);
     border: 1px solid rgba(255, 255, 255, 0.08);
     overflow: hidden;
-    transition: all 0.2s ease;
+    transition: border-color 0.2s ease, background 0.2s ease; /* 严禁 transition: all 或 height！防止高度随打字拉伸时产生200ms延迟动画抽搐 */
+    contain: paint;
 }
 
 .ai-thinking-header {
@@ -3517,6 +3529,9 @@
 .ai-thinking-icon {
     color: #94a3b8 !important;
     font-size: 0.8rem;
+    display: inline-block;
+    transform-origin: center center;
+    flex-shrink: 0;
 }
 
 .ai-thinking-box.is-thinking .ai-thinking-icon {
@@ -3552,6 +3567,23 @@
     border-radius: 6px;
     max-height: 220px;
     overflow-y: auto;
+    overflow-anchor: none; /* 关键：彻底关闭思考区内部滚动锚定，杜绝思考文本上下跳动 */
+    scrollbar-gutter: stable; /* 关键：稳定内部滚动条槽位 */
+    scroll-behavior: auto !important;
+}
+
+.ai-thinking-content::-webkit-scrollbar {
+    width: 4px;
+}
+.ai-thinking-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+.ai-thinking-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+.ai-thinking-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
 }
 
 .ai-thinking-box.is-collapsed .ai-thinking-content {
@@ -3629,10 +3661,11 @@
 .ai-typing-cursor {
     display: inline-block;
     width: 2px;
-    height: 1em;
+    height: 1.1em;
     background: #3b82f6;
-    vertical-align: middle;
-    margin-left: 2px;
+    vertical-align: -0.15em;
+    margin-left: 3px;
+    border-radius: 1px;
     animation: ai-cursor-blink 0.8s infinite;
 }
 
@@ -3899,9 +3932,9 @@
         }
 
         if (animate) {
-            rootDom.style.transition = "all 0.35s cubic-bezier(0.34, 1.45, 0.64, 1)";
+            rootDom.classList.add("is-snapping");
             setTimeout(() => {
-                if (!isDraggingTrigger) rootDom.style.transition = "";
+                if (!isDraggingTrigger) rootDom.classList.remove("is-snapping");
             }, 360);
         }
 
@@ -4297,6 +4330,21 @@
         }).join("");
     }
 
+    function renderAnswerHtml(container, markdownText, showCursor) {
+        container.innerHTML = formatMarkdown(markdownText);
+        if (showCursor) {
+            const cursor = document.createElement("span");
+            cursor.className = "ai-typing-cursor";
+            // 找到内部最末尾的一个块级元素，将光标内联挂接在其末尾，防止光标单独换行引起高度跳变抽搐
+            const lastTarget = container.querySelector("p:last-of-type, li:last-of-type, pre:last-of-type, h4:last-of-type, h3:last-of-type, h2:last-of-type");
+            if (lastTarget) {
+                lastTarget.appendChild(cursor);
+            } else {
+                container.appendChild(cursor);
+            }
+        }
+    }
+
     function renderRestoredHistory() {
         if (!chatHistory || chatHistory.length === 0) return;
         const logoUrl = triggerDom.querySelector("img").src;
@@ -4424,6 +4472,51 @@
         abortController = new AbortController();
         let fullReasoning = "";
         let fullAnswer = "";
+        let hasNewReasoning = false;
+        let hasNewAnswer = false;
+        let rafId = null;
+        let isUserReadingThinking = false;
+
+        // 思考区独立向上翻阅检测（当用户在思考框内主动往上翻看时，不强制将其拉回思考框底部）
+        thinkingContent.addEventListener("scroll", () => {
+            const dist = thinkingContent.scrollHeight - thinkingContent.scrollTop - thinkingContent.clientHeight;
+            isUserReadingThinking = dist > 35;
+        }, { passive: true });
+
+        // 使用 requestAnimationFrame 进行流式帧同步合并渲染，彻底解决每毫秒频繁重绘引起的抽搐与抖动
+        function flushRender() {
+            rafId = null;
+            if (hasNewReasoning) {
+                if (thinkingBox.style.display === "none") {
+                    thinkingBox.style.display = "block";
+                }
+                thinkingContent.textContent = fullReasoning;
+                // 若用户没有在思考框内往上翻阅，自动保持显示最新思考动态
+                if (!isUserReadingThinking) {
+                    thinkingContent.scrollTop = thinkingContent.scrollHeight;
+                }
+                hasNewReasoning = false;
+            }
+
+            if (hasNewAnswer) {
+                if (thinkingBox.classList.contains("is-thinking")) {
+                    thinkingBox.classList.remove("is-thinking");
+                    if (thinkingHeaderText) {
+                        thinkingHeaderText.textContent = "深度思考过程 (点击折叠/展开)";
+                    }
+                }
+                renderAnswerHtml(answerBox, fullAnswer, true);
+                hasNewAnswer = false;
+            }
+
+            smartScrollToBottom();
+        }
+
+        function scheduleRender() {
+            if (rafId === null) {
+                rafId = requestAnimationFrame(flushRender);
+            }
+        }
 
         const apiMessages = chatHistory.slice(-10).map(m => ({
             role: m.role,
@@ -4474,39 +4567,46 @@
                         const delta = json.choices && json.choices[0] && json.choices[0].delta;
                         if (!delta) continue;
 
-                        // 思考链内容 (灰色显示，智能滚动不抢夺用户滚轮)
+                        // 思考链内容 (灰色显示，帧同步平滑渲染，杜绝抽搐)
                         if (delta.reasoning_content) {
-                            if (thinkingBox.style.display === "none") {
-                                thinkingBox.style.display = "block";
-                            }
                             fullReasoning += delta.reasoning_content;
-                            thinkingContent.textContent = fullReasoning;
-                            smartScrollToBottom();
+                            hasNewReasoning = true;
+                            scheduleRender();
                         }
 
-                        // 回答内容 (白色显示，智能滚动不抢夺用户滚轮)
+                        // 回答内容 (白色显示，帧同步平滑渲染，杜绝抽搐)
                         if (delta.content) {
-                            if (thinkingBox.classList.contains("is-thinking")) {
-                                thinkingBox.classList.remove("is-thinking");
-                                if (thinkingHeaderText) {
-                                    thinkingHeaderText.textContent = "深度思考过程 (点击折叠/展开)";
-                                }
-                            }
                             fullAnswer += delta.content;
-                            answerBox.innerHTML = formatMarkdown(fullAnswer) + '<span class="ai-typing-cursor"></span>';
-                            smartScrollToBottom();
+                            hasNewAnswer = true;
+                            scheduleRender();
                         }
                     } catch(err) {}
                 }
             }
 
-            answerBox.innerHTML = formatMarkdown(fullAnswer || "(无回答内容)");
+            // 完成后取消残留 rAF 并执行终态渲染
+            if (rafId !== null) {
+                cancelAnimationFrame(rafId);
+                rafId = null;
+            }
+
+            if (fullReasoning) {
+                if (thinkingBox.style.display === "none") {
+                    thinkingBox.style.display = "block";
+                }
+                thinkingContent.textContent = fullReasoning;
+                if (!isUserReadingThinking) {
+                    thinkingContent.scrollTop = thinkingContent.scrollHeight;
+                }
+            }
             if (thinkingBox.classList.contains("is-thinking")) {
                 thinkingBox.classList.remove("is-thinking");
                 if (thinkingHeaderText) {
                     thinkingHeaderText.textContent = "深度思考过程 (点击折叠/展开)";
                 }
             }
+            renderAnswerHtml(answerBox, fullAnswer || "(无回答内容)", false);
+            smartScrollToBottom();
 
             const botRecord = {
                 id: "msg_" + Date.now() + "_" + Math.random().toString(36).substr(2, 6),
@@ -4520,12 +4620,21 @@
             saveHistoryToStorage();
 
         } catch(err) {
+            if (rafId !== null) {
+                cancelAnimationFrame(rafId);
+                rafId = null;
+            }
             if (err.name === "AbortError") {
-                answerBox.innerHTML = formatMarkdown(fullAnswer) + ' <em style="color:#94a3b8;font-size:0.82rem;">[已中断生成]</em>';
+                renderAnswerHtml(answerBox, fullAnswer, false);
+                answerBox.insertAdjacentHTML("beforeend", ' <em style="color:#94a3b8;font-size:0.82rem;">[已中断生成]</em>');
             } else {
                 answerBox.innerHTML = `<span style="color:#ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> 请求出错: ${escapeHtml(err.message || String(err))}</span>`;
             }
         } finally {
+            if (rafId !== null) {
+                cancelAnimationFrame(rafId);
+                rafId = null;
+            }
             isGenerating = false;
             abortController = null;
             btnSend.classList.remove("is-generating");
