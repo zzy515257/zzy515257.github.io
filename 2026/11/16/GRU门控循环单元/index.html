@@ -2730,10 +2730,10 @@
 })();
 </script>
 
-	<!-- AI Chatbot Component (SiliconFlow DeepSeek-R1-0528-Qwen3-8B) -->
-<div id="ai-chat-root" class="ai-chat-root is-collapsed" data-swup-ignore-script>
-    <!-- 1. 悬浮圆形 Logo 按钮 (默认折叠态) -->
-    <div id="ai-chat-trigger" class="ai-chat-trigger" title="点击与 DeepSeek-R1 AI 助手对话 (可点击展开/收起)">
+	<!-- AI Chatbot Component (SiliconFlow DeepSeek-R1-0528-Qwen3-8B · 支持拖动停靠 · 自由缩放 · 智能防抢滚轮 · 3天/5000条本地持久化) -->
+<div id="ai-chat-root" class="ai-chat-root is-collapsed dock-right" data-swup-ignore-script>
+    <!-- 1. 悬浮圆形 Logo 按钮 (支持左右拖拽停靠，自动避开音乐播放器) -->
+    <div id="ai-chat-trigger" class="ai-chat-trigger" title="点击展开/收起 · 长按拖拽可吸附停靠至左侧或右侧">
         <div class="ai-trigger-pulse"></div>
         <div class="ai-trigger-inner">
             <img src="/images/ai-logo.png" alt="AI Assistant" class="ai-trigger-logo" />
@@ -2741,8 +2741,17 @@
         <span class="ai-trigger-badge">R1</span>
     </div>
 
-    <!-- 2. 展开后的 AI 对话框主体 -->
+    <!-- 2. 展开后的 AI 对话框主体 (支持拖拽边框/边角自由放大缩小) -->
     <div id="ai-chat-panel" class="ai-chat-panel" role="dialog" aria-label="DeepSeek-R1 AI 助手">
+        <!-- 自由缩放拖动手柄 -->
+        <div class="ai-resize-handle-top" id="ai-resize-top" title="拖动调整高度"></div>
+        <div class="ai-resize-handle-side" id="ai-resize-side" title="拖动调整宽度"></div>
+        <div class="ai-resize-handle-corner" id="ai-resize-corner" title="拖动调整尺寸">
+            <svg class="ai-resize-icon" viewBox="0 0 10 10">
+                <path d="M9 1L1 9M9 5L5 9M9 9L9 9" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+        </div>
+
         <!-- 头部 -->
         <div class="ai-chat-header">
             <div class="ai-header-left" id="ai-header-logo-btn" title="点击圆形Logo收起对话框">
@@ -2757,11 +2766,15 @@
                     <div class="ai-header-status">
                         <span class="ai-status-dot"></span>
                         <span class="ai-status-text">深度思考已就绪</span>
+                        <span class="ai-history-badge" id="ai-history-badge" title="历史记录保留 3 天，最多 5000 条">已存本地</span>
                     </div>
                 </div>
             </div>
             <div class="ai-header-actions">
-                <button type="button" class="ai-header-btn" id="ai-btn-clear" title="开启新对话 (清空聊天历史)">
+                <button type="button" class="ai-header-btn" id="ai-btn-export" title="导出并备份聊天记录至本地 JSON 文件">
+                    <i class="fa-solid fa-download"></i>
+                </button>
+                <button type="button" class="ai-header-btn" id="ai-btn-clear" title="开启新对话 (清空当前历史)">
                     <i class="fa-solid fa-rotate-right"></i>
                 </button>
                 <button type="button" class="ai-header-btn ai-btn-close" id="ai-btn-close" title="收起对话框">
@@ -2780,10 +2793,17 @@
                 <div class="ai-msg-bubble">
                     <div class="ai-answer-box">
                         <p>你好呀！👋 我是博客的 <strong>DeepSeek-R1</strong> 智能助手。</p>
-                        <p>你可以向我提问关于<strong>学术论文研读、深度学习模型、代码实现、算法推导</strong>等任何技术问题，我会为您展现<strong>思考过程</strong>并给出清晰的回答！</p>
+                        <p>你可以向我提问关于<strong>学术论文研读、深度学习模型、代码实现、算法推导</strong>等任何技术问题，我会为您展现<strong>思考过程</strong>并给出清晰回答！</p>
+                        <p style="font-size:0.8rem;color:#94a3b8;margin-top:6px;">✨ 聊天记录自动保存在本地，<strong>保留 3 天，最多 5000 条</strong>；输出过程中您可以自由滚动翻阅。</p>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- 用户往上翻阅时的浮动提示按钮 -->
+        <div id="ai-scroll-bottom-btn" class="ai-scroll-bottom-btn" title="点击跳至最新输出">
+            <i class="fa-solid fa-arrow-down"></i>
+            <span>查看最新内容</span>
         </div>
 
         <!-- 底部输入栏 -->
@@ -2809,33 +2829,59 @@
 
 <style>
 /* ==========================================================================
-   AI Chatbot Component Styles (右下角圆形悬浮 · 点击展开/收起 · 思考灰色/回答白色)
+   AI Chatbot Component Styles (左右停靠 · 自由缩放 · 思考灰色/回答白色 · 避让播放器)
    ========================================================================== */
 .ai-chat-root {
     position: fixed;
     z-index: 9998;
-    bottom: 88px;
-    right: 25px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     user-select: text;
     -webkit-user-select: text;
+    touch-action: none;
+    transition: left 0.32s cubic-bezier(0.34, 1.45, 0.64, 1),
+                right 0.32s cubic-bezier(0.34, 1.45, 0.64, 1),
+                top 0.32s cubic-bezier(0.34, 1.45, 0.64, 1);
 }
 
-/* 1. 悬浮圆形 Logo 按钮 */
+.ai-chat-root.is-dragging {
+    transition: none !important;
+}
+
+/* 停靠在右侧（默认） */
+.ai-chat-root.dock-right {
+    right: 24px;
+    left: auto;
+}
+
+/* 停靠在左侧 */
+.ai-chat-root.dock-left {
+    left: 24px;
+    right: auto;
+}
+
+/* 1. 悬浮圆形 Logo 按钮 (可拖拽，悬停缩放微动效) */
 .ai-chat-trigger {
     position: relative;
     width: 52px;
     height: 52px;
     border-radius: 50%;
-    cursor: pointer;
+    cursor: grab;
     display: flex;
     align-items: center;
     justify-content: center;
     background: #111217;
     border: 1.5px solid rgba(79, 134, 247, 0.5);
     box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45), 0 0 12px rgba(59, 130, 246, 0.3);
-    transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease, border-color 0.28s ease;
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, border-color 0.25s ease;
     will-change: transform;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.ai-chat-root.is-dragging .ai-chat-trigger {
+    cursor: grabbing !important;
+    transform: scale(1.12);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.6), 0 0 20px rgba(59, 130, 246, 0.6);
 }
 
 .ai-chat-trigger:hover {
@@ -2845,7 +2891,7 @@
 }
 
 .ai-chat-trigger:active {
-    transform: scale(0.95);
+    transform: scale(0.96);
 }
 
 /* 呼吸光环 */
@@ -2877,6 +2923,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    pointer-events: none;
 }
 
 .ai-trigger-logo {
@@ -2906,15 +2953,16 @@
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
-/* 2. 对话框主体面板 */
+/* 2. 对话框主体面板 (支持自由拖拽边框缩放) */
 .ai-chat-panel {
     position: fixed;
     bottom: 25px;
-    right: 88px;
     width: 385px;
     height: 540px;
+    min-width: 320px;
+    min-height: 380px;
     max-width: calc(100vw - 110px);
-    max-height: calc(100vh - 120px);
+    max-height: calc(100vh - 70px);
     border-radius: 20px;
     background: #13141a;
     border: 1px solid rgba(255, 255, 255, 0.12);
@@ -2924,14 +2972,27 @@
     overflow: hidden;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    transform-origin: bottom right;
-    transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.32s cubic-bezier(0.16, 1, 0.3, 1),
-                visibility 0.32s ease;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                visibility 0.3s ease;
     z-index: 9999;
 }
 
-/* 折叠与展开状态切换 */
+/* 停靠在右侧时：面板伸向左侧 */
+.ai-chat-root.dock-right .ai-chat-panel {
+    right: 86px;
+    left: auto;
+    transform-origin: bottom right;
+}
+
+/* 停靠在左侧时：面板伸向右侧 */
+.ai-chat-root.dock-left .ai-chat-panel {
+    left: 86px;
+    right: auto;
+    transform-origin: bottom left;
+}
+
+/* 折叠与展开 */
 .ai-chat-root.is-collapsed .ai-chat-panel {
     opacity: 0;
     visibility: hidden;
@@ -2951,6 +3012,73 @@
     box-shadow: 0 0 18px rgba(59, 130, 246, 0.6);
 }
 
+/* 自由缩放手柄样式 */
+.ai-resize-handle-top {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    right: 10px;
+    height: 8px;
+    cursor: ns-resize;
+    z-index: 20;
+}
+.ai-resize-handle-top:hover {
+    background: rgba(59, 130, 246, 0.3);
+}
+
+.ai-resize-handle-side {
+    position: absolute;
+    top: 10px;
+    bottom: 10px;
+    width: 8px;
+    cursor: ew-resize;
+    z-index: 20;
+}
+.ai-resize-handle-side:hover {
+    background: rgba(59, 130, 246, 0.3);
+}
+
+.ai-chat-root.dock-right .ai-resize-handle-side {
+    left: 0;
+    right: auto;
+}
+.ai-chat-root.dock-left .ai-resize-handle-side {
+    right: 0;
+    left: auto;
+}
+
+.ai-resize-handle-corner {
+    position: absolute;
+    top: 2px;
+    width: 22px;
+    height: 22px;
+    z-index: 21;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.ai-resize-handle-corner:hover {
+    opacity: 1;
+    transform: scale(1.15);
+}
+
+.ai-chat-root.dock-right .ai-resize-handle-corner {
+    left: 2px;
+    cursor: nwse-resize;
+}
+.ai-chat-root.dock-left .ai-resize-handle-corner {
+    right: 2px;
+    cursor: nesw-resize;
+}
+
+.ai-resize-icon {
+    width: 12px;
+    height: 12px;
+    pointer-events: none;
+}
+
 /* 对话框头部 */
 .ai-chat-header {
     display: flex;
@@ -2959,6 +3087,8 @@
     padding: 12px 16px;
     background: #181922;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    position: relative;
+    z-index: 15;
 }
 
 .ai-header-left {
@@ -3024,7 +3154,7 @@
 .ai-header-status {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     font-size: 0.72rem;
     color: #94a3b8;
     margin-top: 2px;
@@ -3047,6 +3177,15 @@
 @keyframes ai-dot-blink {
     from { opacity: 0.4; }
     to { opacity: 1; }
+}
+
+.ai-history-badge {
+    font-size: 0.62rem;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.06);
+    color: #94a3b8;
+    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .ai-header-actions {
@@ -3089,10 +3228,9 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    scroll-behavior: smooth;
+    position: relative;
 }
 
-/* 自定义滚动条 */
 .ai-chat-messages::-webkit-scrollbar {
     width: 5px;
 }
@@ -3107,7 +3245,37 @@
     background: rgba(255, 255, 255, 0.3);
 }
 
-/* 单条消息样式 */
+/* 查看最新浮动按钮 (输出中用户向上滚动时展示) */
+.ai-scroll-bottom-btn {
+    position: absolute;
+    bottom: 74px;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    display: none;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    background: rgba(37, 99, 235, 0.9);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    border-radius: 9999px;
+    font-size: 0.74rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    z-index: 30;
+    transition: all 0.2s ease;
+}
+.ai-scroll-bottom-btn.is-active {
+    display: inline-flex;
+    transform: translateX(-50%) translateY(0);
+}
+.ai-scroll-bottom-btn:hover {
+    background: #2563eb;
+    transform: translateX(-50%) scale(1.05);
+}
+
+/* 消息气泡 */
 .ai-msg {
     display: flex;
     gap: 10px;
@@ -3419,9 +3587,13 @@
 
 /* 移动端全屏友好自适应 */
 @media (max-width: 640px) {
-    .ai-chat-root {
-        bottom: 80px;
+    .ai-chat-root.dock-right {
         right: 14px;
+        left: auto;
+    }
+    .ai-chat-root.dock-left {
+        left: 14px;
+        right: auto;
     }
     .ai-chat-trigger {
         width: 48px;
@@ -3432,25 +3604,32 @@
         height: 34px;
     }
     .ai-chat-panel {
-        bottom: 12px;
-        right: 12px;
-        left: 12px;
-        width: auto;
-        max-width: none;
-        height: calc(100vh - 90px);
-        max-height: none;
+        bottom: 12px !important;
+        right: 12px !important;
+        left: 12px !important;
+        width: auto !important;
+        max-width: none !important;
+        height: calc(100vh - 90px) !important;
+        max-height: none !important;
         border-radius: 16px;
+    }
+    .ai-resize-handle-top,
+    .ai-resize-handle-side,
+    .ai-resize-handle-corner {
+        display: none !important;
     }
 }
 </style>
 
 <script data-swup-ignore-script>
 (function() {
-    // SiliconFlow API 配置
+    // SiliconFlow API 配置与规则约束
     const API_URL = "https://api.siliconflow.cn/v1/chat/completions";
     const API_KEY = "sk-bmggkkjtebtlvzwongojvnwcgsuirxjnrqbhuhzutdgdqnut";
     const MODEL_NAME = "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B";
     const INACTIVITY_TIMEOUT_MS = 75000; // 75秒无交互自动收起
+    const RETENTION_DAYS_MS = 3 * 24 * 60 * 60 * 1000; // 本地聊天记录只保存 3 天
+    const MAX_LOCAL_RECORDS = 5000; // 最多保存 5000 条记录
 
     // DOM 元素引用
     const rootDom = document.getElementById("ai-chat-root");
@@ -3459,12 +3638,19 @@
     const headerLogoBtn = document.getElementById("ai-header-logo-btn");
     const btnClose = document.getElementById("ai-btn-close");
     const btnClear = document.getElementById("ai-btn-clear");
+    const btnExport = document.getElementById("ai-btn-export");
     const messagesDom = document.getElementById("ai-chat-messages");
     const inputDom = document.getElementById("ai-chat-input");
     const btnSend = document.getElementById("ai-btn-send");
     const sendIcon = document.getElementById("ai-send-icon");
     const statusDot = document.querySelector(".ai-status-dot");
     const statusText = document.querySelector(".ai-status-text");
+    const scrollBottomBtn = document.getElementById("ai-scroll-bottom-btn");
+
+    // 缩放手柄引用
+    const resizeTop = document.getElementById("ai-resize-top");
+    const resizeSide = document.getElementById("ai-resize-side");
+    const resizeCorner = document.getElementById("ai-resize-corner");
 
     if (!rootDom || !triggerDom || !panelDom || !inputDom || !btnSend) return;
 
@@ -3473,19 +3659,290 @@
     let isGenerating = false;
     let abortController = null;
     let inactivityTimer = null;
-    let chatHistory = []; // [{role: "user"|"assistant", content: "..."}]
+    let isUserReadingAbove = false; // 用户是否在自主向上滚动查看
+    let chatHistory = []; // [{id, timestamp, timeStr, role, content, reasoning}]
 
-    // 从 sessionStorage 恢复历史记录
+    // 拖拽悬浮球状态
+    let isDraggingTrigger = false;
+    let hasMovedTrigger = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let initialTriggerRect = null;
+    let currentDock = "right";
+
+    // =========================================================================
+    // 1. 本地存储持久化与 3 天/5000 条自动生命周期清理
+    // =========================================================================
+    function cleanAndFilterRecords(records) {
+        if (!Array.isArray(records)) return [];
+        const cutoff = Date.now() - RETENTION_DAYS_MS;
+        // 过滤只保留 3 天以内的数据
+        let valid = records.filter(r => r && (r.timestamp || 0) >= cutoff);
+        // 最多保留 5000 条
+        if (valid.length > MAX_LOCAL_RECORDS) {
+            valid = valid.slice(-MAX_LOCAL_RECORDS);
+        }
+        return valid;
+    }
+
+    function saveHistoryToStorage() {
+        try {
+            chatHistory = cleanAndFilterRecords(chatHistory);
+            localStorage.setItem("blog_ai_chat_history_v3", JSON.stringify(chatHistory));
+        } catch(e) {}
+    }
+
+    // 从 localStorage 恢复历史记录
     try {
-        const saved = sessionStorage.getItem("blog_ai_chat_history");
+        const saved = localStorage.getItem("blog_ai_chat_history_v3");
         if (saved) {
-            chatHistory = JSON.parse(saved);
+            chatHistory = cleanAndFilterRecords(JSON.parse(saved));
+            saveHistoryToStorage();
             renderRestoredHistory();
         }
     } catch(e) {}
 
     // =========================================================================
-    // 展开 / 折叠 / 自动超时收起逻辑
+    // 2. 悬浮按钮自由拖动与左右停靠逻辑（自动避开音乐播放器与侧边工具栏）
+    // =========================================================================
+    function applyDock(dock, targetY, animate = true) {
+        currentDock = dock;
+        const isMobile = window.innerWidth <= 768;
+        const btnHeight = isMobile ? 48 : 52;
+        const screenH = window.innerHeight;
+        const defaultY = screenH - (isMobile ? 80 : 88);
+        let safeY = Math.max(16, Math.min(screenH - btnHeight - 16, targetY || defaultY));
+
+        // 核心避让逻辑：检测并避开音乐播放器 (vinyl-player)，绝不重叠
+        const vp = document.getElementById("vinyl-player");
+        if (vp) {
+            const vpRect = vp.getBoundingClientRect();
+            const isVpSameDock = (dock === "left" && vp.classList.contains("dock-left")) ||
+                                 (dock === "right" && vp.classList.contains("dock-right"));
+            if (isVpSameDock && vpRect.width > 0 && vpRect.height > 0) {
+                const margin = 16;
+                const aiBottom = safeY + btnHeight;
+                const isOverlapping = !(aiBottom < vpRect.top - margin || safeY > vpRect.bottom + margin);
+                if (isOverlapping) {
+                    const spaceAbove = vpRect.top - btnHeight - margin;
+                    const spaceBelow = vpRect.bottom + margin;
+                    if (safeY < vpRect.top && spaceAbove >= 16) {
+                        safeY = spaceAbove;
+                    } else if (spaceBelow + btnHeight <= screenH - 16) {
+                        safeY = spaceBelow;
+                    } else if (spaceAbove >= 16) {
+                        safeY = spaceAbove;
+                    } else {
+                        safeY = Math.max(16, spaceBelow);
+                    }
+                }
+            }
+        }
+
+        // 若停靠在右侧，同时检测并避开主题侧边工具栏齿轮按钮
+        if (dock === "right") {
+            const st = document.querySelector(".right-side-tools-container") || document.querySelector(".side-tools-container");
+            if (st) {
+                const stRect = st.getBoundingClientRect();
+                if (stRect.width > 0 && stRect.height > 0) {
+                    const margin = 14;
+                    const aiBottom = safeY + btnHeight;
+                    if (!(aiBottom < stRect.top - margin || safeY > stRect.bottom + margin)) {
+                        safeY = Math.max(16, stRect.top - btnHeight - margin);
+                    }
+                }
+            }
+        }
+
+        if (animate) {
+            rootDom.style.transition = "all 0.35s cubic-bezier(0.34, 1.45, 0.64, 1)";
+            setTimeout(() => {
+                if (!isDraggingTrigger) rootDom.style.transition = "";
+            }, 360);
+        }
+
+        if (dock === "left") {
+            rootDom.classList.remove("dock-right");
+            rootDom.classList.add("dock-left");
+            rootDom.style.left = isMobile ? "14px" : "24px";
+            rootDom.style.right = "auto";
+            rootDom.style.top = safeY + "px";
+            rootDom.style.bottom = "auto";
+        } else {
+            rootDom.classList.remove("dock-left");
+            rootDom.classList.add("dock-right");
+            rootDom.style.left = "auto";
+            rootDom.style.right = isMobile ? "14px" : "24px";
+            rootDom.style.top = safeY + "px";
+            rootDom.style.bottom = "auto";
+        }
+
+        try {
+            localStorage.setItem("ai_chat_dock_pos_v2", JSON.stringify({
+                dock: currentDock,
+                topPercent: safeY / screenH
+            }));
+        } catch(e) {}
+    }
+
+    // 恢复历史停靠位置
+    try {
+        const savedDock = JSON.parse(localStorage.getItem("ai_chat_dock_pos_v2") || "{}");
+        if (savedDock && (savedDock.dock === "left" || savedDock.dock === "right") && savedDock.topPercent) {
+            applyDock(savedDock.dock, Math.round(savedDock.topPercent * window.innerHeight), false);
+        } else {
+            applyDock("right", null, false);
+        }
+    } catch(e) {
+        applyDock("right", null, false);
+    }
+
+    // 监听窗口尺寸变化重算停靠
+    window.addEventListener("resize", () => {
+        const rect = triggerDom.getBoundingClientRect();
+        applyDock(currentDock, rect.top, false);
+    });
+
+    // 拖拽悬浮球事件监听
+    triggerDom.addEventListener("pointerdown", (e) => {
+        if (e.button !== 0 && e.pointerType === "mouse") return;
+        isDraggingTrigger = true;
+        hasMovedTrigger = false;
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
+        initialTriggerRect = triggerDom.getBoundingClientRect();
+        try {
+            triggerDom.setPointerCapture(e.pointerId);
+        } catch(err) {}
+    });
+
+    triggerDom.addEventListener("pointermove", (e) => {
+        if (!isDraggingTrigger) return;
+        const dx = e.clientX - dragStartX;
+        const dy = e.clientY - dragStartY;
+
+        if (!hasMovedTrigger && Math.hypot(dx, dy) > 6) {
+            hasMovedTrigger = true;
+            rootDom.classList.add("is-dragging");
+            collapseChat(); // 拖拽中收起对话框，体验更轻盈
+        }
+
+        if (hasMovedTrigger) {
+            const currentX = initialTriggerRect.left + dx;
+            const currentY = initialTriggerRect.top + dy;
+            rootDom.style.left = currentX + "px";
+            rootDom.style.top = currentY + "px";
+            rootDom.style.right = "auto";
+            rootDom.style.bottom = "auto";
+        }
+    });
+
+    const handleTriggerPointerEnd = (e) => {
+        if (!isDraggingTrigger) return;
+        isDraggingTrigger = false;
+        rootDom.classList.remove("is-dragging");
+        try {
+            triggerDom.releasePointerCapture(e.pointerId);
+        } catch(err) {}
+
+        if (hasMovedTrigger) {
+            const currentRect = triggerDom.getBoundingClientRect();
+            const centerX = currentRect.left + currentRect.width / 2;
+            const targetDock = centerX < window.innerWidth / 2 ? "left" : "right";
+            applyDock(targetDock, currentRect.top, true);
+        } else {
+            // 纯点击触发展开/收起
+            toggleChat();
+        }
+    };
+
+    triggerDom.addEventListener("pointerup", handleTriggerPointerEnd);
+    triggerDom.addEventListener("pointercancel", handleTriggerPointerEnd);
+
+    // =========================================================================
+    // 3. 对话框拖拽边框/边角自由放大缩小 (默认 385x540，持久记忆)
+    // =========================================================================
+    try {
+        const savedSize = JSON.parse(localStorage.getItem("ai_chat_panel_size_v2") || "{}");
+        if (savedSize && savedSize.width && savedSize.height && window.innerWidth > 640) {
+            const safeW = Math.max(320, Math.min(window.innerWidth - 110, savedSize.width));
+            const safeH = Math.max(380, Math.min(window.innerHeight - 70, savedSize.height));
+            panelDom.style.width = safeW + "px";
+            panelDom.style.height = safeH + "px";
+        }
+    } catch(e) {}
+
+    function setupResizeHandle(handleEl, resizeType) {
+        if (!handleEl) return;
+        let isResizing = false;
+        let startX = 0;
+        let startY = 0;
+        let startW = 0;
+        let startH = 0;
+
+        handleEl.addEventListener("pointerdown", (e) => {
+            if (e.button !== 0 && e.pointerType === "mouse") return;
+            e.stopPropagation();
+            isResizing = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            startW = panelDom.offsetWidth;
+            startH = panelDom.offsetHeight;
+            try {
+                handleEl.setPointerCapture(e.pointerId);
+            } catch(err) {}
+            panelDom.style.transition = "none";
+        });
+
+        handleEl.addEventListener("pointermove", (e) => {
+            if (!isResizing) return;
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+
+            // 调整高度 (向上拉伸)
+            if (resizeType === "top" || resizeType === "corner") {
+                const newH = Math.max(380, Math.min(window.innerHeight - 70, startH - dy));
+                panelDom.style.height = newH + "px";
+            }
+
+            // 调整宽度 (左右拉伸自适应停靠方向)
+            if (resizeType === "side" || resizeType === "corner") {
+                let newW;
+                if (currentDock === "right") {
+                    newW = Math.max(320, Math.min(window.innerWidth - 110, startW - dx));
+                } else {
+                    newW = Math.max(320, Math.min(window.innerWidth - 110, startW + dx));
+                }
+                panelDom.style.width = newW + "px";
+            }
+        });
+
+        const endResize = (e) => {
+            if (!isResizing) return;
+            isResizing = false;
+            try {
+                handleEl.releasePointerCapture(e.pointerId);
+            } catch(err) {}
+            panelDom.style.transition = "";
+
+            try {
+                localStorage.setItem("ai_chat_panel_size_v2", JSON.stringify({
+                    width: panelDom.offsetWidth,
+                    height: panelDom.offsetHeight
+                }));
+            } catch(err) {}
+        };
+
+        handleEl.addEventListener("pointerup", endResize);
+        handleEl.addEventListener("pointercancel", endResize);
+    }
+
+    setupResizeHandle(resizeTop, "top");
+    setupResizeHandle(resizeSide, "side");
+    setupResizeHandle(resizeCorner, "corner");
+
+    // =========================================================================
+    // 4. 展开 / 折叠 / 自动超时收起逻辑
     // =========================================================================
     function expandChat() {
         isExpanded = true;
@@ -3494,7 +3951,9 @@
         resetInactivityTimer();
         setTimeout(() => {
             inputDom.focus();
-            scrollToBottom();
+            if (!isUserReadingAbove) {
+                messagesDom.scrollTop = messagesDom.scrollHeight;
+            }
         }, 150);
     }
 
@@ -3513,10 +3972,9 @@
         }
     }
 
-    // 重置长时间不交互自动收起计时器
     function resetInactivityTimer() {
         clearTimeout(inactivityTimer);
-        // 只有在面板展开且不在流式生成中时才倒计时自动收起
+        // 只有面板展开且当前不在生成时才倒计时自动收起
         if (isExpanded && !isGenerating) {
             inactivityTimer = setTimeout(() => {
                 collapseChat();
@@ -3524,19 +3982,11 @@
         }
     }
 
-    // 绑定交互事件以重置无交互倒计时
     const panelEvents = ["mousemove", "mousedown", "keydown", "touchstart", "scroll"];
     panelEvents.forEach(evt => {
         panelDom.addEventListener(evt, resetInactivityTimer, { passive: true });
     });
 
-    // 点击圆形 Logo 按钮切换展开/收起
-    triggerDom.addEventListener("click", (e) => {
-        e.stopPropagation();
-        toggleChat();
-    });
-
-    // 点击对话框顶部圆形 Logo 收起
     if (headerLogoBtn) {
         headerLogoBtn.addEventListener("click", (e) => {
             e.stopPropagation();
@@ -3544,7 +3994,6 @@
         });
     }
 
-    // 点击关闭按钮收起
     if (btnClose) {
         btnClose.addEventListener("click", (e) => {
             e.stopPropagation();
@@ -3552,14 +4001,12 @@
         });
     }
 
-    // 按 Escape 键快速收起
     window.addEventListener("keydown", (e) => {
         if (e.key === "Escape" && isExpanded) {
             collapseChat();
         }
     });
 
-    // 点击外部区域自动收起（不包括 trigger 自身）
     document.addEventListener("click", (e) => {
         if (!isExpanded) return;
         if (!panelDom.contains(e.target) && !triggerDom.contains(e.target)) {
@@ -3571,11 +4018,9 @@
     if (btnClear) {
         btnClear.addEventListener("click", () => {
             if (isGenerating) return;
-            if (confirm("确定要清空当前聊天记录并开启新对话吗？")) {
+            if (confirm("确定要清空当前的聊天记录并开启新对话吗？")) {
                 chatHistory = [];
-                try {
-                    sessionStorage.removeItem("blog_ai_chat_history");
-                } catch(e) {}
+                saveHistoryToStorage();
                 messagesDom.innerHTML = `
                     <div class="ai-msg ai-msg-bot">
                         <div class="ai-msg-avatar">
@@ -3593,8 +4038,59 @@
         });
     }
 
+    // 导出备份到本地 JSON 文件 (只保留 3 天以内的合法记录)
+    if (btnExport) {
+        btnExport.addEventListener("click", () => {
+            const valid = cleanAndFilterRecords(chatHistory);
+            if (valid.length === 0) {
+                alert("当前暂无 3 天内的有效聊天记录可导出。");
+                return;
+            }
+            const blob = new Blob([JSON.stringify(valid, null, 2)], { type: "application/json;charset=utf-8" });
+            const nowStr = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = `ai_chat_history_${nowStr}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(a.href);
+        });
+    }
+
     // =========================================================================
-    // 输入框自适应高度与发送
+    // 5. 智能滚动监测 (解决输出时自动滚屏无法向上翻看的问题)
+    // =========================================================================
+    messagesDom.addEventListener("scroll", () => {
+        const distFromBottom = messagesDom.scrollHeight - messagesDom.scrollTop - messagesDom.clientHeight;
+        // 距离底部超过 45px 视为用户正在自主向上翻阅，不强制抢夺滚轮
+        isUserReadingAbove = distFromBottom > 45;
+
+        if (scrollBottomBtn) {
+            if (isUserReadingAbove && isGenerating) {
+                scrollBottomBtn.classList.add("is-active");
+            } else {
+                scrollBottomBtn.classList.remove("is-active");
+            }
+        }
+    }, { passive: true });
+
+    if (scrollBottomBtn) {
+        scrollBottomBtn.addEventListener("click", () => {
+            isUserReadingAbove = false;
+            messagesDom.scrollTop = messagesDom.scrollHeight;
+            scrollBottomBtn.classList.remove("is-active");
+        });
+    }
+
+    function smartScrollToBottom() {
+        if (!isUserReadingAbove) {
+            messagesDom.scrollTop = messagesDom.scrollHeight;
+        }
+    }
+
+    // =========================================================================
+    // 6. 输入框交互与 Markdown 渲染
     // =========================================================================
     inputDom.addEventListener("input", () => {
         inputDom.style.height = "auto";
@@ -3613,13 +4109,6 @@
         handleSend();
     });
 
-    function scrollToBottom() {
-        messagesDom.scrollTop = messagesDom.scrollHeight;
-    }
-
-    // =========================================================================
-    // 轻量安全 Markdown 解析器 (零依赖，支持代码块、行内代码、粗体、列表、换行)
-    // =========================================================================
     function escapeHtml(str) {
         return str
             .replace(/&/g, "&amp;")
@@ -3631,42 +4120,28 @@
         if (!text) return "";
         let codeBlocks = [];
 
-        // 提取代码块，防止内部被后续正则误伤
         let clean = text.replace(/```([a-zA-Z0-9_\-\+]*)\n([\s\S]*?)```/g, (match, lang, code) => {
             const idx = codeBlocks.length;
             codeBlocks.push({ lang: lang || "plaintext", code: escapeHtml(code.trim()) });
             return `__CODE_BLOCK_${idx}__`;
         });
 
-        // HTML 转义其余文本
         clean = escapeHtml(clean);
-
-        // 行内代码 `code`
         clean = clean.replace(/`([^`\n]+)`/g, "<code>$1</code>");
-
-        // 加粗 **text**
         clean = clean.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
-
-        // 斜体 *text*
         clean = clean.replace(/\*([^*]+)\*/g, "<em>$1</em>");
-
-        // 标题 ###
         clean = clean.replace(/^### (.*$)/gim, '<h4 style="color:#ffffff;margin:8px 0 4px;font-size:0.98rem;font-weight:700;">$1</h4>');
         clean = clean.replace(/^## (.*$)/gim, '<h3 style="color:#ffffff;margin:10px 0 6px;font-size:1.05rem;font-weight:700;">$1</h3>');
         clean = clean.replace(/^# (.*$)/gim, '<h2 style="color:#ffffff;margin:12px 0 8px;font-size:1.15rem;font-weight:700;">$1</h2>');
-
-        // 列表 - item 或 * item
         clean = clean.replace(/^\s*[-*]\s+(.*)$/gim, "<li>$1</li>");
         clean = clean.replace(/(<li>.*<\/li>)/gis, "<ul>$1</ul>");
         clean = clean.replace(/<\/ul>\s*<ul>/g, "");
 
-        // 还原代码块
         clean = clean.replace(/__CODE_BLOCK_(\d+)__/g, (m, id) => {
             const item = codeBlocks[parseInt(id, 10)];
             return `<pre><code class="language-${item.lang}">${item.code}</code></pre>`;
         });
 
-        // 分割双换行形成段落
         const paras = clean.split(/\n{2,}/);
         return paras.map(p => {
             const trimmed = p.trim();
@@ -3678,9 +4153,6 @@
         }).join("");
     }
 
-    // =========================================================================
-    // 渲染历史记录
-    // =========================================================================
     function renderRestoredHistory() {
         if (!chatHistory || chatHistory.length === 0) return;
         const logoUrl = triggerDom.querySelector("img").src;
@@ -3725,35 +4197,42 @@
     }
 
     // =========================================================================
-    // 发送消息并调用 SiliconFlow API (支持流式 reasoning_content 思考链与 answer 回答)
+    // 7. 发送消息并调用 SiliconFlow API (流式思考链灰色、回答白色、智能滚动)
     // =========================================================================
     async function handleSend() {
         if (isGenerating) {
-            // 点击停止生成
-            if (abortController) {
-                abortController.abort();
-            }
+            if (abortController) abortController.abort();
             return;
         }
 
         const text = inputDom.value.trim();
         if (!text) return;
 
-        // 清空输入框并重置高度
         inputDom.value = "";
         inputDom.style.height = "auto";
 
-        // 1. 渲染用户消息
+        // 用户主动发起新提问，复位滚动到底部
+        isUserReadingAbove = false;
+        if (scrollBottomBtn) scrollBottomBtn.classList.remove("is-active");
+
+        // 渲染用户消息
         const userMsgDiv = document.createElement("div");
         userMsgDiv.className = "ai-msg ai-msg-user";
         userMsgDiv.innerHTML = `<div class="ai-msg-bubble">${escapeHtml(text)}</div>`;
         messagesDom.appendChild(userMsgDiv);
-        scrollToBottom();
+        messagesDom.scrollTop = messagesDom.scrollHeight;
 
-        // 记录历史
-        chatHistory.push({ role: "user", content: text });
+        const userRecord = {
+            id: "msg_" + Date.now() + "_" + Math.random().toString(36).substr(2, 6),
+            timestamp: Date.now(),
+            timeStr: new Date().toLocaleString(),
+            role: "user",
+            content: text
+        };
+        chatHistory.push(userRecord);
+        saveHistoryToStorage();
 
-        // 2. 准备 AI 消息结构
+        // 渲染 AI 消息容器
         const logoUrl = triggerDom.querySelector("img").src;
         const botMsgDiv = document.createElement("div");
         botMsgDiv.className = "ai-msg ai-msg-bot";
@@ -3778,7 +4257,7 @@
             </div>
         `;
         messagesDom.appendChild(botMsgDiv);
-        scrollToBottom();
+        messagesDom.scrollTop = messagesDom.scrollHeight;
 
         const thinkingBox = botMsgDiv.querySelector(".ai-thinking-box");
         const thinkingHeader = botMsgDiv.querySelector(".ai-thinking-header");
@@ -3786,12 +4265,10 @@
         const thinkingContent = botMsgDiv.querySelector(".ai-thinking-content");
         const answerBox = botMsgDiv.querySelector(".ai-answer-box");
 
-        // 允许点击折叠/展开思考过程
         thinkingHeader.addEventListener("click", () => {
             thinkingBox.classList.toggle("is-collapsed");
         });
 
-        // 切换发送按钮状态
         isGenerating = true;
         clearTimeout(inactivityTimer);
         btnSend.classList.add("is-generating");
@@ -3804,7 +4281,6 @@
         let fullReasoning = "";
         let fullAnswer = "";
 
-        // 准备请求历史（最多携带最近 10 轮对话以节省 token）
         const apiMessages = chatHistory.slice(-10).map(m => ({
             role: m.role,
             content: m.content
@@ -3841,7 +4317,7 @@
 
                 buffer += decoder.decode(value, { stream: true });
                 const lines = buffer.split("\n");
-                buffer = lines.pop(); // 保留未完整的最后一行
+                buffer = lines.pop();
 
                 for (const line of lines) {
                     const trimmed = line.trim();
@@ -3854,19 +4330,18 @@
                         const delta = json.choices && json.choices[0] && json.choices[0].delta;
                         if (!delta) continue;
 
-                        // 1. 思考链内容 (reasoning_content -> 灰色显示)
+                        // 思考链内容 (灰色显示，智能滚动不抢夺用户滚轮)
                         if (delta.reasoning_content) {
                             if (thinkingBox.style.display === "none") {
                                 thinkingBox.style.display = "block";
                             }
                             fullReasoning += delta.reasoning_content;
                             thinkingContent.textContent = fullReasoning;
-                            scrollToBottom();
+                            smartScrollToBottom();
                         }
 
-                        // 2. 正式回答内容 (content -> 白色显示)
+                        // 回答内容 (白色显示，智能滚动不抢夺用户滚轮)
                         if (delta.content) {
-                            // 一旦开始输出回答，标记思考完成
                             if (thinkingBox.classList.contains("is-thinking")) {
                                 thinkingBox.classList.remove("is-thinking");
                                 if (thinkingHeaderText) {
@@ -3875,15 +4350,12 @@
                             }
                             fullAnswer += delta.content;
                             answerBox.innerHTML = formatMarkdown(fullAnswer) + '<span class="ai-typing-cursor"></span>';
-                            scrollToBottom();
+                            smartScrollToBottom();
                         }
-                    } catch(err) {
-                        // 忽略单个非 JSON chunk 解析异常
-                    }
+                    } catch(err) {}
                 }
             }
 
-            // 完成输出：移除打字光标
             answerBox.innerHTML = formatMarkdown(fullAnswer || "(无回答内容)");
             if (thinkingBox.classList.contains("is-thinking")) {
                 thinkingBox.classList.remove("is-thinking");
@@ -3892,15 +4364,16 @@
                 }
             }
 
-            // 存入历史并持久化
-            chatHistory.push({
+            const botRecord = {
+                id: "msg_" + Date.now() + "_" + Math.random().toString(36).substr(2, 6),
+                timestamp: Date.now(),
+                timeStr: new Date().toLocaleString(),
                 role: "assistant",
                 content: fullAnswer,
                 reasoning: fullReasoning
-            });
-            try {
-                sessionStorage.setItem("blog_ai_chat_history", JSON.stringify(chatHistory.slice(-20)));
-            } catch(e) {}
+            };
+            chatHistory.push(botRecord);
+            saveHistoryToStorage();
 
         } catch(err) {
             if (err.name === "AbortError") {
@@ -3916,6 +4389,7 @@
             sendIcon.className = "fa-solid fa-paper-plane";
             if (statusDot) statusDot.classList.remove("is-busy");
             if (statusText) statusText.textContent = "深度思考已就绪";
+            if (scrollBottomBtn) scrollBottomBtn.classList.remove("is-active");
             resetInactivityTimer();
         }
     }
