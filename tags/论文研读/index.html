@@ -3569,8 +3569,19 @@
             }
         }
 
-        // 若停靠在右侧，同时检测并避开主题侧边工具栏齿轮按钮
+        // 若停靠在右侧，同时检测并避开看板娘和主题侧边工具栏齿轮按钮
         if (dock === "right") {
+            const wg = document.getElementById("whale-stage") || document.getElementById("whale-girl-root");
+            if (wg && wg.offsetParent !== null) {
+                const wgRect = wg.getBoundingClientRect();
+                if (wgRect.width > 0 && wgRect.height > 0) {
+                    const margin = 16;
+                    const aiBottom = safeY + btnHeight;
+                    if (!(aiBottom < wgRect.top - margin || safeY > wgRect.bottom + margin)) {
+                        safeY = Math.max(16, wgRect.top - btnHeight - margin);
+                    }
+                }
+            }
             const st = document.querySelector(".right-side-tools-container") || document.querySelector(".side-tools-container");
             if (st) {
                 const stRect = st.getBoundingClientRect();
@@ -3801,6 +3812,11 @@
             expandChat();
         }
     }
+
+    // 暴露全局 API 供看板娘小鲸鱼及其他交互组件调用
+    window.openAiChat = expandChat;
+    window.toggleAiChat = toggleChat;
+    window.closeAiChat = collapseChat;
 
     function resetInactivityTimer() {
         clearTimeout(inactivityTimer);
@@ -4299,6 +4315,821 @@
             resetInactivityTimer();
         }
     }
+})();
+</script>
+
+	<!-- DeepSeek Whale Girl 看板娘 (基于 GarfieldZhung/DeepSeek-Whale-Girl 社区二创深蓝女仆小鲸鱼) -->
+<div id="whale-girl-root" class="whale-girl-root" data-swup-ignore-script>
+    <!-- 1. 漫画风格对话气泡 -->
+    <div id="whale-speech-bubble" class="whale-bubble" aria-live="polite">
+        <span id="whale-bubble-text">有问题就问我</span>
+        <div class="whale-bubble-tail"></div>
+    </div>
+
+    <!-- 2. 看板娘交互舞台 -->
+    <div id="whale-stage" class="whale-stage" title="单击摸头；双击切换动作；长按可拖拽">
+        <!-- 关闭按钮 (叉号) -->
+        <button type="button" id="whale-close-btn" class="whale-close-btn" title="让小鲸鱼出去玩会儿 (重新打开网页恢复)">
+            <svg viewBox="0 0 14 14" width="9" height="9">
+                <path d="M1 1L13 13M13 1L1 13" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+            </svg>
+        </button>
+
+        <!-- 角色精灵双缓冲平滑过渡层 -->
+        <div class="whale-sprite-wrap" id="whale-sprite-wrap">
+            <img id="whale-sprite-main" class="whale-sprite is-visible" src="/images/whale/whale-maid.png" alt="DeepSeek 女仆小鲸鱼看板娘" draggable="false" />
+            <img id="whale-sprite-next" class="whale-sprite" src="/images/whale/whale-maid.png" alt="" draggable="false" />
+        </div>
+
+        <!-- 地面微光投影 -->
+        <div class="whale-shadow"></div>
+
+        <!-- 底部互动状态胶囊 -->
+        <button type="button" id="whale-status-pill" class="whale-status-pill" title="点击呼叫 DeepSeek-R1 智能助手">
+            <span class="whale-pill-sparkle">✦</span>
+            <span id="whale-pill-text">有问题就问我</span>
+        </button>
+    </div>
+
+    <!-- 3. 轻量召唤小按钮 (仅当点击叉号出去玩后显示在右下角边沿) -->
+    <div id="whale-summon-btn" class="whale-summon-btn" style="display: none;" title="召唤小鲸鱼回来">
+        <img src="/images/whale/whale-maid.png" alt="召唤小鲸鱼" />
+        <span>呼唤小鲸鱼</span>
+    </div>
+</div>
+
+<style>
+/* ==========================================================================
+   DeepSeek Whale Girl 看板娘样式表 (悬浮灵动 · 漫画气泡 · 动作切换)
+   ========================================================================== */
+.whale-girl-root {
+    position: fixed;
+    right: 20px;
+    bottom: 12px;
+    z-index: 9990;
+    user-select: none;
+    -webkit-user-select: none;
+    pointer-events: auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+/* 交互舞台 */
+.whale-stage {
+    position: relative;
+    width: 175px;
+    height: 175px;
+    cursor: grab;
+    touch-action: none;
+    transition: transform 0.25s ease;
+}
+
+.whale-stage.is-dragging {
+    cursor: grabbing !important;
+}
+
+/* 关闭按钮 (右上角精致叉号) */
+.whale-close-btn {
+    position: absolute;
+    top: -2px;
+    right: 6px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(17, 24, 39, 0.75);
+    color: #94a3b8;
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 20;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+.whale-stage:hover .whale-close-btn,
+.whale-close-btn:focus-visible {
+    opacity: 0.9;
+    transform: scale(1);
+}
+
+.whale-close-btn:hover {
+    opacity: 1 !important;
+    background: #ef4444;
+    color: #ffffff;
+    border-color: #f87171;
+    transform: scale(1.1) rotate(90deg);
+}
+
+/* 角色贴图包裹器 */
+.whale-sprite-wrap {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.whale-sprite {
+    position: absolute;
+    bottom: 12px;
+    width: 165px;
+    height: 165px;
+    object-fit: contain;
+    opacity: 0;
+    pointer-events: none;
+    transform-origin: 50% 90%;
+    transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.34, 1.45, 0.64, 1);
+    will-change: transform, opacity;
+}
+
+.whale-sprite.is-visible {
+    opacity: 1;
+}
+
+/* 默认轻盈悬浮动画 */
+.whale-stage.state-idle .whale-sprite.is-visible {
+    animation: whale-float-anim 3.8s ease-in-out infinite;
+}
+
+@keyframes whale-float-anim {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-7px);
+    }
+}
+
+/* 摸头动作微动画 */
+.whale-stage.state-headpat .whale-sprite.is-visible {
+    animation: whale-headpat-anim 0.45s ease-in-out infinite alternate;
+}
+
+@keyframes whale-headpat-anim {
+    0% { transform: translateY(0) scale(1, 1); }
+    100% { transform: translateY(4px) scale(1.025, 0.975); }
+}
+
+/* 咬手撒娇动作微动画 */
+.whale-stage.state-bite .whale-sprite.is-visible {
+    animation: whale-bite-anim 0.22s ease-in-out infinite alternate;
+}
+
+@keyframes whale-bite-anim {
+    0% { transform: translateX(-2px) rotate(-1deg); }
+    100% { transform: translateX(2px) rotate(1deg); }
+}
+
+/* 惊慌被拖动微动画 */
+.whale-stage.state-dragging .whale-sprite.is-visible {
+    animation: whale-drag-anim 0.3s ease-in-out infinite alternate;
+}
+
+@keyframes whale-drag-anim {
+    0% { transform: translateY(-4px) rotate(-2deg); }
+    100% { transform: translateY(2px) rotate(2deg); }
+}
+
+/* 地面微光阴影 */
+.whale-shadow {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    width: 100px;
+    height: 14px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(15, 23, 42, 0.45) 0%, rgba(15, 23, 42, 0.18) 60%, transparent 75%);
+    transform: translateX(-50%);
+    pointer-events: none;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.whale-stage.state-idle .whale-shadow {
+    animation: whale-shadow-anim 3.8s ease-in-out infinite;
+}
+
+@keyframes whale-shadow-anim {
+    0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.85; }
+    50% { transform: translateX(-50%) scale(0.85); opacity: 0.55; }
+}
+
+.whale-stage.state-dragging .whale-shadow {
+    opacity: 0.2;
+    transform: translateX(-50%) scale(0.6);
+}
+
+/* 底部状态胶囊小按钮 */
+.whale-status-pill {
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 3px 10px;
+    border-radius: 9999px;
+    color: #f7e8c7;
+    background: rgba(24, 38, 73, 0.92);
+    border: 1px solid rgba(226, 196, 138, 0.65);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+    font-size: 10.5px;
+    font-weight: 700;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s cubic-bezier(0.34, 1.45, 0.64, 1);
+}
+
+.whale-status-pill:hover {
+    color: #172554;
+    background: #f7e8c7;
+    transform: translateX(-50%) scale(1.06);
+    box-shadow: 0 4px 12px rgba(247, 232, 199, 0.45);
+}
+
+.whale-pill-sparkle {
+    color: #60a5fa;
+    font-size: 11px;
+}
+
+.whale-status-pill:hover .whale-pill-sparkle {
+    color: #2563eb;
+}
+
+/* 漫画风对话气泡 */
+.whale-bubble {
+    position: absolute;
+    bottom: 180px;
+    right: 10px;
+    max-width: 220px;
+    min-width: 90px;
+    padding: 8px 13px;
+    border: 2px solid #25335f;
+    border-radius: 18px 18px 18px 4px;
+    color: #1e293b;
+    background-color: #ffffff;
+    background-image: radial-gradient(rgba(96, 165, 250, 0.16) 1.2px, transparent 1.2px);
+    background-size: 7px 7px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.28), 3px 4px 0 rgba(37, 51, 95, 0.25);
+    font-size: 12.5px;
+    font-weight: 700;
+    line-height: 1.45;
+    z-index: 30;
+    opacity: 0;
+    pointer-events: none;
+    transform-origin: bottom right;
+    transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.34, 1.45, 0.64, 1);
+    word-break: break-word;
+}
+
+.whale-bubble.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0) scale(1) rotate(-1deg);
+    cursor: pointer;
+}
+
+.whale-bubble:not(.is-visible) {
+    transform: translateY(8px) scale(0.9);
+}
+
+.whale-bubble-tail {
+    position: absolute;
+    right: 32px;
+    bottom: -10px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 10px solid #25335f;
+}
+
+.whale-bubble-tail::after {
+    content: "";
+    position: absolute;
+    right: -2px;
+    bottom: 2px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 3px solid transparent;
+    border-top: 8px solid #ffffff;
+}
+
+/* 召唤小鲸鱼小浮标 (当关闭后显示在右下角) */
+.whale-summon-btn {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    padding: 5px 12px;
+    border-radius: 9999px;
+    background: rgba(17, 24, 39, 0.85);
+    border: 1.5px solid rgba(96, 165, 250, 0.45);
+    color: #e2e8f0;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    z-index: 9989;
+    transition: all 0.25s ease;
+}
+
+.whale-summon-btn:hover {
+    background: #1e293b;
+    border-color: #38bdf8;
+    color: #ffffff;
+    transform: scale(1.06);
+    box-shadow: 0 6px 18px rgba(56, 189, 248, 0.35);
+}
+
+.whale-summon-btn img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+/* 离开/出去玩的平滑退场动画 */
+.whale-girl-root.is-leaving {
+    animation: whale-leave-anim 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes whale-leave-anim {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    40% {
+        opacity: 1;
+        transform: translateY(-8px) scale(1.05);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(60px) scale(0.6);
+        pointer-events: none;
+    }
+}
+
+/* 移动端智能尺寸自适应 */
+@media (max-width: 640px) {
+    .whale-girl-root {
+        right: 8px;
+        bottom: 8px;
+        transform: scale(0.82);
+        transform-origin: bottom right;
+    }
+}
+</style>
+
+<script data-swup-ignore-script>
+(function() {
+    // 基础 DOM 引用
+    const rootDom = document.getElementById("whale-girl-root");
+    const stageDom = document.getElementById("whale-stage");
+    const spriteMain = document.getElementById("whale-sprite-main");
+    const spriteNext = document.getElementById("whale-sprite-next");
+    const bubbleDom = document.getElementById("whale-speech-bubble");
+    const bubbleText = document.getElementById("whale-bubble-text");
+    const closeBtn = document.getElementById("whale-close-btn");
+    const statusPill = document.getElementById("whale-status-pill");
+    const summonBtn = document.getElementById("whale-summon-btn");
+
+    if (!rootDom || !stageDom || !spriteMain || !spriteNext || !bubbleDom || !bubbleText) return;
+
+    // 动作素材清单 (使用 Hexo url_for 保持路径规范)
+    const ASSETS = {
+        maid: "/images/whale/whale-maid.png",
+        swing: "/images/whale/whale-idle-swing.png",
+        game: "/images/whale/whale-idle-game.png",
+        movie: "/images/whale/whale-idle-movie.png",
+        running: "/images/whale/whale-idle-running.png",
+        working: "/images/whale/whale-working-desk.png",
+        satiated: "/images/whale/whale-satiated.png",
+        headpat: "/images/whale/whale-headpat.png",
+        bite: "/images/whale/whale-bite-hand.png",
+        dragging: "/images/whale/whale-drag-panic.png",
+        busy: "/images/whale/whale-busy-cry.png"
+    };
+
+    // 预加载全部动作图片
+    Object.values(ASSETS).forEach(url => {
+        const img = new Image();
+        img.src = url;
+    });
+
+    // 台词库（包含用户特别要求的核心台词，以及社区生动台词）
+    const DIALOGUES = {
+        // 用户指定的核心必看台词
+        customMandatory: [
+            "你有没有给我带大米饭啊",
+            "这都写的什么啊",
+            "哦鲸鲸",
+            "有问题就问我"
+        ],
+        // 摸头互动台词
+        headpat: [
+            "呜嘿嘿，女仆的头饰要被摸歪啦～",
+            "只给你摸三秒，第四秒也……可以！",
+            "被摸头的时候，烦恼会像泡泡一样飘走呢。",
+            "尾巴没有摇！是它自己高兴的！",
+            "轻一点嘛，刘海都要变成海浪了～",
+            "眼睛眯起来不是困，是舒服得控制不住～"
+        ],
+        // 连续摸头咬手台词
+        bite: [
+            "嗷呜——轻轻咬一下，不许再欺负头饰！",
+            "哼，摸够五次了！这只手先归我保管～",
+            "再摸会秃的！先让本鲸鱼撒个娇嘛。",
+            "抓到你啦，这只手要在我嘴边冷静三十秒！"
+        ],
+        // 拖拽惊慌台词
+        dragging: [
+            "呀——不要揪我的头饰！",
+            "放我下来，我会自己游过去啦！",
+            "裙摆！裙摆要飞起来了呜哇！",
+            "尾巴还没跟上，慢一点、慢一点！"
+        ],
+        // 切换动作专属台词
+        actions: {
+            maid: [
+                "今天也会温柔工作，顺便温柔地想大米饭～",
+                "我才不是胖，是鲸鱼系的蓬松感～",
+                "尾巴这么大，是因为装了很多好运气！",
+                "发一会儿呆，脑袋里的小鱼就会排好队啦。"
+            ],
+            swing: [
+                "荡高一点，就能看见蛋糕店了吗？",
+                "前进、后退——烦恼也被甩出去啦～",
+                "尾巴负责配重，我负责可爱，很合理吧？"
+            ],
+            game: [
+                "这一局赢了就睡……再来一局！",
+                "连招成功！不许看屏幕，我马上就要通关啦！",
+                "这局我来带你，女仆服务包含上分哦～"
+            ],
+            movie: [
+                "嘘，正演到鲸鱼女仆拯救蛋糕店呢。",
+                "爆米花是看电影的工作餐，不算偷吃！",
+                "这段有点吓人……借你的袖子挡一下嘛。"
+            ],
+            running: [
+                "跑完这一圈，就奖励自己两大碗米饭！",
+                "大胖鱼也能跑得很优雅……呼、呼。",
+                "减肥目标很坚定，大米饭目标也一样坚定！"
+            ],
+            working: [
+                "小鲸鱼正在全速学习，键盘要冒烟啦！",
+                "左手看文章，右手记笔记，尾巴负责加油！"
+            ],
+            satiated: [
+                "肚子圆圆，米饭吃得饱饱～嗝。",
+                "不是吃撑，是大米饭在肚子里开会！"
+            ]
+        }
+    };
+
+    // 运行状态与上下文变量
+    let currentAction = "maid";
+    let activeSpriteIndex = 0; // 0: main, 1: next
+    const spriteDoms = [spriteMain, spriteNext];
+    let bubbleTimer = null;
+    let idleChatterTimer = null;
+    let idleActionTimer = null;
+    let patCount = 0;
+    let patResetTimer = null;
+    let patCooldownUntil = 0;
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let initialRootLeft = 0;
+    let initialRootTop = 0;
+    let hasMoved = false;
+
+    // Web Audio 合成小黄鸭可爱的按压音效（无需外部音频文件）
+    function playDuckSqueak() {
+        try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return;
+            const ctx = new AudioCtx();
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            const filter = ctx.createBiquadFilter();
+
+            osc.type = "square";
+            osc.frequency.setValueAtTime(760, now);
+            osc.frequency.exponentialRampToValueAtTime(430, now + 0.075);
+            osc.frequency.exponentialRampToValueAtTime(610, now + 0.18);
+
+            filter.type = "bandpass";
+            filter.frequency.value = 1150;
+            filter.Q.value = 2.1;
+
+            gain.gain.setValueAtTime(0.0001, now);
+            gain.gain.exponentialRampToValueAtTime(0.065, now + 0.012);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+
+            osc.connect(filter).connect(gain).connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.23);
+        } catch (e) {}
+    }
+
+    // =========================================================================
+    // 1. 台词气泡与说话机制
+    // =========================================================================
+    function speak(text, duration = 3800) {
+        clearTimeout(bubbleTimer);
+        bubbleText.textContent = text || "";
+        bubbleDom.classList.add("is-visible");
+
+        bubbleTimer = setTimeout(() => {
+            bubbleDom.classList.remove("is-visible");
+        }, duration);
+    }
+
+    // 随机获取一句日常闲聊台词（强化用户指定的4句核心台词出现概率）
+    function getRandomIdleLine() {
+        // 60% 几率优先播放用户指定的核心金句
+        if (Math.random() < 0.6) {
+            const mandatories = DIALOGUES.customMandatory;
+            return mandatories[Math.floor(Math.random() * mandatories.length)];
+        }
+        // 40% 几率播放当前动作对应的生动台词
+        const actionPool = DIALOGUES.actions[currentAction] || DIALOGUES.actions.maid;
+        return actionPool[Math.floor(Math.random() * actionPool.length)];
+    }
+
+    // 定时循环闲聊
+    function scheduleIdleChatter() {
+        clearTimeout(idleChatterTimer);
+        // 每 15 ~ 26 秒自言自语一次
+        const nextTime = 15000 + Math.random() * 11000;
+        idleChatterTimer = setTimeout(() => {
+            if (!rootDom.classList.contains("is-leaving") && !isDragging) {
+                speak(getRandomIdleLine());
+            }
+            scheduleIdleChatter();
+        }, nextTime);
+    }
+
+    // =========================================================================
+    // 2. 动作姿势切换机制 (双缓冲图片无缝交叉淡入淡出)
+    // =========================================================================
+    function setSprite(assetUrl, stateClass = "state-idle") {
+        const prevDom = spriteDoms[activeSpriteIndex];
+        const nextIdx = 1 - activeSpriteIndex;
+        const nextDom = spriteDoms[nextIdx];
+
+        nextDom.src = assetUrl;
+        nextDom.classList.add("is-visible");
+        prevDom.classList.remove("is-visible");
+
+        activeSpriteIndex = nextIdx;
+
+        stageDom.className = `whale-stage ${stateClass}`;
+    }
+
+    function switchIdleAction(actionName) {
+        if (!ASSETS[actionName]) return;
+        currentAction = actionName;
+        setSprite(ASSETS[actionName], "state-idle");
+
+        // 切换动作时有几率伴随一句有趣台词
+        const pool = DIALOGUES.actions[actionName];
+        if (pool && pool.length > 0) {
+            speak(pool[Math.floor(Math.random() * pool.length)]);
+        }
+    }
+
+    // 定时随机切换待机趣味动作 (荡秋千、玩游戏、看电影、跑步、女仆、工作)
+    const IDLE_ACTIONS = ["maid", "swing", "game", "movie", "running", "working", "satiated"];
+    function scheduleIdleActionChange() {
+        clearTimeout(idleActionTimer);
+        // 每 35 ~ 60 秒随机换一个动作
+        const nextTime = 35000 + Math.random() * 25000;
+        idleActionTimer = setTimeout(() => {
+            if (!isDragging && !stageDom.classList.contains("state-bite") && !stageDom.classList.contains("state-headpat")) {
+                const nextAct = IDLE_ACTIONS[Math.floor(Math.random() * IDLE_ACTIONS.length)];
+                switchIdleAction(nextAct);
+            }
+            scheduleIdleActionChange();
+        }, nextTime);
+    }
+
+    // =========================================================================
+    // 3. 用户交互事件：单击摸头、连续摸咬手、双击切动作、拖拽
+    // =========================================================================
+    // 单击摸头 / 连续摸头
+    stageDom.addEventListener("click", (e) => {
+        if (e.target.closest("#whale-close-btn") || e.target.closest("#whale-status-pill")) return;
+        if (hasMoved) return; // 拖动松开不触发点击
+
+        playDuckSqueak();
+
+        // 检查咬手冷却
+        if (Date.now() < patCooldownUntil) {
+            speak("还在被小鲸鱼咬住中……三十秒后再来摸头啦～");
+            return;
+        }
+
+        patCount += 1;
+        clearTimeout(patResetTimer);
+        patResetTimer = setTimeout(() => { patCount = 0; }, 14000);
+
+        if (patCount >= 5) {
+            // 连续摸头达到 5 次 -> 触发咬手撒娇动作
+            patCount = 0;
+            patCooldownUntil = Date.now() + 25000;
+            setSprite(ASSETS.bite, "state-bite");
+            speak(DIALOGUES.bite[Math.floor(Math.random() * DIALOGUES.bite.length)], 4500);
+
+            setTimeout(() => {
+                setSprite(ASSETS[currentAction] || ASSETS.maid, "state-idle");
+            }, 4500);
+        } else {
+            // 普通摸头动作
+            setSprite(ASSETS.headpat, "state-headpat");
+            speak(DIALOGUES.headpat[Math.floor(Math.random() * DIALOGUES.headpat.length)], 2400);
+
+            setTimeout(() => {
+                if (stageDom.classList.contains("state-headpat")) {
+                    setSprite(ASSETS[currentAction] || ASSETS.maid, "state-idle");
+                }
+            }, 2400);
+        }
+    });
+
+    // 双击角色：直接切换下一个待机动作
+    stageDom.addEventListener("dblclick", (e) => {
+        if (e.target.closest("#whale-close-btn") || e.target.closest("#whale-status-pill")) return;
+        const currentIdx = IDLE_ACTIONS.indexOf(currentAction);
+        const nextAct = IDLE_ACTIONS[(currentIdx + 1) % IDLE_ACTIONS.length];
+        switchIdleAction(nextAct);
+    });
+
+    // 拖动小鲸鱼
+    stageDom.addEventListener("pointerdown", (e) => {
+        if (e.button !== 0 && e.pointerType === "mouse") return;
+        if (e.target.closest("#whale-close-btn") || e.target.closest("#whale-status-pill")) return;
+
+        isDragging = true;
+        hasMoved = false;
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
+
+        const rect = rootDom.getBoundingClientRect();
+        initialRootLeft = rect.left;
+        initialRootTop = rect.top;
+
+        try {
+            stageDom.setPointerCapture(e.pointerId);
+        } catch (err) {}
+    });
+
+    stageDom.addEventListener("pointermove", (e) => {
+        if (!isDragging) return;
+        const dx = e.clientX - dragStartX;
+        const dy = e.clientY - dragStartY;
+
+        if (!hasMoved && Math.hypot(dx, dy) > 6) {
+            hasMoved = true;
+            stageDom.classList.add("is-dragging");
+            setSprite(ASSETS.dragging, "state-dragging");
+            speak(DIALOGUES.dragging[Math.floor(Math.random() * DIALOGUES.dragging.length)], 3000);
+        }
+
+        if (hasMoved) {
+            const newX = Math.max(10, Math.min(window.innerWidth - 185, initialRootLeft + dx));
+            const newY = Math.max(10, Math.min(window.innerHeight - 185, initialRootTop + dy));
+            rootDom.style.left = newX + "px";
+            rootDom.style.top = newY + "px";
+            rootDom.style.right = "auto";
+            rootDom.style.bottom = "auto";
+        }
+    });
+
+    const handleDragEnd = (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+        stageDom.classList.remove("is-dragging");
+
+        try {
+            stageDom.releasePointerCapture(e.pointerId);
+        } catch (err) {}
+
+        if (hasMoved) {
+            setTimeout(() => {
+                hasMoved = false;
+            }, 100);
+            setSprite(ASSETS[currentAction] || ASSETS.maid, "state-idle");
+        }
+    };
+
+    stageDom.addEventListener("pointerup", handleDragEnd);
+    stageDom.addEventListener("pointercancel", handleDragEnd);
+
+    // =========================================================================
+    // 4. 关闭与退出机制：“好吧那我出去玩了” -> 重新打开网页自动恢复
+    // =========================================================================
+    closeBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+
+        // 1. 弹出专属告别台词
+        speak("好吧那我出去玩了～", 2500);
+        setSprite(ASSETS.maid, "state-idle");
+
+        // 2. 停下所有闲聊与动作定时器
+        clearTimeout(idleChatterTimer);
+        clearTimeout(idleActionTimer);
+
+        // 3. 伴随平滑退场动画滑出收起
+        setTimeout(() => {
+            rootDom.classList.add("is-leaving");
+            setTimeout(() => {
+                rootDom.style.display = "none";
+                rootDom.classList.remove("is-leaving");
+
+                // 使用 sessionStorage 记录当前网页会话中关闭，重新打开标签页/网页即自动恢复！
+                try {
+                    sessionStorage.setItem("whale_girl_closed_session", "true");
+                } catch (err) {}
+
+                // 在右下角提供极简召唤小浮标
+                if (summonBtn) {
+                    summonBtn.style.display = "flex";
+                }
+            }, 1100);
+        }, 1200);
+    });
+
+    // 召唤小鲸鱼回来
+    if (summonBtn) {
+        summonBtn.addEventListener("click", () => {
+            try {
+                sessionStorage.removeItem("whale_girl_closed_session");
+            } catch (err) {}
+            summonBtn.style.display = "none";
+            rootDom.style.display = "block";
+            setSprite(ASSETS.maid, "state-idle");
+            speak("我回来啦！有没有想我呀～");
+            scheduleIdleChatter();
+            scheduleIdleActionChange();
+        });
+    }
+
+    // 检查本会话是否曾被关闭 (关闭标签重新打开时 sessionStorage 为空，自然自动恢复看板娘)
+    try {
+        if (sessionStorage.getItem("whale_girl_closed_session") === "true") {
+            rootDom.style.display = "none";
+            if (summonBtn) summonBtn.style.display = "flex";
+        }
+    } catch (err) {}
+
+    // =========================================================================
+    // 5. 与 DeepSeek-R1 智能对话框联动：点击“有问题就问我”直接唤醒 AI
+    // =========================================================================
+    function triggerAiChat() {
+        if (typeof window.openAiChat === "function") {
+            window.openAiChat();
+        } else {
+            const aiTrigger = document.getElementById("ai-chat-trigger");
+            if (aiTrigger) aiTrigger.click();
+        }
+        speak("有什么学术或者代码问题，尽管问我哦！", 3000);
+    }
+
+    statusPill.addEventListener("click", (e) => {
+        e.stopPropagation();
+        triggerAiChat();
+    });
+
+    // 点击气泡若是“有问题就问我”，也呼出 AI 聊天框
+    bubbleDom.addEventListener("click", () => {
+        if (bubbleText.textContent.includes("问题")) {
+            triggerAiChat();
+        } else {
+            speak(getRandomIdleLine());
+        }
+    });
+
+    // 启动初始动画与台词
+    setTimeout(() => {
+        // 开屏首句话：温暖欢迎
+        speak("有问题就问我", 4200);
+        scheduleIdleChatter();
+        scheduleIdleActionChange();
+    }, 1200);
+
 })();
 </script>
 
