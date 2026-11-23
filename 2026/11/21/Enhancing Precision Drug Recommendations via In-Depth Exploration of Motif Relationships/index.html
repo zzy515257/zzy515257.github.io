@@ -94,7 +94,7 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/images/redefine-og.webp">
 <meta property="article:published_time" content="2026-11-21T09:36:58.000Z">
-<meta property="article:modified_time" content="2026-11-21T09:36:58.641Z">
+<meta property="article:modified_time" content="2026-11-23T12:16:04.000Z">
 <meta property="article:author" content="Zoe Raina">
 <meta property="article:tag" content="论文研读">
 <meta name="twitter:card" content="summary">
@@ -1286,8 +1286,8 @@
     
         <span class="article-date article-meta-item">
             <i class="fa-regular fa-wrench"></i>&nbsp;
-            <span class="desktop">2026-11-21 17:36:58</span>
-            <span class="mobile">2026-11-21 17:36:58</span>
+            <span class="desktop">2026-11-23 20:16:04</span>
+            <span class="mobile">2026-11-23 20:16:04</span>
             <span class="hover-info">Updated</span>
         </span>
     
@@ -1411,8 +1411,65 @@
 <h6 id="计算患者症状的不确定性的病情演变表征向量-mathbf-z-u"><a href="#计算患者症状的不确定性的病情演变表征向量-mathbf-z-u" class="headerlink" title="计算患者症状的不确定性的病情演变表征向量 $\mathbf{z}^u$"></a>计算患者症状的不确定性的病情演变表征向量 $\mathbf{z}^u$</h6><p>考虑到患者的诊断阶段和药物的功能特点，</p>
 <script type="math/tex; mode=display">
 \mathbf{q}^u = \mathbf{u}^{\mathcal{N}_k} - \mathbf{u}^{\mathcal{N}_k - 1},</script><p>$q^u$表示各种疾病</p>
-<p>模型使用动态自动编码器建模分布，而不是直接利用$q^u$作为表示向量，这种做法可以固定训练减轻噪音，而且可以加入不确定性到表示中</p>
+<p>模型使用变分自动编码器建模分布，而不是直接利用$q^u$作为表示向量，这种做法可以固定训练减轻噪音，而且可以加入不确定性到表示中</p>
 <div class="code-container" data-rel="Plaintext"><figure class="iseeu highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">如果直接把这个确定性的差值向量，q送入下游的注意力机制去计算 motif 得分，在医疗场景下存在明显隐患：</span><br><span class="line"></span><br><span class="line">- 医疗数据的天然噪声：电子病历（EHR）中的诊断和操作记录常常存在漏记、误记或编码粒度不一等问题，直接做向量相减会把两步的噪声叠加放大。</span><br><span class="line">- 病情演变的不确定性：论文明确指出，在真实临床中，患者病情的状态变化本身具有动态性和随机不确定性（例如相同的诊断变化背后可能对应不同的生理恢复或恶化路径）。   </span><br><span class="line">- 点估计容易过拟合：如果只把 q 当作潜空间里的一个固定“点”，下游注意力网络很容易死记硬背训练集中特定的差值噪声，导致泛化能力下降、训练波动大。</span><br></pre></td></tr></table></figure></div>
+<hr>
+<p><strong>Variational Autoencoder（变分自编码器，简称 VAE）</strong> 是由 Kingma 和 Welling 在 2014 年提出的一种经典深度概率生成模型（即论文引用的参考文献 [47]）。对比传统自编码器，可以很清楚地看懂它的核心思想：   </p>
+<h4 id="1-先看普通自编码器（Autoencoder-AE）"><a href="#1-先看普通自编码器（Autoencoder-AE）" class="headerlink" title="1. 先看普通自编码器（Autoencoder, AE）"></a>1. 先看普通自编码器（Autoencoder, AE）</h4><ul>
+<li><strong>结构</strong>：<code>输入 x -&gt; 编码器（Encoder）-&gt; 固定潜向量 z -&gt; 解码器（Decoder）-&gt; 重构输出 x&#39;</code>。</li>
+<li><strong>特点</strong>：编码器把输入 $x$ 压缩成潜空间里的<strong>一个确定性的点 $z$</strong>。</li>
+<li><strong>局限</strong>：潜空间里每个样本只占一个孤立的点，点与点之间的空白区域缺乏规律，鲁棒性差；输入带有一点噪声，编码出来的点就可能偏到未知区域。</li>
+</ul>
+<h4 id="2-再看变分自编码器（Variational-Autoencoder-VAE）"><a href="#2-再看变分自编码器（Variational-Autoencoder-VAE）" class="headerlink" title="2. 再看变分自编码器（Variational Autoencoder, VAE）"></a>2. 再看变分自编码器（Variational Autoencoder, VAE）</h4><p>VAE 的核心突破，是把潜空间的表示从“一个确定性的点”<strong>改造成了</strong>“一个连续的概率分布”：</p>
+<ol>
+<li><p><strong>概率编码器</strong>：给定输入 $x$，编码器不再直接输出向量 $z$，而是输出一个高斯分布的两个参数——<strong>均值向量 $\boldsymbol{\mu}$</strong>（分布中心）和<strong>标准差/方差 $\boldsymbol{\sigma}$</strong>（不确定性范围）。</p>
+</li>
+<li><p><strong>重参数化采样（Reparameterization Trick）</strong>：为了既能从高斯分布 $\mathcal{N}(\boldsymbol{\mu}, \text{diag}(\boldsymbol{\sigma}^2))$ 中随机采样出潜向量 $z$，又能让梯度正常反向传播，VAE 改写采样过程为：</p>
+<script type="math/tex; mode=display">z = \boldsymbol{\mu} + \epsilon \odot \boldsymbol{\sigma}, \quad \epsilon \sim \mathcal{N}(0, I)</script><p>这样随机性完全落在外部标准正态噪声 $\epsilon$ 上，$\boldsymbol{\mu}$ 和 $\boldsymbol{\sigma}$ 对损失函数是可导的。</p>
+</li>
+<li><p><strong>标准 VAE 的双项损失（ELBO）</strong>：</p>
+<ul>
+<li><strong>重构损失</strong>：要求解码器用采样出的 $z$ 仍能还原出原始输入 $x$（哪怕 $z$ 在 $\boldsymbol{\mu}$ 附近有随机抖动），从而强迫模型抵抗噪声、学习平滑的局部特征；</li>
+<li><strong>KL 散度正则项</strong>：迫使编码器学出的分布 $\mathcal{N}(\boldsymbol{\mu}, \boldsymbol{\sigma}^2)$ 靠近标准正态分布 $\mathcal{N}(0, I)$，防止分布坍缩（例如把 $\boldsymbol{\sigma}$ 压成 $0$ 退化回普通 AE）。</li>
+</ul>
+</li>
+</ol>
+<h4 id="3-严谨区分：这篇论文（DEPOT）实际用了-VAE-的哪一部分？"><a href="#3-严谨区分：这篇论文（DEPOT）实际用了-VAE-的哪一部分？" class="headerlink" title="3. 严谨区分：这篇论文（DEPOT）实际用了 VAE 的哪一部分？"></a>3. 严谨区分：这篇论文（DEPOT）实际用了 VAE 的哪一部分？</h4><p>核对论文的架构与损失函数可以发现，<strong>DEPOT 并没有搭建完整的 VAE，而是只借用了 VAE 的“概率编码器 + 重参数化采样”这一半机制</strong>：   </p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th><strong>对比组件</strong></th>
+<th><strong>完整标准 VAE</strong></th>
+<th><strong>DEPOT 论文中的实际做法</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>概率编码器（输出 $\boldsymbol{\mu}, \log \boldsymbol{\sigma}$）</strong></td>
+<td>有</td>
+<td><strong>有</strong>（式 9：用 $\mathbf{W}_\mu$ 和 $\mathbf{W}_\sigma$ 对病情变化 $\mathbf{q}^u$ 建模高斯分布参数）</td>
+</tr>
+<tr>
+<td><strong>重参数化采样（$\mathbf{z} = \boldsymbol{\mu} + \epsilon \odot \boldsymbol{\sigma}$）</strong></td>
+<td>有</td>
+<td><strong>有</strong>（式 9：采样出 $\mathbf{z}^u$ 送入 Repeat / Explore 注意力层）</td>
+</tr>
+<tr>
+<td><strong>解码器（重构原始输入）</strong></td>
+<td>有</td>
+<td><strong>无</strong>（没有重构 $\mathbf{q}^u$ 的分支，直接用于下游推荐任务）</td>
+</tr>
+<tr>
+<td><strong>KL 散度正则损失</strong></td>
+<td>有</td>
+<td><strong>论文损失函数中未显式包含</strong>（式 18–21 总损失只写了准确性损失 $\mathcal{L}_{ACC}$ 和安全损失 $\mathcal{L}_{DDI}$）</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>作者在论文中解释引入这一机制的动机是：真实医疗场景中病情演变往往存在动态性与随机不确定性，直接拿硬算出来的差值向量 $\mathbf{q}^u$ 做匹配容易受电子病历噪声干扰；通过建模高斯分布并采样，可以把不确定性融入表征中，从而缓解噪声并稳定训练。</p>
+<hr>
 <script type="math/tex; mode=display">
 \begin{align}
 \mathbf{q}^u &= \mathrm{ReLU} \left( \mathbf{W}_u \mathbf{q}^u \right), \quad \boldsymbol{\mu} = \mathbf{W}_\mu \mathbf{q}^u, \quad \log \boldsymbol{\sigma} = \mathbf{W}_\sigma \mathbf{q}^u, \notag \\
@@ -1557,7 +1614,7 @@ P(i \mid e, u, \mathcal{I}_S) &= \frac{\exp(\mathbf{f}_i)}{\sum_{j=1}^{\mathcal{
         
             <li>
                 <strong>Updated at
-                    :</strong> 2026-11-21 17:36:58
+                    :</strong> 2026-11-23 20:16:04
             </li>
         
         <li>
@@ -1682,7 +1739,7 @@ P(i \mid e, u, \mathcal{I}_S) &= \frac{\exp(\mathbf{f}_i)}{\sum_{j=1}^{\mathcal{
 	<div class="post-toc">
 		<div class="toc-title">On this page</div>
 		<div class="page-title">Enhancing Precision Drug Recommendations via In-Depth Exploration of Motif Relationships</div>
-		<ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Enhancing-Precision-Drug-Recommendations-via-In-Depth-Exploration-of-Motif-Relationships"><span class="nav-text">Enhancing Precision Drug Recommendations via In-Depth Exploration of Motif Relationships</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80-%E6%91%98%E8%A6%81"><span class="nav-text">一.摘要</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%BB%A5%E5%89%8D%E7%A0%94%E7%A9%B6%E7%9A%84%E4%B8%8D%E8%B6%B3%EF%BC%9A"><span class="nav-text">1.以前研究的不足：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-DEPOT%E7%9A%84%E5%88%9B%E6%96%B0"><span class="nav-text">2.DEPOT的创新</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C-%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="nav-text">二.相关工作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89-%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="nav-text">三.模型的设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E9%97%AE%E9%A2%98%E7%9A%84%E8%A1%A8%E7%A4%BA"><span class="nav-text">1.问题的表示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%A8%A1%E5%9E%8B%E5%AE%9A%E4%B9%89"><span class="nav-text">2.模型定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1%E8%AF%8A%E6%96%AD%E5%92%8C%E6%89%8B%E6%9C%AF%E5%BA%8F%E5%88%97%E5%8C%96"><span class="nav-text">2.1诊断和手术序列化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2%E5%8A%9F%E8%83%BD%E5%9B%A2%E6%84%8F%E8%AF%86%E8%8D%AF%E7%89%A9%E6%8E%A8%E8%8D%90"><span class="nav-text">2.2功能团意识药物推荐</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E4%BB%A5%E8%8D%AF%E7%89%A9%E4%B8%BA%E4%B8%AD%E5%BF%83%E7%9A%84%E8%A1%A8%E7%A4%BA%E6%A8%A1%E5%9E%8B%E2%80%94%E5%9C%A8%E5%8A%9F%E8%83%BD%E5%9B%A2%E5%B1%82%E6%AC%A1%E8%A1%A8%E7%A4%BA%E8%8D%AF%E7%89%A9"><span class="nav-text">1.以药物为中心的表示模型—在功能团层次表示药物</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E4%BB%A5%E6%82%A3%E8%80%85%E4%B8%BA%E4%B8%AD%E5%BF%83%E7%9A%84%E8%A1%A8%E7%A4%BA%E6%A8%A1%E5%9E%8B"><span class="nav-text">2.以患者为中心的表示模型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1%E9%87%8D%E5%A4%8D%E7%BC%96%E7%A0%81%E5%99%A8%EF%BC%9A"><span class="nav-text">2.1重复编码器：</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%82%A3%E8%80%85%E7%97%87%E7%8A%B6%E7%9A%84%E4%B8%8D%E7%A1%AE%E5%AE%9A%E6%80%A7%E7%9A%84%E7%97%85%E6%83%85%E6%BC%94%E5%8F%98%E8%A1%A8%E5%BE%81%E5%90%91%E9%87%8F-mathbf-z-u"><span class="nav-text">计算患者症状的不确定性的病情演变表征向量 $\mathbf{z}^u$</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%82%A3%E8%80%85%E4%BB%A5%E5%BE%80%E6%89%80%E6%9C%89%E7%9A%84%E5%8A%9F%E8%83%BD%E5%9B%A2%E7%9A%84%E5%BE%97%E5%88%86"><span class="nav-text">计算患者以往所有的功能团的得分</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2%E6%8E%A2%E7%B4%A2%E7%BC%96%E7%A0%81%E5%99%A8%EF%BC%9A"><span class="nav-text">2.2探索编码器：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3%E9%89%B4%E5%88%AB%E7%BC%96%E7%A0%81%E5%99%A8%EF%BC%9A"><span class="nav-text">2.3鉴别编码器：</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E9%87%8D%E5%A4%8D%E7%BC%96%E7%A0%81%E5%99%A8%E5%92%8C%E6%8E%A2%E7%B4%A2%E7%BC%96%E7%A0%81%E5%99%A8%E7%9A%84%E6%9D%83%E9%87%8D"><span class="nav-text">计算重复编码器和探索编码器的权重</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%89%80%E6%9C%89%E8%8D%AF%E7%89%A9%E7%9A%84%E7%9A%84%E8%A1%A8%E7%A4%BA%E5%90%91%E9%87%8F"><span class="nav-text">计算所有药物的的表示向量</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E8%8D%AF%E7%89%A9%E6%8E%A8%E8%8D%90%E6%A8%A1%E5%9D%97"><span class="nav-text">3.药物推荐模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0%E8%AE%BE%E8%AE%A1"><span class="nav-text">4.损失函数设计</span></a></li></ol></li></ol></li></ol></li></ol>
+		<ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Enhancing-Precision-Drug-Recommendations-via-In-Depth-Exploration-of-Motif-Relationships"><span class="nav-text">Enhancing Precision Drug Recommendations via In-Depth Exploration of Motif Relationships</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80-%E6%91%98%E8%A6%81"><span class="nav-text">一.摘要</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%BB%A5%E5%89%8D%E7%A0%94%E7%A9%B6%E7%9A%84%E4%B8%8D%E8%B6%B3%EF%BC%9A"><span class="nav-text">1.以前研究的不足：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-DEPOT%E7%9A%84%E5%88%9B%E6%96%B0"><span class="nav-text">2.DEPOT的创新</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C-%E7%9B%B8%E5%85%B3%E5%B7%A5%E4%BD%9C"><span class="nav-text">二.相关工作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89-%E6%A8%A1%E5%9E%8B%E7%9A%84%E8%AE%BE%E8%AE%A1"><span class="nav-text">三.模型的设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E9%97%AE%E9%A2%98%E7%9A%84%E8%A1%A8%E7%A4%BA"><span class="nav-text">1.问题的表示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%A8%A1%E5%9E%8B%E5%AE%9A%E4%B9%89"><span class="nav-text">2.模型定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1%E8%AF%8A%E6%96%AD%E5%92%8C%E6%89%8B%E6%9C%AF%E5%BA%8F%E5%88%97%E5%8C%96"><span class="nav-text">2.1诊断和手术序列化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2%E5%8A%9F%E8%83%BD%E5%9B%A2%E6%84%8F%E8%AF%86%E8%8D%AF%E7%89%A9%E6%8E%A8%E8%8D%90"><span class="nav-text">2.2功能团意识药物推荐</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E4%BB%A5%E8%8D%AF%E7%89%A9%E4%B8%BA%E4%B8%AD%E5%BF%83%E7%9A%84%E8%A1%A8%E7%A4%BA%E6%A8%A1%E5%9E%8B%E2%80%94%E5%9C%A8%E5%8A%9F%E8%83%BD%E5%9B%A2%E5%B1%82%E6%AC%A1%E8%A1%A8%E7%A4%BA%E8%8D%AF%E7%89%A9"><span class="nav-text">1.以药物为中心的表示模型—在功能团层次表示药物</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E4%BB%A5%E6%82%A3%E8%80%85%E4%B8%BA%E4%B8%AD%E5%BF%83%E7%9A%84%E8%A1%A8%E7%A4%BA%E6%A8%A1%E5%9E%8B"><span class="nav-text">2.以患者为中心的表示模型</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#2-1%E9%87%8D%E5%A4%8D%E7%BC%96%E7%A0%81%E5%99%A8%EF%BC%9A"><span class="nav-text">2.1重复编码器：</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%82%A3%E8%80%85%E7%97%87%E7%8A%B6%E7%9A%84%E4%B8%8D%E7%A1%AE%E5%AE%9A%E6%80%A7%E7%9A%84%E7%97%85%E6%83%85%E6%BC%94%E5%8F%98%E8%A1%A8%E5%BE%81%E5%90%91%E9%87%8F-mathbf-z-u"><span class="nav-text">计算患者症状的不确定性的病情演变表征向量 $\mathbf{z}^u$</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-%E5%85%88%E7%9C%8B%E6%99%AE%E9%80%9A%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8%EF%BC%88Autoencoder-AE%EF%BC%89"><span class="nav-text">1. 先看普通自编码器（Autoencoder, AE）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-%E5%86%8D%E7%9C%8B%E5%8F%98%E5%88%86%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8%EF%BC%88Variational-Autoencoder-VAE%EF%BC%89"><span class="nav-text">2. 再看变分自编码器（Variational Autoencoder, VAE）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E4%B8%A5%E8%B0%A8%E5%8C%BA%E5%88%86%EF%BC%9A%E8%BF%99%E7%AF%87%E8%AE%BA%E6%96%87%EF%BC%88DEPOT%EF%BC%89%E5%AE%9E%E9%99%85%E7%94%A8%E4%BA%86-VAE-%E7%9A%84%E5%93%AA%E4%B8%80%E9%83%A8%E5%88%86%EF%BC%9F"><span class="nav-text">3. 严谨区分：这篇论文（DEPOT）实际用了 VAE 的哪一部分？</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%82%A3%E8%80%85%E4%BB%A5%E5%BE%80%E6%89%80%E6%9C%89%E7%9A%84%E5%8A%9F%E8%83%BD%E5%9B%A2%E7%9A%84%E5%BE%97%E5%88%86"><span class="nav-text">计算患者以往所有的功能团的得分</span></a></li></ol></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-2%E6%8E%A2%E7%B4%A2%E7%BC%96%E7%A0%81%E5%99%A8%EF%BC%9A"><span class="nav-text">2.2探索编码器：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-3%E9%89%B4%E5%88%AB%E7%BC%96%E7%A0%81%E5%99%A8%EF%BC%9A"><span class="nav-text">2.3鉴别编码器：</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E9%87%8D%E5%A4%8D%E7%BC%96%E7%A0%81%E5%99%A8%E5%92%8C%E6%8E%A2%E7%B4%A2%E7%BC%96%E7%A0%81%E5%99%A8%E7%9A%84%E6%9D%83%E9%87%8D"><span class="nav-text">计算重复编码器和探索编码器的权重</span></a></li><li class="nav-item nav-level-6"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%89%80%E6%9C%89%E8%8D%AF%E7%89%A9%E7%9A%84%E7%9A%84%E8%A1%A8%E7%A4%BA%E5%90%91%E9%87%8F"><span class="nav-text">计算所有药物的的表示向量</span></a></li></ol></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E8%8D%AF%E7%89%A9%E6%8E%A8%E8%8D%90%E6%A8%A1%E5%9D%97"><span class="nav-text">3.药物推荐模块</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0%E8%AE%BE%E8%AE%A1"><span class="nav-text">4.损失函数设计</span></a></li></ol></li></ol></li></ol></li></ol>
 
 	</div>
 </div>
