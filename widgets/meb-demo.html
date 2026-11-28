@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>二维特征空间对齐与串扰消除</title>
+  <style>
+    :root {
+      --bg-page: #121212;
+      --bg-card: #1b1b1e;
+      --bg-sub: #141417;
+      --border: #2a2a30;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --blue: #7cc4ff;
+      --orange: #e5c068;
+      --purple: #c4a5ff;
+      --green: #22c55e;
+      --red: #ef4444;
+      --amber: #f59e0b;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      background: var(--bg-page);
+    }
+
+    html.in-iframe,
+    body.in-iframe {
+      background: transparent;
+    }
+
+    body {
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+    }
+
+    body.in-iframe {
+      padding: 0;
+    }
+
+    .widget {
+      width: 100%;
+      max-width: 820px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 22px 24px;
+    }
+
+    .header h1 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      letter-spacing: 0.3px;
+    }
+
+    .header p {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-bottom: 18px;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 720px) {
+      .widget { padding: 18px 16px; }
+      .main-grid { grid-template-columns: 1fr; }
+    }
+
+    .canvas-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .canvas-wrap {
+      position: relative;
+      background: var(--bg-sub);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      height: 320px;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+      padding: 0 2px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .dot.dashed {
+      background: transparent;
+      border: 2px dashed var(--orange);
+    }
+
+    .panel {
+      background: var(--bg-sub);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .panel-title {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-main);
+    }
+
+    .metric {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .metric-label { font-size: 12.5px; color: var(--text-muted); }
+    .metric-val { font-size: 20px; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+    .bar-track {
+      width: 100%;
+      height: 7px;
+      background: #27272d;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.08s linear, background-color 0.2s ease;
+    }
+
+    .metric-sub { font-size: 11.5px; color: var(--text-muted); }
+
+    .formula-box {
+      background: #1b1b20;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .formula-title {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .formula-code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12.5px;
+      line-height: 1.55;
+      color: var(--text-main);
+      word-break: break-word;
+    }
+
+    .formula-vals {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .controls {
+      background: var(--bg-sub);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .mode-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .mode-label { font-size: 13.5px; color: var(--text-main); }
+
+    .btn-group {
+      display: inline-flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .mode-btn {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid transparent;
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .mode-btn:hover { color: var(--text-main); }
+
+    .mode-btn.active {
+      background: #23242c;
+      color: var(--text-main);
+      border-color: #93c5fd;
+      box-shadow: 0 0 0 1px rgba(147, 197, 253, 0.25);
+    }
+
+    .sliders-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .sliders-grid { grid-template-columns: 1fr; }
+    }
+
+    .slider-item {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .slider-head {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+    }
+
+    .slider-val {
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 5px;
+      background: #363640;
+      border-radius: 999px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 2px solid #121212;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4);
+    }
+
+    .tooltip {
+      position: absolute;
+      pointer-events: none;
+      background: rgba(20, 20, 25, 0.94);
+      border: 1px solid #3f3f4a;
+      color: #f3f4f6;
+      font-size: 12px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      line-height: 1.45;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      white-space: nowrap;
+      z-index: 10;
+    }
+  </style>
+</head>
+<body>
+  <div class="widget" id="widgetRoot">
+    <div class="header">
+      <h1>二维特征空间对齐与串扰消除</h1>
+      <p>切换计算模式或调节坐标系错位角，观察直接相减如何破坏纯疗效，以及 MLP 投影如何精准对齐并剔除共享串扰。</p>
+    </div>
+
+    <div class="main-grid">
+      <div class="canvas-box">
+        <div class="canvas-wrap" id="canvasWrap">
+          <canvas id="plotCanvas"></canvas>
+          <div class="tooltip" id="tooltip"></div>
+        </div>
+        <div class="legend">
+          <span class="legend-item"><span class="dot" style="background:var(--blue)"></span>输入 h_eff</span>
+          <span class="legend-item"><span class="dot dashed"></span>错位 h_risk</span>
+          <span class="legend-item"><span class="dot" style="background:var(--purple)"></span>MLP(h_risk)</span>
+          <span class="legend-item"><span class="dot" style="background:var(--green)"></span>解耦成功</span>
+          <span class="legend-item"><span class="dot" style="background:var(--red)"></span>误伤纯疗效</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-title">实时解耦指标</span>
+          <span class="badge" id="statusBadge">
+            <span class="dot" id="statusDot"></span>
+            <span id="statusText">--</span>
+          </span>
+        </div>
+
+        <div class="metric">
+          <div class="metric-row">
+            <span class="metric-label">纯疗效保留值（横轴）</span>
+            <span class="metric-val" id="effVal">4.00</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" id="effBar"></div></div>
+          <div class="metric-sub" id="effSub">目标 4.00 · 偏差 0.00</div>
+        </div>
+
+        <div class="metric">
+          <div class="metric-row">
+            <span class="metric-label">串扰残留值（纵轴绝对值）</span>
+            <span class="metric-val" id="noiseVal">0.00</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill" id="noiseBar"></div></div>
+          <div class="metric-sub">目标 0.00 · 初始串扰 2.50</div>
+        </div>
+
+        <div class="formula-box">
+          <div class="formula-title">当前生效向量减法公式</div>
+          <div class="formula-code" id="formulaExpr"></div>
+          <div class="formula-vals" id="formulaNums"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="mode-row">
+        <span class="mode-label">计算模式</span>
+        <div class="btn-group">
+          <button class="mode-btn active" id="btnDirect">直接相减（无 MLP）</button>
+          <button class="mode-btn" id="btnMlp">开启 MLP 坐标对齐</button>
+        </div>
+      </div>
+
+      <div class="sliders-grid">
+        <div class="slider-item">
+          <div class="slider-head">
+            <span>两分支坐标系错位角 θ</span>
+            <span class="slider-val" id="thetaReadout">62°</span>
+          </div>
+          <input type="range" id="thetaSlider" min="0" max="180" step="1" value="62" />
+        </div>
+
+        <div class="slider-item">
+          <div class="slider-head">
+            <span>门控剔除强度 α·σ</span>
+            <span class="slider-val" id="gateReadout">1.00</span>
+          </div>
+          <input type="range" id="gateSlider" min="0" max="1" step="0.01" value="1.00" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      try {
+        if (window.self !== window.top) {
+          document.documentElement.classList.add("in-iframe");
+          document.body.classList.add("in-iframe");
+        }
+      } catch (e) {
+        document.documentElement.classList.add("in-iframe");
+        document.body.classList.add("in-iframe");
+      }
+    })();
+
+    const widgetRoot = document.getElementById("widgetRoot");
+    const canvas = document.getElementById("plotCanvas");
+    const wrap = document.getElementById("canvasWrap");
+    const tooltip = document.getElementById("tooltip");
+    const ctx = canvas.getContext("2d");
+
+    const btnDirect = document.getElementById("btnDirect");
+    const btnMlp = document.getElementById("btnMlp");
+    const thetaSlider = document.getElementById("thetaSlider");
+    const gateSlider = document.getElementById("gateSlider");
+    const thetaReadout = document.getElementById("thetaReadout");
+    const gateReadout = document.getElementById("gateReadout");
+
+    const statusDot = document.getElementById("statusDot");
+    const statusText = document.getElementById("statusText");
+    const effVal = document.getElementById("effVal");
+    const effBar = document.getElementById("effBar");
+    const effSub = document.getElementById("effSub");
+    const noiseVal = document.getElementById("noiseVal");
+    const noiseBar = document.getElementById("noiseBar");
+    const formulaExpr = document.getElementById("formulaExpr");
+    const formulaNums = document.getElementById("formulaNums");
+
+    const H_EFF = { x: 4.0, y: 2.5 };
+    const TARGET = { x: 4.0, y: 0.0 };
+    const MLP_VEC = { x: 0.0, y: 2.5 };
+
+    let state = {
+      mode: "direct", // "direct" | "mlp"
+      thetaDeg: 62,
+      gate: 1.0,
+      blend: 0.0,     // 0 = direct, 1 = mlp (for smooth animation)
+      animStart: null,
+      animFrom: 0,
+      animTo: 0,
+      animDur: 400
+    };
+
+    let hoverTips = [];
+
+    function getRawRisk(deg) {
+      const r = (deg * Math.PI) / 180;
+      return {
+        x: 1.5 * Math.cos(r) - 2.5 * Math.sin(r),
+        y: 1.5 * Math.sin(r) + 2.5 * Math.cos(r)
+      };
+    }
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+    function clamp(v, min, max) { return Math.min(max, Math.max(min, v)); }
+
+    function setMode(nextMode) {
+      if (state.mode === nextMode) return;
+      state.mode = nextMode;
+      btnDirect.classList.toggle("active", nextMode === "direct");
+      btnMlp.classList.toggle("active", nextMode === "mlp");
+      state.animFrom = state.blend;
+      state.animTo = nextMode === "mlp" ? 1 : 0;
+      state.animStart = performance.now();
+      requestAnimationFrame(tick);
+    }
+
+    function resizeCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      const rect = wrap.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      canvas.width = Math.round(rect.width * dpr);
+      canvas.height = Math.round(rect.height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      render();
+    }
+
+    function notifyParentHeight() {
+      if (window.self === window.top) return;
+      try {
+        const rect = widgetRoot.getBoundingClientRect();
+        const height = Math.ceil(rect.height);
+        if (height > 0) {
+          window.parent.postMessage({
+            type: "blog-widget-resize",
+            widget: "meb-demo",
+            height: height
+          }, "*");
+        }
+      } catch (e) {}
+    }
+
+    function getTransform(w, h) {
+      const xMin = -3.6, xMax = 7.5;
+      const yMin = -2.9, yMax = 5.3;
+      const scale = Math.min(w / (xMax - xMin), h / (yMax - yMin));
+      const ox = (w - (xMax + xMin) * scale) / 2;
+      const oy = (h + (yMax + yMin) * scale) / 2;
+      return {
+        scale,
+        toX: (x) => ox + x * scale,
+        toY: (y) => oy - y * scale
+      };
+    }
+
+    function drawArrow(t, x1, y1, x2, y2, color, dashed = false, lineWidth = 2.6) {
+      const sx1 = t.toX(x1), sy1 = t.toY(y1);
+      const sx2 = t.toX(x2), sy2 = t.toY(y2);
+      const angle = Math.atan2(sy2 - sy1, sx2 - sx1);
+      const headLen = 9;
+
+      ctx.save();
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      ctx.lineWidth = lineWidth;
+      ctx.lineCap = "round";
+      if (dashed) ctx.setLineDash([6, 4]);
+
+      ctx.beginPath();
+      ctx.moveTo(sx1, sy1);
+      ctx.lineTo(sx2 - Math.cos(angle) * 4, sy2 - Math.sin(angle) * 4);
+      ctx.stroke();
+
+      ctx.setLineDash([]);
+      ctx.beginPath();
+      ctx.moveTo(sx2, sy2);
+      ctx.lineTo(sx2 - headLen * Math.cos(angle - Math.PI / 6), sy2 - headLen * Math.sin(angle - Math.PI / 6));
+      ctx.lineTo(sx2 - headLen * Math.cos(angle + Math.PI / 6), sy2 - headLen * Math.sin(angle + Math.PI / 6));
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      return { sx2, sy2 };
+    }
+
+    function render() {
+      const w = wrap.clientWidth;
+      const h = wrap.clientHeight;
+      if (!w || !h) return;
+      const t = getTransform(w, h);
+
+      ctx.clearRect(0, 0, w, h);
+
+      // 1. Base orthogonal grid (h_eff coordinates)
+      ctx.save();
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
+      ctx.lineWidth = 1;
+      for (let x = -6; x <= 10; x++) {
+        ctx.beginPath();
+        ctx.moveTo(t.toX(x), 0);
+        ctx.lineTo(t.toX(x), h);
+        ctx.stroke();
+      }
+      for (let y = -5; y <= 7; y++) {
+        ctx.beginPath();
+        ctx.moveTo(0, t.toY(y));
+        ctx.lineTo(w, t.toY(y));
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // 2. Rotated dashed grid (h_risk coordinates)
+      const rad = (state.thetaDeg * Math.PI) / 180;
+      const ux = Math.cos(rad), uy = Math.sin(rad);
+      const vx = -Math.sin(rad), vy = Math.cos(rad);
+      ctx.save();
+      ctx.strokeStyle = "rgba(229, 192, 104, 0.16)";
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      const span = 5;
+      for (let k = -span; k <= span; k++) {
+        ctx.beginPath();
+        ctx.moveTo(t.toX(k * ux - span * vx), t.toY(k * uy - span * vy));
+        ctx.lineTo(t.toX(k * ux + span * vx), t.toY(k * uy + span * vy));
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(t.toX(-span * ux + k * vx), t.toY(-span * uy + k * vy));
+        ctx.lineTo(t.toX(span * ux + k * vx), t.toY(span * uy + k * vy));
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // 3. Principal axes
+      ctx.save();
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.32)";
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(0, t.toY(0));
+      ctx.lineTo(w, t.toY(0));
+      ctx.moveTo(t.toX(0), 0);
+      ctx.lineTo(t.toX(0), h);
+      ctx.stroke();
+
+      ctx.fillStyle = "#9ca3af";
+      ctx.font = "11.5px -apple-system, BlinkMacSystemFont, sans-serif";
+      ctx.fillText("共享串扰方向 (y)", t.toX(0) + 8, 18);
+      ctx.textAlign = "right";
+      ctx.fillText("纯疗效方向 (x)", w - 10, t.toY(0) - 8);
+      ctx.restore();
+
+      // 4. Compute vectors
+      const rawRisk = getRawRisk(state.thetaDeg);
+      const activeSub = {
+        x: lerp(rawRisk.x, MLP_VEC.x, state.blend),
+        y: lerp(rawRisk.y, MLP_VEC.y, state.blend)
+      };
+      const outVec = {
+        x: H_EFF.x - state.gate * activeSub.x,
+        y: H_EFF.y - state.gate * activeSub.y
+      };
+
+      const effDiff = outVec.x - TARGET.x;
+      const absNoise = Math.abs(outVec.y);
+      const isEffDamaged = Math.abs(effDiff) > 0.12;
+      const isClean = !isEffDamaged && absNoise < 0.15;
+      const outColor = isEffDamaged ? "#ef4444" : (isClean ? "#22c55e" : "#f59e0b");
+
+      // 5. Target marker (4.0, 0.0)
+      ctx.save();
+      ctx.strokeStyle = "#22c55e";
+      ctx.lineWidth = 1.8;
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath();
+      ctx.arc(t.toX(TARGET.x), t.toY(TARGET.y), 9, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = "#9ca3af";
+      ctx.font = "11px ui-monospace, monospace";
+      ctx.textAlign = "center";
+      ctx.fillText("目标 (4.0, 0.0)", t.toX(TARGET.x), t.toY(TARGET.y) + 23);
+      ctx.restore();
+
+      // 6. Draw vectors
+      const pEff = drawArrow(t, 0, 0, H_EFF.x, H_EFF.y, "#7cc4ff", false, 2.6);
+      const pRisk = drawArrow(t, 0, 0, rawRisk.x, rawRisk.y, "#e5c068", true, 2.2);
+
+      let pMlp = null;
+      if (state.blend > 0.01) {
+        pMlp = drawArrow(t, 0, 0, activeSub.x, activeSub.y, "#c4a5ff", false, 2.5);
+      }
+      const pOut = drawArrow(t, 0, 0, outVec.x, outVec.y, outColor, false, 2.9);
+
+      // Labels (clamped within canvas bounds)
+      ctx.save();
+      ctx.font = "600 12px ui-monospace, monospace";
+      ctx.fillStyle = "#7cc4ff";
+      ctx.fillText("h_eff", clamp(pEff.sx2 + 8, 8, w - 45), clamp(pEff.sy2 - 4, 16, h - 8));
+
+      ctx.fillStyle = "#e5c068";
+      ctx.fillText("h_risk", clamp(pRisk.sx2 - 44, 8, w - 52), clamp(pRisk.sy2 - 8, 16, h - 8));
+
+      if (pMlp && state.blend > 0.35) {
+        ctx.fillStyle = "#c4a5ff";
+        ctx.fillText("MLP(h_risk)", clamp(pMlp.sx2 + 8, 8, w - 88), clamp(pMlp.sy2 + 4, 16, h - 8));
+      }
+
+      ctx.fillStyle = outColor;
+      ctx.fillText("h'_eff", clamp(pOut.sx2 + 8, 8, w - 50), clamp(pOut.sy2 - 8, 16, h - 8));
+      ctx.restore();
+
+      // Save hover targets
+      hoverTips = [
+        { x: pEff.sx2, y: pEff.sy2, label: `输入 h_eff (${H_EFF.x.toFixed(2)}, ${H_EFF.y.toFixed(2)})\n含纯疗效 4.00 与串扰 2.50` },
+        { x: pRisk.sx2, y: pRisk.sy2, label: `错位 h_risk (${rawRisk.x.toFixed(2)}, ${rawRisk.y.toFixed(2)})\n相对 h_eff 旋转 ${state.thetaDeg}°` },
+        { x: pOut.sx2, y: pOut.sy2, label: `输出 h'_eff (${outVec.x.toFixed(2)}, ${outVec.y.toFixed(2)})\n纯疗效偏差 ${effDiff >= 0 ? "+" : ""}${effDiff.toFixed(2)}` }
+      ];
+      if (pMlp) {
+        hoverTips.push({ x: pMlp.sx2, y: pMlp.sy2, label: `MLP(h_risk) (${activeSub.x.toFixed(2)}, ${activeSub.y.toFixed(2)})\n已对齐至串扰纵轴` });
+      }
+
+      // 7. Update right metrics panel
+      if (isEffDamaged) {
+        statusDot.style.background = "var(--red)";
+        statusText.textContent = "纯疗效受损";
+      } else if (isClean) {
+        statusDot.style.background = "var(--green)";
+        statusText.textContent = "解耦成功";
+      } else {
+        statusDot.style.background = "var(--amber)";
+        statusText.textContent = "串扰未清";
+      }
+
+      effVal.textContent = outVec.x.toFixed(2);
+      const effPct = Math.max(0, Math.min(100, (outVec.x / 6.5) * 100));
+      effBar.style.width = effPct + "%";
+      effBar.style.background = isEffDamaged ? "var(--red)" : "var(--green)";
+      const sign = effDiff >= 0 ? "+" : "";
+      effSub.textContent = `目标 4.00 · 偏差 ${sign}${effDiff.toFixed(2)}`;
+
+      noiseVal.textContent = absNoise.toFixed(2);
+      const noisePct = Math.max(0, Math.min(100, (absNoise / 3.0) * 100));
+      noiseBar.style.width = noisePct + "%";
+      noiseBar.style.background = absNoise < 0.15 ? "var(--green)" : "var(--amber)";
+
+      const subName = state.mode === "mlp" ? "MLP(h_risk)" : "h_risk";
+      formulaExpr.textContent = `h'_eff = h_eff - g · ${subName}`;
+      formulaNums.textContent =
+        `(${H_EFF.x.toFixed(2)}, ${H_EFF.y.toFixed(2)}) - ${state.gate.toFixed(2)} × ` +
+        `(${activeSub.x.toFixed(2)}, ${activeSub.y.toFixed(2)}) = ` +
+        `(${outVec.x.toFixed(2)}, ${outVec.y.toFixed(2)})`;
+    }
+
+    function tick(now) {
+      if (state.animStart !== null) {
+        const p = Math.min(1, (now - state.animStart) / state.animDur);
+        state.blend = lerp(state.animFrom, state.animTo, easeOutCubic(p));
+        render();
+        if (p < 1) {
+          requestAnimationFrame(tick);
+        } else {
+          state.animStart = null;
+        }
+      }
+    }
+
+    btnDirect.addEventListener("click", () => setMode("direct"));
+    btnMlp.addEventListener("click", () => setMode("mlp"));
+
+    thetaSlider.addEventListener("input", (e) => {
+      state.thetaDeg = Number(e.target.value);
+      thetaReadout.textContent = `${state.thetaDeg}°`;
+      render();
+    });
+
+    gateSlider.addEventListener("input", (e) => {
+      state.gate = Number(e.target.value);
+      gateReadout.textContent = state.gate.toFixed(2);
+      render();
+    });
+
+    canvas.addEventListener("mousemove", (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      const hit = hoverTips.find((pt) => Math.hypot(pt.x - mx, pt.y - my) < 18);
+      if (hit) {
+        tooltip.textContent = hit.label;
+        tooltip.style.whiteSpace = "pre";
+        tooltip.style.left = Math.min(rect.width - 190, Math.max(8, mx + 12)) + "px";
+        tooltip.style.top = Math.max(8, my - 46) + "px";
+        tooltip.style.opacity = "1";
+      } else {
+        tooltip.style.opacity = "0";
+      }
+    });
+
+    canvas.addEventListener("mouseleave", () => { tooltip.style.opacity = "0"; });
+
+    window.addEventListener("message", (e) => {
+      if (e.data && e.data.type === "blog-widget-ping") {
+        notifyParentHeight();
+      }
+    });
+
+    if (typeof ResizeObserver !== "undefined") {
+      new ResizeObserver(() => resizeCanvas()).observe(wrap);
+      new ResizeObserver(() => notifyParentHeight()).observe(widgetRoot);
+    }
+
+    window.addEventListener("resize", () => {
+      resizeCanvas();
+      notifyParentHeight();
+    });
+
+    resizeCanvas();
+    notifyParentHeight();
+  </script>
+</body>
+</html>

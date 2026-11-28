@@ -327,3 +327,20 @@ redefine-tablet()
 .markdown-body mjx-container[display="true"]:not(.not-markdown) svg {
   display: inline-block;
 }
+.markdown-body iframe.widget-meb:not(.not-markdown),
+.markdown-body iframe.blog-widget:not(.not-markdown) {
+  width: 100%;
+  height: 600px;
+  border: none;
+  border-radius: 18px;
+  overflow: hidden;
+  display: block;
+  margin: 1.5rem 0;
+  background: transparent;
+}
+@media (max-width: 720px) {
+  .markdown-body iframe.widget-meb:not(.not-markdown),
+  .markdown-body iframe.blog-widget:not(.not-markdown) {
+    height: 960px;
+  }
+}
